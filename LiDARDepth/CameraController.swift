@@ -1,17 +1,10 @@
-/*
-See LICENSE folder for this sample’s licensing information.
-
-Abstract:
-An object that configures and manages the capture pipeline to stream video and LiDAR depth data.
-*/
-
 import Foundation
 import AVFoundation
 import CoreImage
+import Accelerate
 
 protocol CaptureDataReceiver: AnyObject {
     func onNewData(capturedData: CameraCapturedData)
-    func onNewPhotoData(capturedData: CameraCapturedData)
 }
 
 class CameraController: NSObject, ObservableObject {
@@ -27,7 +20,7 @@ class CameraController: NSObject, ObservableObject {
     
     private(set) var captureSession: AVCaptureSession!
     
-    private var photoOutput: AVCapturePhotoOutput!
+    // private var photoOutput: AVCapturePhotoOutput!
     private var depthDataOutput: AVCaptureDepthDataOutput!
     private var videoDataOutput: AVCaptureVideoDataOutput!
     private var outputVideoSync: AVCaptureDataOutputSynchronizer!
@@ -134,14 +127,6 @@ class CameraController: NSObject, ObservableObject {
         if outputConnection.isCameraIntrinsicMatrixDeliverySupported {
             outputConnection.isCameraIntrinsicMatrixDeliveryEnabled = true
         }
-        
-        // Create an object to output photos.
-        photoOutput = AVCapturePhotoOutput()
-        photoOutput.maxPhotoQualityPrioritization = .quality
-        captureSession.addOutput(photoOutput)
-
-        // Enable delivery of depth data after adding the output to the capture session.
-        photoOutput.isDepthDataDeliveryEnabled = true
     }
     
     func startStream() {
@@ -155,6 +140,28 @@ class CameraController: NSObject, ObservableObject {
 
 // MARK: Output Synchronizer Delegate
 extension CameraController: AVCaptureDataOutputSynchronizerDelegate {
+    func containsObjectWithin(distance: Float, in pixelBuffer: CVPixelBuffer) -> Bool {
+        CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
+        
+        let width = CVPixelBufferGetWidth(pixelBuffer)
+        let height = CVPixelBufferGetHeight(pixelBuffer)
+        let totalPixels = width * height
+        
+        guard let baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer) else {
+            CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly)
+            return false
+        }
+
+        let bufferPointer = baseAddress.assumingMemoryBound(to: Float32.self)
+        
+        var result: Float = Float.greatestFiniteMagnitude
+        vDSP_minv(bufferPointer, 1, &result, vDSP_Length(totalPixels))
+        
+        CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly)
+
+        return !result.isNaN && result <= distance
+    }
+
     
     func dataOutputSynchronizer(_ synchronizer: AVCaptureDataOutputSynchronizer,
                                 didOutput synchronizedDataCollection: AVCaptureSynchronizedDataCollection) {
@@ -172,48 +179,13 @@ extension CameraController: AVCaptureDataOutputSynchronizerDelegate {
                                       cameraIntrinsics: cameraCalibrationData.intrinsicMatrix,
                                       cameraReferenceDimensions: cameraCalibrationData.intrinsicMatrixReferenceDimensions)
         
-        delegate?.onNewData(capturedData: data)
-    }
-}
+        let distanceThreshold = 2.0 as Float // meters
+        let depthPixelBuffer = syncedDepthData.depthData.depthDataMap
+        // if (containsObjectWithin(distance: distanceThreshold, in: depthPixelBuffer)) {
 
-// MARK: Photo Capture Delegate
-extension CameraController: AVCapturePhotoCaptureDelegate {
-    
-    func capturePhoto() {
-        var photoSettings: AVCapturePhotoSettings
-        if  photoOutput.availablePhotoPixelFormatTypes.contains(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange) {
-            photoSettings = AVCapturePhotoSettings(format: [
-                kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
-            ])
-        } else {
-            photoSettings = AVCapturePhotoSettings()
-        }
-        
-        // Capture depth data with this photo capture.
-        photoSettings.isDepthDataDeliveryEnabled = true
-        photoOutput.capturePhoto(with: photoSettings, delegate: self)
-    }
-    
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        
-        // Retrieve the image and depth data.
-        guard let pixelBuffer = photo.pixelBuffer,
-              let depthData = photo.depthData,
-              let cameraCalibrationData = depthData.cameraCalibrationData else { return }
-        
-        // Stop the stream until the user returns to streaming mode.
-        stopStream()
-        
-        // Convert the depth data to the expected format.
-        let convertedDepth = depthData.converting(toDepthDataType: kCVPixelFormatType_DepthFloat16)
-        
-        // Package the captured data.
-        let data = CameraCapturedData(depth: convertedDepth.depthDataMap.texture(withFormat: .r16Float, planeIndex: 0, addToCache: textureCache),
-                                      colorY: pixelBuffer.texture(withFormat: .r8Unorm, planeIndex: 0, addToCache: textureCache),
-                                      colorCbCr: pixelBuffer.texture(withFormat: .rg8Unorm, planeIndex: 1, addToCache: textureCache),
-                                      cameraIntrinsics: cameraCalibrationData.intrinsicMatrix,
-                                      cameraReferenceDimensions: cameraCalibrationData.intrinsicMatrixReferenceDimensions)
-        
-        delegate?.onNewPhotoData(capturedData: data)
+        // }
+
+        // print(depthPixelBuffer)
+        delegate?.onNewData(capturedData: data)
     }
 }

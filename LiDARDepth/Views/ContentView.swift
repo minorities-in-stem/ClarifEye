@@ -22,14 +22,7 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            HStack {
-                Button {
-                    manager.processingCapturedResult ? manager.resumeStream() : manager.startPhotoCapture()
-                } label: {
-                    Image(systemName: manager.processingCapturedResult ? "play.circle" : "camera.circle")
-                        .font(.largeTitle)
-                }
-                
+            HStack {                
                 Text("Depth Filtering")
                 Toggle("Depth Filtering", isOn: $manager.isFilteringDepth).labelsHidden()
                 Spacer()
@@ -37,37 +30,9 @@ struct ContentView: View {
             SliderDepthBoundaryView(val: $maxDepth, label: "Max Depth", minVal: minRangeDepth, maxVal: maxRangeDepth)
             SliderDepthBoundaryView(val: $minDepth, label: "Min Depth", minVal: minRangeDepth, maxVal: maxRangeDepth)
             ScrollView {
-                LazyVGrid(columns: [GridItem(.flexible(maximum: 600)), GridItem(.flexible(maximum: 600))]) {
+                LazyVGrid(columns: [GridItem(.flexible())]) {
                     
                     if manager.dataAvailable {
-                        ZoomOnTap {
-                            MetalTextureColorThresholdDepthView(
-                                rotationAngle: rotationAngle,
-                                maxDepth: $maxDepth,
-                                minDepth: $minDepth,
-                                capturedData: manager.capturedData
-                            )
-                            .aspectRatio(calcAspect(orientation: viewOrientation, texture: manager.capturedData.depth), contentMode: .fit)
-                        }
-                        ZoomOnTap {
-                            MetalTextureColorZapView(
-                                rotationAngle: rotationAngle,
-                                maxDepth: $maxDepth,
-                                minDepth: $minDepth,
-                                capturedData: manager.capturedData
-                            )
-                            .aspectRatio(calcAspect(orientation: viewOrientation, texture: manager.capturedData.depth), contentMode: .fit)
-                        }
-                        ZoomOnTap {
-                            MetalPointCloudView(
-                                rotationAngle: rotationAngle,
-                                maxDepth: $maxDepth,
-                                minDepth: $minDepth,
-                                scaleMovement: $scaleMovement,
-                                capturedData: manager.capturedData
-                            )
-                            .aspectRatio(calcAspect(orientation: viewOrientation, texture: manager.capturedData.depth), contentMode: .fit)
-                        }
                         ZoomOnTap {
                             DepthOverlay(manager: manager,
                                          maxDepth: $maxDepth,
@@ -108,6 +73,6 @@ struct SliderDepthBoundaryView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .previewDevice("iPhone 12 Pro Max")
+            .previewDevice("iPhone 15 Pro")
     }
 }

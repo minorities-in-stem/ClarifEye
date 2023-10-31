@@ -1,10 +1,3 @@
-/*
-See LICENSE folder for this sample’s licensing information.
-
-Abstract:
-An object that connects the camera controller and the views.
-*/
-
 import Foundation
 import SwiftUI
 import Combine
@@ -42,26 +35,10 @@ class CameraManager: ObservableObject, CaptureDataReceiver {
         controller.delegate = self
     }
     
-    func startPhotoCapture() {
-        controller.capturePhoto()
-        waitingForCapture = true
-    }
-    
     func resumeStream() {
         controller.startStream()
         processingCapturedResult = false
         waitingForCapture = false
-    }
-    
-    func onNewPhotoData(capturedData: CameraCapturedData) {
-        // Because the views hold a reference to `capturedData`, the app updates each texture separately.
-        self.capturedData.depth = capturedData.depth
-        self.capturedData.colorY = capturedData.colorY
-        self.capturedData.colorCbCr = capturedData.colorCbCr
-        self.capturedData.cameraIntrinsics = capturedData.cameraIntrinsics
-        self.capturedData.cameraReferenceDimensions = capturedData.cameraReferenceDimensions
-        waitingForCapture = false
-        processingCapturedResult = true
     }
     
     func onNewData(capturedData: CameraCapturedData) {
