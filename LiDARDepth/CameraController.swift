@@ -40,7 +40,9 @@ class CameraController: NSObject, ObservableObject {
     var depthConfiguration: DepthConfiguration
     var isFilteringEnabled = true {
         didSet {
-            depthDataOutput.isFilteringEnabled = isFilteringEnabled
+            if (depthDataOutput != nil) {
+                depthDataOutput.isFilteringEnabled = isFilteringEnabled
+            }
         }
     }
     
@@ -73,7 +75,9 @@ class CameraController: NSObject, ObservableObject {
 
         
         do {
+            #if !targetEnvironment(simulator)
             try setupSession()
+            #endif
         } catch {
             fatalError("Unable to configure the capture session.")
         }
