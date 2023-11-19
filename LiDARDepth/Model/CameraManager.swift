@@ -46,10 +46,6 @@ class CameraManager: ObservableObject, CaptureDataReceiver {
         controller.delegate = self
     }
     
-    func initializeRecording() {
-        
-    }
-    
     func startStream() {
         controller.startStream()
         waitingForCapture = false
