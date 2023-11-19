@@ -1,6 +1,4 @@
 import SwiftUI
-import MetalKit
-import Metal
 
 struct ImageView: View {
     
@@ -10,13 +8,17 @@ struct ImageView: View {
     
     
     var body: some View {
-        VStack {
-            
+        ZStack {
             Button(action: manager.toggleStream) {
-                Text(manager.waitingForCapture ? "Start video" : "Stop video")
+                if (manager.waitingForCapture) {
+                    Image(systemName: "play.circle")
+                } else {
+                    Image(systemName: "pause.circle")
+                }
             }
            
-            ScrollView {
+
+            if (!manager.waitingForCapture && manager.dataAvailable) {
                 ClassificationTextView(manager: manager)
 
                 if manager.dataAvailable {
@@ -27,7 +29,8 @@ struct ImageView: View {
                     .aspectRatio(calcAspect(orientation: viewOrientation, texture: manager.capturedData.depth), contentMode: .fit)
                 }
             }
-
         }
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+        .edgesIgnoringSafeArea(.all)
     }
 }

@@ -10,7 +10,6 @@ struct ContentView: View {
     var body: some View {
         TabView {
             ImageView(manager: manager, maxDepth: $maxDepth, minDepth: $minDepth)
-                .badge(2)
                 .tabItem {
                     Label("Vision", systemImage: "eyeglasses")
                 }
