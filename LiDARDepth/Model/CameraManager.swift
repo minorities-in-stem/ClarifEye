@@ -46,13 +46,21 @@ class CameraManager: ObservableObject, CaptureDataReceiver {
         controller.delegate = self
     }
     
+    func startStream() {
+        controller.startStream()
+        waitingForCapture = false
+    }
+    
+    func stopStream() {
+        controller.stopStream()
+        waitingForCapture = true
+    }
+    
     func toggleStream() {
         if (waitingForCapture) {
-            controller.startStream()
-            waitingForCapture = false
+            startStream()
         } else {
-            controller.stopStream()
-            waitingForCapture = true
+            stopStream()
         }
 
     }

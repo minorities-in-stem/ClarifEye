@@ -1,7 +1,7 @@
 import SwiftUI
 import UIKit
 
-struct BoundingBox: View {
+struct BoundingBoxManager: View {
     
     @ObservedObject var manager: CameraManager
     var frameSize: CGSize

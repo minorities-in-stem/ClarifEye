@@ -10,9 +10,12 @@
 		A3027A252B09ABD4009C644F /* YOLOv3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A3027A242B09ABD4009C644F /* YOLOv3.mlmodel */; };
 		A3027A292B09AC42009C644F /* FCRNFP16.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A3027A282B09AC42009C644F /* FCRNFP16.mlmodel */; };
 		A3027A2B2B09AE54009C644F /* DepthConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3027A2A2B09AE54009C644F /* DepthConfiguration.swift */; };
+		A3027A342B09F474009C644F /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3027A332B09F474009C644F /* ImageView.swift */; };
+		A3027A3B2B09F61A009C644F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3027A3A2B09F61A009C644F /* SettingsView.swift */; };
 		A3846CC32AFCC68400A720E9 /* CameraCapturedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3846CC22AFCC68400A720E9 /* CameraCapturedData.swift */; };
 		A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */; };
-		A3C1181E2AFC528700FC4F23 /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C1181D2AFC528700FC4F23 /* BoundingBox.swift */; };
+		A3AE2FCF2B0A052400DCDC7A /* SliderDepthBoundary.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FCE2B0A052400DCDC7A /* SliderDepthBoundary.swift */; };
+		A3C1181E2AFC528700FC4F23 /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C1181D2AFC528700FC4F23 /* BoundingBoxView.swift */; };
 		A3C118202AFC935100FC4F23 /* ClassificationText.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C1181F2AFC935100FC4F23 /* ClassificationText.swift */; };
 		AE2C81C3273961FF001BDCC7 /* MetalTextureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE921D37270D7B41000E95C6 /* MetalTextureView.swift */; };
 		AE2C81C52739620A001BDCC7 /* MetalTextureViewDepth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7889B0271F02D800B0383F /* MetalTextureViewDepth.swift */; };
@@ -35,9 +38,12 @@
 		A3027A242B09ABD4009C644F /* YOLOv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = YOLOv3.mlmodel; path = CoreML/YOLOv3.mlmodel; sourceTree = "<group>"; };
 		A3027A282B09AC42009C644F /* FCRNFP16.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = FCRNFP16.mlmodel; path = CoreML/FCRNFP16.mlmodel; sourceTree = "<group>"; };
 		A3027A2A2B09AE54009C644F /* DepthConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepthConfiguration.swift; sourceTree = "<group>"; };
+		A3027A332B09F474009C644F /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
+		A3027A3A2B09F61A009C644F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A3846CC22AFCC68400A720E9 /* CameraCapturedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCapturedData.swift; sourceTree = "<group>"; };
 		A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationData.swift; sourceTree = "<group>"; };
-		A3C1181D2AFC528700FC4F23 /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
+		A3AE2FCE2B0A052400DCDC7A /* SliderDepthBoundary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderDepthBoundary.swift; sourceTree = "<group>"; };
+		A3C1181D2AFC528700FC4F23 /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
 		A3C1181F2AFC935100FC4F23 /* ClassificationText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationText.swift; sourceTree = "<group>"; };
 		AE18F046274A126C008BC9E3 /* AVFCapture.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AVFCapture.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE18F048274A1272008BC9E3 /* CMCapture.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CMCapture.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,6 +79,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A3027A352B09F48B009C644F /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				A3C1181D2AFC528700FC4F23 /* BoundingBoxView.swift */,
+				A3C1181F2AFC935100FC4F23 /* ClassificationText.swift */,
+				A3AE2FCE2B0A052400DCDC7A /* SliderDepthBoundary.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		A37940AB2AF0A3AD0064540A /* CoreML */ = {
 			isa = PBXGroup;
 			children = (
@@ -85,8 +101,7 @@
 		A3846CBD2AFCBF8B00A720E9 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				A3C1181F2AFC935100FC4F23 /* ClassificationText.swift */,
-				A3C1181D2AFC528700FC4F23 /* BoundingBox.swift */,
+				A3027A352B09F48B009C644F /* Common */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -171,6 +186,8 @@
 				A3846CC02AFCC64900A720E9 /* Types */,
 				A3846CBD2AFCBF8B00A720E9 /* Components */,
 				AE921D2B270D7B02000E95C6 /* ContentView.swift */,
+				A3027A3A2B09F61A009C644F /* SettingsView.swift */,
+				A3027A332B09F474009C644F /* ImageView.swift */,
 				AEE83E8F2743EFE800790BF9 /* DepthOverlay.swift */,
 				AE2C81C827396765001BDCC7 /* View+Extensions.swift */,
 				AEC8871A272EAFF200ED6FCC /* Metal */,
@@ -272,14 +289,16 @@
 				A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */,
 				AE9AD78D270ECD01001218B2 /* CameraController.swift in Sources */,
 				AE9AD789270ECC86001218B2 /* shaders.metal in Sources */,
-				A3C1181E2AFC528700FC4F23 /* BoundingBox.swift in Sources */,
+				A3C1181E2AFC528700FC4F23 /* BoundingBoxView.swift in Sources */,
 				A3846CC32AFCC68400A720E9 /* CameraCapturedData.swift in Sources */,
 				A3C118202AFC935100FC4F23 /* ClassificationText.swift in Sources */,
 				AE2C81C62739620E001BDCC7 /* MetalTextureViewColor.swift in Sources */,
 				AE5D416F2756041300B2513E /* MetalEnvironment.swift in Sources */,
 				AE8A362E27313F9C000B43A7 /* MetalContentView.swift in Sources */,
 				AEE83E902743EFE900790BF9 /* DepthOverlay.swift in Sources */,
+				A3027A342B09F474009C644F /* ImageView.swift in Sources */,
 				AE2C81C927396765001BDCC7 /* View+Extensions.swift in Sources */,
+				A3AE2FCF2B0A052400DCDC7A /* SliderDepthBoundary.swift in Sources */,
 				A3027A292B09AC42009C644F /* FCRNFP16.mlmodel in Sources */,
 				A3027A252B09ABD4009C644F /* YOLOv3.mlmodel in Sources */,
 				AE2C81C52739620A001BDCC7 /* MetalTextureViewDepth.swift in Sources */,
@@ -287,6 +306,7 @@
 				AED300A5271D6D18008F6007 /* CameraManager.swift in Sources */,
 				AE2C81C3273961FF001BDCC7 /* MetalTextureView.swift in Sources */,
 				AE921D2A270D7B02000E95C6 /* LiDARDepthApp.swift in Sources */,
+				A3027A3B2B09F61A009C644F /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,7 +452,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
@@ -482,7 +502,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
