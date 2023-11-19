@@ -22,7 +22,8 @@ struct DepthOverlay: View {
                 ZStack {
                     MetalTextureViewColor(
                         rotationAngle: rotationAngle,
-                        capturedData: manager.capturedData
+                        capturedData: manager.capturedData,
+                        depthConfiguration: manager.depthConfiguration
                     )
                     MetalTextureDepthView(
                         rotationAngle: rotationAngle,

@@ -7,22 +7,24 @@ import AVFoundation
 class CameraManager: ObservableObject, CaptureDataReceiver {
 
     var capturedData: CameraCapturedData
+    @Published var orientation = UIDevice.current.orientation
+    @Published var waitingForCapture = true
+    @Published var dataAvailable = false
+    @Published var depthConfiguration: DepthConfiguration
+    @Published var classifications: [ClassificationData] = []
     @Published var isFilteringDepth: Bool {
         didSet {
             controller.isFilteringEnabled = isFilteringDepth
         }
     }
     
-    @Published var useDepthEstimation: Bool = false {
+    @Published var useDepthEstimation: Bool {
         didSet {
-            controller.useDepthEstimation = useDepthEstimation
+            depthConfiguration = DepthConfiguration(useEstimation: useDepthEstimation)
+            controller.depthConfiguration = depthConfiguration
         }
     }
-    @Published var orientation = UIDevice.current.orientation
-    @Published var waitingForCapture = true
-    @Published var dataAvailable = false
     
-    @Published var classifications: [ClassificationData] = []
     
     let controller: CameraController
     var cancellables = Set<AnyCancellable>()
@@ -33,7 +35,10 @@ class CameraManager: ObservableObject, CaptureDataReceiver {
         capturedData = CameraCapturedData()
         controller = CameraController()
         controller.isFilteringEnabled = true
+        
         isFilteringDepth = controller.isFilteringEnabled
+        depthConfiguration = controller.depthConfiguration
+        useDepthEstimation = controller.depthConfiguration.useEstimation
         
         NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification).sink { _ in
             self.orientation = UIDevice.current.orientation
@@ -57,7 +62,6 @@ class CameraManager: ObservableObject, CaptureDataReceiver {
             // Because the views hold a reference to `capturedData`, the app updates each texture separately.
             self.capturedData.depth = capturedData.depth
             self.capturedData.colorY = capturedData.colorY
-            self.capturedData.colorCbCr = capturedData.colorCbCr
             self.capturedData.cameraIntrinsics = capturedData.cameraIntrinsics
             self.capturedData.cameraReferenceDimensions = capturedData.cameraReferenceDimensions
             if self.dataAvailable == false {

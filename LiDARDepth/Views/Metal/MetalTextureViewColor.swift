@@ -13,6 +13,7 @@ struct MetalTextureViewColor: UIViewRepresentable, MetalRepresentable {
     var rotationAngle: Double
     
     var capturedData: CameraCapturedData
+    var depthConfiguration: DepthConfiguration
 
     func makeCoordinator() -> MTKColorTextureCoordinator {
         MTKColorTextureCoordinator(parent: self)
@@ -27,7 +28,14 @@ final class MTKColorTextureCoordinator: MTKCoordinator<MetalTextureViewColor> {
             let pipelineDescriptor = MTLRenderPipelineDescriptor()
             pipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
             pipelineDescriptor.vertexFunction = library.makeFunction(name: "planeVertexShader")
-            pipelineDescriptor.fragmentFunction = library.makeFunction(name: "planeFragmentShaderColor")
+            
+            
+            if (parent.depthConfiguration.videoFormat == VideoFormat.BGRA_32) {
+                pipelineDescriptor.fragmentFunction = library.makeFunction(name: "bgraToRgbFragmentShader")
+            } else {
+                pipelineDescriptor.fragmentFunction = library.makeFunction(name: "planeFragmentShaderColor")
+            }
+
             pipelineDescriptor.vertexDescriptor = createPlaneMetalVertexDescriptor()
             pipelineDescriptor.depthAttachmentPixelFormat = .depth32Float
             pipelineState = try metalDevice.makeRenderPipelineState(descriptor: pipelineDescriptor)
@@ -42,7 +50,7 @@ final class MTKColorTextureCoordinator: MTKCoordinator<MetalTextureViewColor> {
     }
     
     override func draw(in view: MTKView) {
-        guard parent.capturedData.colorY != nil && parent.capturedData.colorCbCr != nil else {
+        guard parent.capturedData.colorY != nil else {
             print("MetalTextureViewColor: There's no content to display.")
             return
         }
@@ -55,8 +63,13 @@ final class MTKColorTextureCoordinator: MTKCoordinator<MetalTextureViewColor> {
                                    -1,  1, 0, 1,
                                     1,  1, 0, 0]
         encoder.setVertexBytes(vertexData, length: vertexData.count * MemoryLayout<Float>.stride, index: 0)
-        encoder.setFragmentTexture(parent.capturedData.colorY!, index: 0)
-        encoder.setFragmentTexture(parent.capturedData.colorCbCr!, index: 1)
+        
+        let textures = parent.capturedData.colorY
+        for index in 0..<textures!.count {
+            let texture = textures![index]
+            encoder.setFragmentTexture(texture, index: index)
+        }
+
         encoder.setDepthStencilState(depthState)
         encoder.setRenderPipelineState(pipelineState)
         encoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
