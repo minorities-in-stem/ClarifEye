@@ -5,6 +5,7 @@ struct ImageView: View {
     @ObservedObject var manager: CameraManager
     @Binding var maxDepth: Float
     @Binding var minDepth: Float
+    @Binding var depthFilterOpacity: Float
     
     
     var body: some View {
@@ -12,10 +13,16 @@ struct ImageView: View {
             ButtonSettingsView(manager: manager)
 
             if (!manager.waitingForCapture && manager.dataAvailable) {
-                ClassificationTextView(manager: manager)
+                VStack {
+                    ClassificationTextView(manager: manager)
+                        .padding(.top, 20)
+                    Spacer()
+                }
+
 
                 if manager.dataAvailable {
                     DepthOverlay(manager: manager,
+                                 opacity: $depthFilterOpacity,
                                  maxDepth: $maxDepth,
                                  minDepth: $minDepth
                     )
@@ -25,8 +32,6 @@ struct ImageView: View {
                 Text("Recording paused")
             }
         }
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-        .edgesIgnoringSafeArea(.all)
     }
 }
 

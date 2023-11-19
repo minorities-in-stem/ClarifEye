@@ -15,7 +15,7 @@
 		A3846CC32AFCC68400A720E9 /* CameraCapturedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3846CC22AFCC68400A720E9 /* CameraCapturedData.swift */; };
 		A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */; };
 		A3AE2FCF2B0A052400DCDC7A /* SliderDepthBoundary.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FCE2B0A052400DCDC7A /* SliderDepthBoundary.swift */; };
-		A3C1181E2AFC528700FC4F23 /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C1181D2AFC528700FC4F23 /* BoundingBox.swift */; };
+		A3C1181E2AFC528700FC4F23 /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C1181D2AFC528700FC4F23 /* BoundingBoxView.swift */; };
 		A3C118202AFC935100FC4F23 /* ClassificationText.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C1181F2AFC935100FC4F23 /* ClassificationText.swift */; };
 		AE2C81C3273961FF001BDCC7 /* MetalTextureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE921D37270D7B41000E95C6 /* MetalTextureView.swift */; };
 		AE2C81C52739620A001BDCC7 /* MetalTextureViewDepth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7889B0271F02D800B0383F /* MetalTextureViewDepth.swift */; };
@@ -43,7 +43,7 @@
 		A3846CC22AFCC68400A720E9 /* CameraCapturedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCapturedData.swift; sourceTree = "<group>"; };
 		A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationData.swift; sourceTree = "<group>"; };
 		A3AE2FCE2B0A052400DCDC7A /* SliderDepthBoundary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderDepthBoundary.swift; sourceTree = "<group>"; };
-		A3C1181D2AFC528700FC4F23 /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
+		A3C1181D2AFC528700FC4F23 /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
 		A3C1181F2AFC935100FC4F23 /* ClassificationText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationText.swift; sourceTree = "<group>"; };
 		AE18F046274A126C008BC9E3 /* AVFCapture.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AVFCapture.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE18F048274A1272008BC9E3 /* CMCapture.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CMCapture.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,7 +82,7 @@
 		A3027A352B09F48B009C644F /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				A3C1181D2AFC528700FC4F23 /* BoundingBox.swift */,
+				A3C1181D2AFC528700FC4F23 /* BoundingBoxView.swift */,
 				A3C1181F2AFC935100FC4F23 /* ClassificationText.swift */,
 				A3AE2FCE2B0A052400DCDC7A /* SliderDepthBoundary.swift */,
 			);
@@ -289,7 +289,7 @@
 				A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */,
 				AE9AD78D270ECD01001218B2 /* CameraController.swift in Sources */,
 				AE9AD789270ECC86001218B2 /* shaders.metal in Sources */,
-				A3C1181E2AFC528700FC4F23 /* BoundingBox.swift in Sources */,
+				A3C1181E2AFC528700FC4F23 /* BoundingBoxView.swift in Sources */,
 				A3846CC32AFCC68400A720E9 /* CameraCapturedData.swift in Sources */,
 				A3C118202AFC935100FC4F23 /* ClassificationText.swift in Sources */,
 				AE2C81C62739620E001BDCC7 /* MetalTextureViewColor.swift in Sources */,
