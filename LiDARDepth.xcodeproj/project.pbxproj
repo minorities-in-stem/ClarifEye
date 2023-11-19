@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A3027A232B09A3B5009C644F /* YOLOv3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A3027A222B09A3B5009C644F /* YOLOv3.mlmodel */; };
+		A3027A252B09ABD4009C644F /* YOLOv3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A3027A242B09ABD4009C644F /* YOLOv3.mlmodel */; };
+		A3027A292B09AC42009C644F /* FCRNFP16.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A3027A282B09AC42009C644F /* FCRNFP16.mlmodel */; };
+		A3027A2B2B09AE54009C644F /* DepthConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3027A2A2B09AE54009C644F /* DepthConfiguration.swift */; };
 		A3846CC32AFCC68400A720E9 /* CameraCapturedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3846CC22AFCC68400A720E9 /* CameraCapturedData.swift */; };
 		A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */; };
 		A3C1181E2AFC528700FC4F23 /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C1181D2AFC528700FC4F23 /* BoundingBox.swift */; };
@@ -30,7 +32,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A3027A222B09A3B5009C644F /* YOLOv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3.mlmodel; sourceTree = "<group>"; };
+		A3027A242B09ABD4009C644F /* YOLOv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = YOLOv3.mlmodel; path = CoreML/YOLOv3.mlmodel; sourceTree = "<group>"; };
+		A3027A282B09AC42009C644F /* FCRNFP16.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = FCRNFP16.mlmodel; path = CoreML/FCRNFP16.mlmodel; sourceTree = "<group>"; };
+		A3027A2A2B09AE54009C644F /* DepthConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepthConfiguration.swift; sourceTree = "<group>"; };
 		A3846CC22AFCC68400A720E9 /* CameraCapturedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCapturedData.swift; sourceTree = "<group>"; };
 		A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationData.swift; sourceTree = "<group>"; };
 		A3C1181D2AFC528700FC4F23 /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
@@ -72,7 +76,8 @@
 		A37940AB2AF0A3AD0064540A /* CoreML */ = {
 			isa = PBXGroup;
 			children = (
-				A3027A222B09A3B5009C644F /* YOLOv3.mlmodel */,
+				A3027A282B09AC42009C644F /* FCRNFP16.mlmodel */,
+				A3027A242B09ABD4009C644F /* YOLOv3.mlmodel */,
 			);
 			name = CoreML;
 			sourceTree = "<group>";
@@ -91,6 +96,7 @@
 			children = (
 				A3846CC22AFCC68400A720E9 /* CameraCapturedData.swift */,
 				A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */,
+				A3027A2A2B09AE54009C644F /* DepthConfiguration.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -261,6 +267,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3027A2B2B09AE54009C644F /* DepthConfiguration.swift in Sources */,
 				AEAC8EBD27291512001CC1D5 /* CVPixelBuffer+Extension.swift in Sources */,
 				A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */,
 				AE9AD78D270ECD01001218B2 /* CameraController.swift in Sources */,
@@ -273,7 +280,8 @@
 				AE8A362E27313F9C000B43A7 /* MetalContentView.swift in Sources */,
 				AEE83E902743EFE900790BF9 /* DepthOverlay.swift in Sources */,
 				AE2C81C927396765001BDCC7 /* View+Extensions.swift in Sources */,
-				A3027A232B09A3B5009C644F /* YOLOv3.mlmodel in Sources */,
+				A3027A292B09AC42009C644F /* FCRNFP16.mlmodel in Sources */,
+				A3027A252B09ABD4009C644F /* YOLOv3.mlmodel in Sources */,
 				AE2C81C52739620A001BDCC7 /* MetalTextureViewDepth.swift in Sources */,
 				AE921D2C270D7B02000E95C6 /* ContentView.swift in Sources */,
 				AED300A5271D6D18008F6007 /* CameraManager.swift in Sources */,

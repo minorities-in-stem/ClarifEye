@@ -29,7 +29,6 @@ class CameraController: NSObject, ObservableObject {
     private var depthDataOutput: AVCaptureDepthDataOutput!
     private var videoDataOutput: AVCaptureVideoDataOutput!
     private var outputVideoSync: AVCaptureDataOutputSynchronizer!
-    private var useDepthEstimationModel: Bool = false
     
     private var textureCache: CVMetalTextureCache!
     
@@ -38,19 +37,15 @@ class CameraController: NSObject, ObservableObject {
     private let detectionModel: VNCoreMLModel
     private let depthModel: FCRNFP16
     
+    var depthConfiguration: DepthConfiguration
     var isFilteringEnabled = true {
         didSet {
             depthDataOutput.isFilteringEnabled = isFilteringEnabled
         }
     }
     
-    var useDepthEstimation = true {
-        didSet {
-            self.useDepthEstimationModel = useDepthEstimation
-        }
-    }
-    
     override init() {
+        depthConfiguration = DepthConfiguration(useEstimation: true)
         
         // Create a texture cache to hold sample buffer textures.
         CVMetalTextureCacheCreate(kCFAllocatorDefault,
@@ -142,9 +137,11 @@ class CameraController: NSObject, ObservableObject {
     private func setupCaptureOutputs() {
         // Create an object to output video sample buffers.
         videoDataOutput = AVCaptureVideoDataOutput()
-        videoDataOutput.videoSettings = [
-            String(kCVPixelBufferPixelFormatTypeKey): Int(kCVPixelFormatType_32BGRA)
-        ]
+        if (depthConfiguration.videoFormat == VideoFormat.BGRA_32) {
+            videoDataOutput.videoSettings = [
+                String(kCVPixelBufferPixelFormatTypeKey): Int(kCVPixelFormatType_32BGRA)
+            ]
+        }
         
         captureSession.addOutput(videoDataOutput)
         
@@ -260,9 +257,8 @@ extension CameraController {
     
     func depthEstimationDepthMap(imagePixelBuffer: CVPixelBuffer) -> CVPixelBuffer? {
         let image = downsample(pixelBuffer: imagePixelBuffer, toSize: CGSize(width: 304, height: 228))
-        let input = try? FCRNFP16Input(image: image!)
-        let prediction = try? depthModel.prediction(input: input!)
-        print("TEST", prediction)
+        let input = FCRNFP16Input(image: image!)
+        let prediction = try? depthModel.prediction(input: input)
 
         
         return prediction?.depthmap.pixelBuffer
@@ -318,15 +314,19 @@ extension CameraController: AVCaptureDataOutputSynchronizerDelegate {
               let cameraCalibrationData = syncedDepthData.depthData.cameraCalibrationData else { return }
         
 
+        var textures: [MTLTexture?]
+        if (depthConfiguration.videoFormat == VideoFormat.BGRA_32) {
+            textures = [pixelBuffer.texture(withFormat: .bgra8Unorm, planeIndex: 0, addToCache: textureCache)]
+        } else {
+            textures = [
+                pixelBuffer.texture(withFormat: .r8Unorm, planeIndex: 0, addToCache: textureCache),
+                pixelBuffer.texture(withFormat: .rg8Unorm, planeIndex: 1, addToCache: textureCache)
+            ]
+        }
+        
         // Package the captured data.
         let data = CameraCapturedData(depth: syncedDepthData.depthData.depthDataMap.texture(withFormat: .r16Float, planeIndex: 0, addToCache: textureCache),
-//                      colorY: pixelBuffer.texture(withFormat: .r8Unorm, planeIndex: 0, addToCache: textureCache),
-//                      colorCbCr: pixelBuffer.texture(withFormat: .rg8Unorm, planeIndex: 1, addToCache: textureCache),
-                                      
-                      // TEST 1
-                      colorY: pixelBuffer.texture(withFormat: .bgra8Unorm, planeIndex: 0, addToCache: textureCache),
-                      colorCbCr: pixelBuffer.texture(withFormat: .bgra8Unorm, planeIndex: 0, addToCache: textureCache),
-                    
+                      colorY: textures,
                       cameraIntrinsics: cameraCalibrationData.intrinsicMatrix,
                       cameraReferenceDimensions: cameraCalibrationData.intrinsicMatrixReferenceDimensions)
         
@@ -335,7 +335,7 @@ extension CameraController: AVCaptureDataOutputSynchronizerDelegate {
 
         let imagePixelBuffer = syncedVideoData.sampleBuffer.imageBuffer
         var depthPixelBuffer = syncedDepthData.depthData.depthDataMap
-        if (useDepthEstimationModel) {
+        if (depthConfiguration.useEstimation) {
             if let estimation = depthEstimationDepthMap(imagePixelBuffer: imagePixelBuffer!){
                 depthPixelBuffer = estimation
             }

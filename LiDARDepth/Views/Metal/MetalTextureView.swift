@@ -19,7 +19,12 @@ class MTKTextureCoordinator: MTKCoordinator<MetalTextureView> {
             let pipelineDescriptor = MTLRenderPipelineDescriptor()
             pipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
             pipelineDescriptor.vertexFunction = library.makeFunction(name: "planeVertexShader")
-            pipelineDescriptor.fragmentFunction = library.makeFunction(name: "planeFragmentShader")
+//            pipelineDescriptor.fragmentFunction = library.makeFunction(name: "planeFragmentShader")
+            if (parent.depthConfiguration.videoFormat == VideoFormat.BGRA_32) {
+                pipelineDescriptor.fragmentFunction = library.makeFunction(name: "bgraToRgbFragmentShader")
+            } else {
+                pipelineDescriptor.fragmentFunction = library.makeFunction(name: "planeFragmentShaderColor")
+            }
             pipelineDescriptor.vertexDescriptor = createPlaneMetalVertexDescriptor()
             pipelineDescriptor.depthAttachmentPixelFormat = .depth32Float
             pipelineState = try metalDevice.makeRenderPipelineState(descriptor: pipelineDescriptor)
@@ -61,6 +66,7 @@ class MTKTextureCoordinator: MTKCoordinator<MetalTextureView> {
 struct MetalTextureView: MetalRepresentable {
     
     var rotationAngle: Double
+    var depthConfiguration: DepthConfiguration
 
     @Binding var maxDepth: Float
     @Binding var minDepth: Float
