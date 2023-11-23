@@ -10,7 +10,7 @@ class DepthConfiguration {
     var useEstimation: Bool
     var videoFormat: VideoFormat
 
-    init(useEstimation: Bool) {
+    init(useEstimation: Bool = true) {
         self.useEstimation = useEstimation
         if useEstimation {
             self.videoFormat = VideoFormat.BGRA_32

@@ -4,7 +4,18 @@ import Combine
 import simd
 import AVFoundation
 
-class CameraManager: ObservableObject, CaptureDataReceiver {
+protocol CameraCapturedDataReceiver: AnyObject {
+    func onNewData(capturedData: CameraCapturedData)
+    var orientation: UIDeviceOrientation {
+        get
+    }
+    var depthConfiguration: DepthConfiguration {
+        get
+    }
+}
+
+
+class CameraDepthManager: ObservableObject, CameraCapturedDataReceiver {
 
     var capturedData: CameraCapturedData
     @Published var orientation = UIDevice.current.orientation
@@ -17,7 +28,6 @@ class CameraManager: ObservableObject, CaptureDataReceiver {
             controller.isFilteringEnabled = isFilteringDepth
         }
     }
-    
     @Published var useDepthEstimation: Bool {
         didSet {
             depthConfiguration = DepthConfiguration(useEstimation: useDepthEstimation)
@@ -25,25 +35,23 @@ class CameraManager: ObservableObject, CaptureDataReceiver {
         }
     }
     
-    
-    let controller: CameraController
     var cancellables = Set<AnyCancellable>()
-    var session: AVCaptureSession { controller.captureSession }
     
+    let controller: CameraDepthController
     init() {
         // Create an object to store the captured data for the views to present.
         capturedData = CameraCapturedData()
-        controller = CameraController()
+        controller = CameraDepthController()
         controller.isFilteringEnabled = true
         
         isFilteringDepth = controller.isFilteringEnabled
         depthConfiguration = controller.depthConfiguration
-        useDepthEstimation = controller.depthConfiguration.useEstimation
         
         NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification).sink { _ in
             self.orientation = UIDevice.current.orientation
         }.store(in: &cancellables)
-        controller.delegate = self
+        
+        controller.cameraCapturedDataDelegate = self
     }
     
     func startStream() {
@@ -75,13 +83,6 @@ class CameraManager: ObservableObject, CaptureDataReceiver {
             if self.dataAvailable == false {
                 self.dataAvailable = true
             }
-        }
-    }
-    
-    func onClassification(classifications: [ClassificationData]) {
-        DispatchQueue.main.async {
-            self.classifications = classifications
-            self.objectWillChange.send()
         }
     }
 }
