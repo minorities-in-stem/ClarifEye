@@ -442,7 +442,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClarifEye/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "bacon!";
+				INFOPLIST_KEY_CFBundleDisplayName = ClarifEye;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "";
@@ -492,7 +492,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClarifEye/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "bacon!";
+				INFOPLIST_KEY_CFBundleDisplayName = ClarifEye;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "";
