@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct LiDARDepthApp: App {
+struct ClarifEyeApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

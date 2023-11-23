@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AE921D25270D7B02000E95C6"
-               BuildableName = "LiDARDepth.app"
-               BlueprintName = "LiDARDepth"
-               ReferencedContainer = "container:LiDARDepth.xcodeproj">
+               BuildableName = "ClarifEye.app"
+               BlueprintName = "ClarifEye"
+               ReferencedContainer = "container:ClarifEye.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AE921D25270D7B02000E95C6"
-            BuildableName = "LiDARDepth.app"
-            BlueprintName = "LiDARDepth"
-            ReferencedContainer = "container:LiDARDepth.xcodeproj">
+            BuildableName = "ClarifEye.app"
+            BlueprintName = "ClarifEye"
+            ReferencedContainer = "container:ClarifEye.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AE921D25270D7B02000E95C6"
-            BuildableName = "LiDARDepth.app"
-            BlueprintName = "LiDARDepth"
-            ReferencedContainer = "container:LiDARDepth.xcodeproj">
+            BuildableName = "ClarifEye.app"
+            BlueprintName = "ClarifEye"
+            ReferencedContainer = "container:ClarifEye.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

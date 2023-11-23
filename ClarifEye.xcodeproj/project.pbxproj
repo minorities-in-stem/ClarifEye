@@ -23,7 +23,7 @@
 		AE2C81C927396765001BDCC7 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2C81C827396765001BDCC7 /* View+Extensions.swift */; };
 		AE5D416F2756041300B2513E /* MetalEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5D416E2756041300B2513E /* MetalEnvironment.swift */; };
 		AE8A362E27313F9C000B43A7 /* MetalContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAC8EBA272914AA001CC1D5 /* MetalContentView.swift */; };
-		AE921D2A270D7B02000E95C6 /* LiDARDepthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE921D29270D7B02000E95C6 /* LiDARDepthApp.swift */; };
+		AE921D2A270D7B02000E95C6 /* ClarifEye.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE921D29270D7B02000E95C6 /* ClarifEye.swift */; };
 		AE921D2C270D7B02000E95C6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE921D2B270D7B02000E95C6 /* ContentView.swift */; };
 		AE921D2E270D7B04000E95C6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE921D2D270D7B04000E95C6 /* Assets.xcassets */; };
 		AE921D31270D7B04000E95C6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE921D30270D7B04000E95C6 /* Preview Assets.xcassets */; };
@@ -51,8 +51,8 @@
 		AE5D416E2756041300B2513E /* MetalEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalEnvironment.swift; sourceTree = "<group>"; };
 		AE7889AD271DB86E00B0383F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		AE7889B0271F02D800B0383F /* MetalTextureViewDepth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalTextureViewDepth.swift; sourceTree = "<group>"; };
-		AE921D26270D7B02000E95C6 /* LiDARDepth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiDARDepth.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		AE921D29270D7B02000E95C6 /* LiDARDepthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiDARDepthApp.swift; sourceTree = "<group>"; };
+		AE921D26270D7B02000E95C6 /* ClarifEye.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClarifEye.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE921D29270D7B02000E95C6 /* ClarifEye.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClarifEye.swift; sourceTree = "<group>"; };
 		AE921D2B270D7B02000E95C6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		AE921D2D270D7B04000E95C6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AE921D30270D7B04000E95C6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -120,7 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				D0C5477C199C5F5C91FCD321 /* README.md */,
-				AE921D28270D7B02000E95C6 /* LiDARDepth */,
+				AE921D28270D7B02000E95C6 /* ClarifEye */,
 				AE921D27270D7B02000E95C6 /* Products */,
 				AEA6FCEE272AED0C002947D4 /* Frameworks */,
 			);
@@ -129,24 +129,24 @@
 		AE921D27270D7B02000E95C6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AE921D26270D7B02000E95C6 /* LiDARDepth.app */,
+				AE921D26270D7B02000E95C6 /* ClarifEye.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		AE921D28270D7B02000E95C6 /* LiDARDepth */ = {
+		AE921D28270D7B02000E95C6 /* ClarifEye */ = {
 			isa = PBXGroup;
 			children = (
 				A37940AB2AF0A3AD0064540A /* CoreML */,
 				AE9AD78C270ECD01001218B2 /* CameraController.swift */,
 				C444DFC327C43447000D8883 /* Model */,
 				AEC8871B272EB01200ED6FCC /* Views */,
-				AE921D29270D7B02000E95C6 /* LiDARDepthApp.swift */,
+				AE921D29270D7B02000E95C6 /* ClarifEye.swift */,
 				AE921D2D270D7B04000E95C6 /* Assets.xcassets */,
 				AE7889AD271DB86E00B0383F /* Info.plist */,
 				AE921D2F270D7B04000E95C6 /* Preview Content */,
 			);
-			path = LiDARDepth;
+			path = ClarifEye;
 			sourceTree = "<group>";
 		};
 		AE921D2F270D7B04000E95C6 /* Preview Content */ = {
@@ -215,9 +215,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		AE921D25270D7B02000E95C6 /* LiDARDepth */ = {
+		AE921D25270D7B02000E95C6 /* ClarifEye */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AE921D34270D7B04000E95C6 /* Build configuration list for PBXNativeTarget "LiDARDepth" */;
+			buildConfigurationList = AE921D34270D7B04000E95C6 /* Build configuration list for PBXNativeTarget "ClarifEye" */;
 			buildPhases = (
 				AE921D22270D7B02000E95C6 /* Sources */,
 				AE921D23270D7B02000E95C6 /* Frameworks */,
@@ -227,9 +227,9 @@
 			);
 			dependencies = (
 			);
-			name = LiDARDepth;
+			name = ClarifEye;
 			productName = DepthAPISample;
-			productReference = AE921D26270D7B02000E95C6 /* LiDARDepth.app */;
+			productReference = AE921D26270D7B02000E95C6 /* ClarifEye.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -249,7 +249,7 @@
 					};
 				};
 			};
-			buildConfigurationList = AE921D21270D7B02000E95C6 /* Build configuration list for PBXProject "LiDARDepth" */;
+			buildConfigurationList = AE921D21270D7B02000E95C6 /* Build configuration list for PBXProject "ClarifEye" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -262,7 +262,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				AE921D25270D7B02000E95C6 /* LiDARDepth */,
+				AE921D25270D7B02000E95C6 /* ClarifEye */,
 			);
 		};
 /* End PBXProject section */
@@ -305,7 +305,7 @@
 				AE921D2C270D7B02000E95C6 /* ContentView.swift in Sources */,
 				AED300A5271D6D18008F6007 /* CameraManager.swift in Sources */,
 				AE2C81C3273961FF001BDCC7 /* MetalTextureView.swift in Sources */,
-				AE921D2A270D7B02000E95C6 /* LiDARDepthApp.swift in Sources */,
+				AE921D2A270D7B02000E95C6 /* ClarifEye.swift in Sources */,
 				A3027A3B2B09F61A009C644F /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -437,11 +437,11 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_ASSET_PATHS = "\"LiDARDepth/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"ClarifEye/Preview Content\"";
 				DEVELOPMENT_TEAM = G68699Q862;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = LiDARDepth/Info.plist;
+				INFOPLIST_FILE = ClarifEye/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "bacon!";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
@@ -465,7 +465,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = bacon;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ClarifEye;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -487,11 +487,11 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_ASSET_PATHS = "\"LiDARDepth/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"ClarifEye/Preview Content\"";
 				DEVELOPMENT_TEAM = G68699Q862;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = LiDARDepth/Info.plist;
+				INFOPLIST_FILE = ClarifEye/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "bacon!";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
@@ -515,7 +515,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = bacon;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ClarifEye;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -531,7 +531,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		AE921D21270D7B02000E95C6 /* Build configuration list for PBXProject "LiDARDepth" */ = {
+		AE921D21270D7B02000E95C6 /* Build configuration list for PBXProject "ClarifEye" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AE921D32270D7B04000E95C6 /* Debug */,
@@ -540,7 +540,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AE921D34270D7B04000E95C6 /* Build configuration list for PBXNativeTarget "LiDARDepth" */ = {
+		AE921D34270D7B04000E95C6 /* Build configuration list for PBXNativeTarget "ClarifEye" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AE921D35270D7B04000E95C6 /* Debug */,
