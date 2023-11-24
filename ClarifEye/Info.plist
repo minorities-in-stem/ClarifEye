@@ -8,8 +8,6 @@
 	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>This application will use the camera for Augmented Reality and Computer Vision.</string>
-	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

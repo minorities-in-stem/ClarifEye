@@ -8,7 +8,6 @@ struct ImageView: View {
         ZStack {
             ButtonSettingsView(manager: manager)
                 .zIndex(1000)
-//            if (!manager.waitingForCapture && manager.dataAvailable) {
 
             VStack {
                 ClassificationTextView(manager: manager)
@@ -18,8 +17,6 @@ struct ImageView: View {
 
             ARView(manager: manager)
                 .zIndex(-1)
-//              .frame(height: 700)
-                
         }
     }
 }
@@ -41,6 +38,9 @@ struct ButtonSettingsView: View {
                         }
                     }
                     
+                    Button(action: manager.restart) {
+                        Image(systemName: "arrow.clockwise")
+                    }
                 }
                 .padding(.leading, 20) // Add padding to align with the screen's edge
 

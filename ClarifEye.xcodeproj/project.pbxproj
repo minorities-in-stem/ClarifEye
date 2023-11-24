@@ -9,20 +9,18 @@
 /* Begin PBXBuildFile section */
 		A3027A342B09F474009C644F /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3027A332B09F474009C644F /* ImageView.swift */; };
 		A3027A3B2B09F61A009C644F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3027A3A2B09F61A009C644F /* SettingsView.swift */; };
+		A3331B6D2B10B9DD00EADE34 /* LabelScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A3331B6C2B10B9DD00EADE34 /* LabelScene.sks */; };
 		A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */; };
 		A3AE2FE52B0F594B00DCDC7A /* FCRNFP16.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FE22B0F594B00DCDC7A /* FCRNFP16.mlmodel */; };
 		A3AE2FE72B0F594B00DCDC7A /* YOLOv3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FE42B0F594B00DCDC7A /* YOLOv3.mlmodel */; };
-		A3AE2FED2B0F6CEA00DCDC7A /* LabelScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A3AE2FEC2B0F6CEA00DCDC7A /* LabelScene.sks */; };
 		A3AE2FF22B0FF08800DCDC7A /* ClassificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FF12B0FF08800DCDC7A /* ClassificationController.swift */; };
 		A3AE2FF82B0FF29300DCDC7A /* ARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FF72B0FF29300DCDC7A /* ARView.swift */; };
 		A3AE2FFB2B10013100DCDC7A /* CameraDepthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FFA2B10013100DCDC7A /* CameraDepthManager.swift */; };
-		A3AE30042B10950E00DCDC7A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3AE30032B10950E00DCDC7A /* Main.storyboard */; };
 		A3AE30072B1099DF00DCDC7A /* ARController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE30062B1099DF00DCDC7A /* ARController.swift */; };
 		A3AE30092B1099F700DCDC7A /* StatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE30082B1099F700DCDC7A /* StatusViewController.swift */; };
 		A3AE300B2B109A1100DCDC7A /* TemplateLabelNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE300A2B109A1100DCDC7A /* TemplateLabelNode.swift */; };
 		A3AE300D2B109BA700DCDC7A /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE300C2B109BA700DCDC7A /* Settings.swift */; };
 		A3AE300F2B10A46100DCDC7A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3AE300E2B10A46100DCDC7A /* LaunchScreen.storyboard */; };
-		A3C1181E2AFC528700FC4F23 /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C1181D2AFC528700FC4F23 /* BoundingBoxView.swift */; };
 		A3C118202AFC935100FC4F23 /* ClassificationText.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C1181F2AFC935100FC4F23 /* ClassificationText.swift */; };
 		AE2C81C927396765001BDCC7 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2C81C827396765001BDCC7 /* View+Extensions.swift */; };
 		AE921D2A270D7B02000E95C6 /* ClarifEye.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE921D29270D7B02000E95C6 /* ClarifEye.swift */; };
@@ -33,20 +31,18 @@
 /* Begin PBXFileReference section */
 		A3027A332B09F474009C644F /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		A3027A3A2B09F61A009C644F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A3331B6C2B10B9DD00EADE34 /* LabelScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LabelScene.sks; sourceTree = "<group>"; };
 		A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationData.swift; sourceTree = "<group>"; };
 		A3AE2FE22B0F594B00DCDC7A /* FCRNFP16.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = FCRNFP16.mlmodel; path = Models/FCRNFP16.mlmodel; sourceTree = "<group>"; };
 		A3AE2FE42B0F594B00DCDC7A /* YOLOv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = YOLOv3.mlmodel; path = Models/YOLOv3.mlmodel; sourceTree = "<group>"; };
-		A3AE2FEC2B0F6CEA00DCDC7A /* LabelScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LabelScene.sks; sourceTree = "<group>"; };
 		A3AE2FF12B0FF08800DCDC7A /* ClassificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationController.swift; sourceTree = "<group>"; };
 		A3AE2FF72B0FF29300DCDC7A /* ARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARView.swift; sourceTree = "<group>"; };
 		A3AE2FFA2B10013100DCDC7A /* CameraDepthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraDepthManager.swift; sourceTree = "<group>"; };
-		A3AE30032B10950E00DCDC7A /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		A3AE30062B1099DF00DCDC7A /* ARController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARController.swift; sourceTree = "<group>"; };
 		A3AE30082B1099F700DCDC7A /* StatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewController.swift; sourceTree = "<group>"; };
 		A3AE300A2B109A1100DCDC7A /* TemplateLabelNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateLabelNode.swift; sourceTree = "<group>"; };
 		A3AE300C2B109BA700DCDC7A /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		A3AE300E2B10A46100DCDC7A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		A3C1181D2AFC528700FC4F23 /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
 		A3C1181F2AFC935100FC4F23 /* ClassificationText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationText.swift; sourceTree = "<group>"; };
 		AE18F046274A126C008BC9E3 /* AVFCapture.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AVFCapture.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE18F048274A1272008BC9E3 /* CMCapture.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CMCapture.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -74,7 +70,6 @@
 		A3027A352B09F48B009C644F /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				A3C1181D2AFC528700FC4F23 /* BoundingBoxView.swift */,
 				A3C1181F2AFC935100FC4F23 /* ClassificationText.swift */,
 			);
 			path = Common;
@@ -181,9 +176,8 @@
 				AE921D29270D7B02000E95C6 /* ClarifEye.swift */,
 				AE921D2D270D7B04000E95C6 /* Assets.xcassets */,
 				AE7889AD271DB86E00B0383F /* Info.plist */,
-				A3AE30032B10950E00DCDC7A /* Main.storyboard */,
+				A3331B6C2B10B9DD00EADE34 /* LabelScene.sks */,
 				A3AE300E2B10A46100DCDC7A /* LaunchScreen.storyboard */,
-				A3AE2FEC2B0F6CEA00DCDC7A /* LabelScene.sks */,
 			);
 			path = ClarifEye;
 			sourceTree = "<group>";
@@ -268,10 +262,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A3AE2FED2B0F6CEA00DCDC7A /* LabelScene.sks in Resources */,
 				AE921D2E270D7B04000E95C6 /* Assets.xcassets in Resources */,
+				A3331B6D2B10B9DD00EADE34 /* LabelScene.sks in Resources */,
 				A3AE300F2B10A46100DCDC7A /* LaunchScreen.storyboard in Resources */,
-				A3AE30042B10950E00DCDC7A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,7 +279,6 @@
 				A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */,
 				A3AE2FE72B0F594B00DCDC7A /* YOLOv3.mlmodel in Sources */,
 				A3AE30092B1099F700DCDC7A /* StatusViewController.swift in Sources */,
-				A3C1181E2AFC528700FC4F23 /* BoundingBoxView.swift in Sources */,
 				A3C118202AFC935100FC4F23 /* ClassificationText.swift in Sources */,
 				A3AE30072B1099DF00DCDC7A /* ARController.swift in Sources */,
 				A3AE300B2B109A1100DCDC7A /* TemplateLabelNode.swift in Sources */,
@@ -443,7 +435,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
@@ -493,7 +485,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;

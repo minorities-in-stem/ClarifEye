@@ -17,6 +17,8 @@ struct ContentView: View {
                     Label("Settings", systemImage: "gear")
                 }
 
-        }.zIndex(1000)
+        }
+        .zIndex(1000)
+        .background(Color.secondary)
     }
 }

@@ -24,9 +24,9 @@ extension CGImagePropertyOrientation {
 
 class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDelegate, ARSessionDelegate {
     private var anchorLabels = [UUID: String]()
-//    @IBOutlet weak var sceneView: ARSKView!
     var sceneView: ARSKView = ARSKView()
     var classification: ClassificationData?
+    var lastClassification: ClassificationData?
     
     var cameraDepthDelegate: CameraInputReceiver?
     var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
@@ -35,6 +35,16 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
 //    private lazy var statusViewController: StatusViewController = {
 //        return children.lazy.compactMap({ $0 as? StatusViewController }).first!
 //    }()
+    
+    func start() {
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
+        sceneView.session.run(configuration)
+    }
+    
+    func pause() {
+        sceneView.session.pause()
+    }
     
     
     // MARK: - View controller lifecycle
@@ -55,25 +65,17 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
         // Hook up status view controller callback.
 //        statusViewController.restartExperienceHandler = { [unowned self] in
 //            self.restartSession()
-//        } 
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // Create a session configuration
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
-        
-        // Run the view's session
-        sceneView.session.run(configuration)
+        self.start()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        // Pause the view's session
-        sceneView.session.pause()
+        self.pause()
     }
     
     
@@ -135,7 +137,7 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
         }
     }
 
-    private func restartSession() {
+     func restartSession() {
 //        statusViewController.cancelAllScheduledMessages()
 //        statusViewController.showMessage("RESTARTING SESSION")
 
@@ -162,8 +164,6 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
 // MARK: - ARSessionDelegate
 extension ARController {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        // Can pass in AR Frame (frame.capturedImage) here for classification if desired
-        print("scene depth", frame.sceneDepth, "capturedDepthData", frame.capturedDepthData)
         if (frame.sceneDepth != nil) {
             cameraDepthDelegate?.classify(imagePixelBuffer: frame.capturedImage, depthDataBuffer: frame.sceneDepth!.depthMap)
         }
@@ -184,6 +184,11 @@ extension ARController {
             
             // Track anchor ID to associate text with the anchor after ARKit creates a corresponding SKNode.
             anchorLabels[anchor.identifier] = label
+            
+            // Remove the anchor after 8 seconds
+            DispatchQueue.main.asyncAfter(deadline: .now() + 8) { [self] in
+                self.sceneView.session.remove(anchor: anchor)
+            }
         }
     }
     
@@ -204,8 +209,13 @@ extension ARController: ClassificationReceiver {
         DispatchQueue.main.async {
             let boundingBox = classification.boundingBox
             let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
-            self.placeLabelAtLocation(location: point, label: classification.label)
             self.classification = classification
+            
+            // Use this as a safe guard from placing too many labels down
+            if (self.lastClassification == nil || self.lastClassification!.label != classification.label) {
+                self.placeLabelAtLocation(location: point, label: classification.label)
+                self.lastClassification = self.classification
+            }
         }
     }
 }

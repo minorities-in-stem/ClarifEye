@@ -72,7 +72,6 @@ extension ClassificationController: CameraInputReceiver {
                 return
             }
             
-            print("classifying")
             self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthDataBuffer)
         }
     }
@@ -105,10 +104,12 @@ extension ClassificationController: CameraInputReceiver {
                     let boundingBox = observation.boundingBox
                     let boundingBoxDistance = self.lidarDistance(boundingBox: boundingBox, imagePixelBuffer: imagePixelBuffer, depthPixelBuffer: depthDataBuffer)
                     
-                    print("labels", labels)
+                    // Use the denormalized box to preserve relativity to initial input
+                    let denormalizedBox = self.denormalizeBoundingBox(boundingBox: boundingBox, colorImageSize: self.getPixelBufferSize(pixelBuffer: imagePixelBuffer))
+                    
                     
                     if let label = labels.first(where: { l in l.confidence > 0.5 }) {
-                        let classification = ClassificationData(label: label.identifier, confidence: label.confidence, distance: boundingBoxDistance, boundingBox: boundingBox)
+                        let classification = ClassificationData(label: label.identifier, confidence: label.confidence, distance: boundingBoxDistance, boundingBox: denormalizedBox)
                         
                         // For debugging
                         let text = "\(label.identifier), distance: \(boundingBoxDistance) m, confidence: \(label.confidence)"

@@ -32,10 +32,12 @@ class CameraDepthManager: ObservableObject, CameraCapturedDataReceiver {
     
     func startStream() {
         waitingForCapture = false
+        arController.start()
     }
     
     func stopStream() {
         waitingForCapture = true
+        arController.pause()
     }
     
     func toggleStream() {
@@ -44,7 +46,10 @@ class CameraDepthManager: ObservableObject, CameraCapturedDataReceiver {
         } else {
             stopStream()
         }
-
+    }
+    
+    func restart() {
+        arController.restartSession()
     }
 }
  
