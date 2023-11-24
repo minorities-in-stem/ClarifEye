@@ -46,6 +46,7 @@ class CameraDepthManager: ObservableObject, CameraCapturedDataReceiver {
         
         isFilteringDepth = controller.isFilteringEnabled
         depthConfiguration = controller.depthConfiguration
+        useDepthEstimation = controller.depthConfiguration.useEstimation
         
         NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification).sink { _ in
             self.orientation = UIDevice.current.orientation

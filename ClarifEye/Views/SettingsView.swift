@@ -3,7 +3,7 @@ import MetalKit
 import Metal
 
 struct SettingsView: View {
-    @ObservedObject var manager: CameraManager
+    @ObservedObject var manager: CameraDepthManager
     @Binding var maxDepth: Float
     @Binding var minDepth: Float
     @Binding var depthFilterOpacity: Float

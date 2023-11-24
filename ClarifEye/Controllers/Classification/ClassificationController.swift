@@ -84,13 +84,29 @@ extension ClassificationController: CameraDepthReceiver {
         }
     }
     
-    func classifyWithDepthEstimation(imagePixelBuffer: CVPixelBuffer) {
+    func classifyWithLidar(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer) {
+        guard currentBuffer == nil else {
+            return
+        }
+        
         self.currentBuffer = imagePixelBuffer
-        <#code#>
+        self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthDataBuffer)
+    }
+    
+    func classifyWithDepthEstimation(imagePixelBuffer: CVPixelBuffer) {
+        guard currentBuffer == nil else {
+            return
+        }
+        
+        self.currentBuffer = imagePixelBuffer
+        if let estimation = depthEstimationDepthMap(imagePixelBuffer: imagePixelBuffer){
+           let depthPixelBuffer = estimation
+            self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthPixelBuffer)
+       }
     }
     
     
-    func classifyWithLidar(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer) {
+    func getClassificationAndDistance(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer) {
         self.currentBuffer = imagePixelBuffer
 
         // Create a Vision request

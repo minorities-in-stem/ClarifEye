@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ImageView: View {
     
-    @ObservedObject var manager: CameraManager
+    @ObservedObject var manager: CameraDepthManager
     @Binding var maxDepth: Float
     @Binding var minDepth: Float
     @Binding var depthFilterOpacity: Float
@@ -36,7 +36,7 @@ struct ImageView: View {
 }
 
 struct ButtonSettingsView: View {
-    @ObservedObject var manager: CameraManager
+    @ObservedObject var manager: CameraDepthManager
     
     var body: some View {
         VStack {

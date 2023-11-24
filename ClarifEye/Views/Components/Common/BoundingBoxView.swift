@@ -3,7 +3,7 @@ import UIKit
 
 struct BoundingBoxManager: View {
     
-    @ObservedObject var manager: CameraManager
+    @ObservedObject var manager: CameraDepthManager
     var frameSize: CGSize
     
     var body: some View {

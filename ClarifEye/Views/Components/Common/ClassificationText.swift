@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ClassificationTextView: View {
-    @ObservedObject var manager: CameraManager
+    @ObservedObject var manager: CameraDepthManager
     
     var body: some View {
             VStack {

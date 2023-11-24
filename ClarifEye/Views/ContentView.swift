@@ -6,7 +6,7 @@ struct ContentView: View {
     @State private var maxDepth = Float(15)
     @State private var minDepth = Float(0.0)
     @State private var depthFilterOpacity = Float(0.0)
-    @StateObject private var manager = CameraManager()
+    @StateObject private var manager = CameraDepthManager()
     
     var body: some View {
         TabView {
