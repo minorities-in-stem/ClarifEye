@@ -16,8 +16,6 @@ protocol CameraCapturedDataReceiver: AnyObject {
 
 
 class CameraDepthManager: ObservableObject, CameraCapturedDataReceiver {
-
-
     @Published var orientation = UIDevice.current.orientation
     @Published var waitingForCapture = true
     @Published var dataAvailable = false

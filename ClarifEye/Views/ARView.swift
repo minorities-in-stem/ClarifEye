@@ -2,20 +2,20 @@ import SwiftUI
 import ARKit
 import SpriteKit
 
-struct ARViewWrapper: UIViewRepresentable {
-    @Binding var settings: Settings
+struct ARViewWrapper: UIViewControllerRepresentable {
+    @ObservedObject var settings: Settings
     
-    func makeUIView(context: Context) -> ARSKView {
+    func makeUIViewController(context: Context) -> ARController  {
         let controller = settings.cameraDepthManager.arController
-        return controller.sceneView
+        return controller
     }
 
-    func updateUIView(_ uiView: ARSKView, context: Context) {
+    func updateUIViewController(_ uiViewController: ARController, context: Context) {
         // Update the view as needed
     }
 
-    class Coordinator: NSObject, ARSKViewDelegate {
-        // Implement ARSKViewDelegate methods here
+    class Coordinator: NSObject {
+        // Handle delegate callbacks if needdd
     }
 
     func makeCoordinator() -> Coordinator {
@@ -25,9 +25,9 @@ struct ARViewWrapper: UIViewRepresentable {
 
 // Usage in SwiftUI View
 struct ARView: View {
-    @Binding var settings: Settings
+    @ObservedObject var settings: Settings
     
     var body: some View {
-        ARViewWrapper(settings: $settings)
+        ARViewWrapper(settings: settings)
     }
 }

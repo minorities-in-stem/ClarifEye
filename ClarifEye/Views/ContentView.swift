@@ -3,15 +3,15 @@ import MetalKit
 import Metal
 
 struct ContentView: View {
-    @State private var settings = Settings()
+    @StateObject private var settings = Settings()
     
     var body: some View {
         TabView {
-            ImageView(settings: $settings)
+            ImageView(settings: settings)
                 .tabItem {
                     Label("Vision", systemImage: "eyeglasses")
                 }
-            SettingsView(settings: $settings)
+            SettingsView(settings: settings)
                 .tabItem {
                     Label("Settings", systemImage: "gear")
                 }

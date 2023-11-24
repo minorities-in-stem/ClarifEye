@@ -24,7 +24,7 @@ extension CGImagePropertyOrientation {
 
 class ARController: UIViewController {
     private var anchorLabels = [UUID: String]()
-    @IBOutlet weak var sceneView: ARSKView!
+    var sceneView: ARSKView!
     
     // The view controller that displays the status and "restart experience" UI.
     private lazy var statusViewController: StatusViewController = {

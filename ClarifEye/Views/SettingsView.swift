@@ -3,7 +3,7 @@ import MetalKit
 import Metal
 
 struct SettingsView: View {
-    @Binding var settings: Settings
+    @ObservedObject var settings: Settings
     
     let maxRangeDepth = Float(15)
     let minRangeDepth = Float(0)

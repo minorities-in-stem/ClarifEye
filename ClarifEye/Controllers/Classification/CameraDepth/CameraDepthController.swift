@@ -11,7 +11,7 @@ enum ConfigurationError: Error {
 
 class CameraDepthController: NSObject {
     // Configuring depth properties
-    var depthConfiguration: DepthConfiguration = DepthConfiguration(useEstimation: true)
+    var depthConfiguration: DepthConfiguration = DepthConfiguration()
     var isFilteringEnabled = true {
         didSet {
             if (depthDataOutput != nil) {
@@ -22,7 +22,7 @@ class CameraDepthController: NSObject {
     
     // Properties for AV capture
     private let preferredWidthResolution = 1920
-    private let videoQueue = DispatchQueue(label: "com.ClarifEye.VideoQueue", qos: .userInteractive)
+    private let cameraDepthQueue = DispatchQueue(label: "com.ClarifEye.CameraDepthQueue", qos: .userInteractive)
     
     private(set) var captureSession: AVCaptureSession!
     private var depthDataOutput: AVCaptureDepthDataOutput!
@@ -130,7 +130,7 @@ class CameraDepthController: NSObject {
 
         // Create an object to synchronize the delivery of depth and video data.
         outputVideoSync = AVCaptureDataOutputSynchronizer(dataOutputs: [depthDataOutput, videoDataOutput])
-        outputVideoSync.setDelegate(self, queue: videoQueue)
+        outputVideoSync.setDelegate(self, queue: cameraDepthQueue)
 
         // Enable camera intrinsics matrix delivery.
         guard let outputConnection = videoDataOutput.connection(with: .video) else { return }
@@ -166,17 +166,14 @@ extension CameraDepthController: AVCaptureDataOutputSynchronizerDelegate {
               let cameraCalibrationData = syncedDepthData.depthData.cameraCalibrationData else { return }
     
         // Handle the classifictions
-        do {
-            if let imagePixelBuffer = syncedVideoData.sampleBuffer.imageBuffer {
-                if (depthConfiguration.useEstimation) {
-                    cameraDepthDelegate?.classifyWithDepthEstimation(imagePixelBuffer: imagePixelBuffer)
-                } else {
-                    let depthPixelBuffer = syncedDepthData.depthData.depthDataMap
-                    cameraDepthDelegate?.classifyWithLidar(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthPixelBuffer)
-                }
+        if let imagePixelBuffer = syncedVideoData.sampleBuffer.imageBuffer {
+            if (depthConfiguration.useEstimation) {
+                cameraDepthDelegate?.classifyWithDepthEstimation(imagePixelBuffer: imagePixelBuffer)
+            } else {
+                let depthPixelBuffer = syncedDepthData.depthData.depthDataMap
+                cameraDepthDelegate?.classifyWithLidar(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthPixelBuffer)
             }
         }
-
 
         // Handle metal textures
         var textures: [MTLTexture?]
@@ -188,10 +185,12 @@ extension CameraDepthController: AVCaptureDataOutputSynchronizerDelegate {
                 pixelBuffer.texture(withFormat: .rg8Unorm, planeIndex: 1, addToCache: textureCache)
             ]
         }
-        let data = CameraCapturedData(depth: syncedDepthData.depthData.depthDataMap.texture(withFormat: .r16Float, planeIndex: 0, addToCache: textureCache),
-                      colorY: textures,
-                      cameraIntrinsics: cameraCalibrationData.intrinsicMatrix,
-                      cameraReferenceDimensions: cameraCalibrationData.intrinsicMatrixReferenceDimensions)
+        let data = CameraCapturedData(
+              depth: syncedDepthData.depthData.depthDataMap.texture(withFormat: .r16Float, planeIndex: 0, addToCache: textureCache),
+              colorY: textures,
+              cameraIntrinsics: cameraCalibrationData.intrinsicMatrix,
+              cameraReferenceDimensions: cameraCalibrationData.intrinsicMatrixReferenceDimensions
+        )
 
         cameraCapturedDataDelegate?.onNewData(capturedData: data)
     }

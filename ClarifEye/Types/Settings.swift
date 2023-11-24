@@ -1,6 +1,6 @@
 import Foundation
 
-class Settings {
+class Settings: ObservableObject {
     @Published var cameraDepthManager = CameraDepthManager()
     
     var maxDepth = Float(15)

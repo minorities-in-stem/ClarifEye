@@ -95,8 +95,7 @@ extension ClassificationController: CameraDepthReceiver {
 
         // Create a Vision request
         let request = VNCoreMLRequest(model: self.coreMLClassificationModel) { request, error in
-            var classifications = [] as [ClassificationData]
-                
+
             if let results = request.results as? [VNRecognizedObjectObservation] {
                 for observation in results {
                     let labels = observation.labels
