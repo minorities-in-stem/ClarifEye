@@ -4,11 +4,11 @@ import Metal
 
 struct ContentView: View {
     @StateObject private var settings: Settings = Settings()
-    @StateObject private var cameraDepthManager: CameraDepthManager = CameraDepthManager()
+    @StateObject private var cameraManager: CameraManager = CameraManager()
     
     var body: some View {
         TabView {
-            ImageView(settings: settings, manager: cameraDepthManager)
+            ImageView(settings: settings, manager: cameraManager)
                 .tabItem {
                     Label("Vision", systemImage: "eyeglasses")
                 }
@@ -19,6 +19,6 @@ struct ContentView: View {
 
         }
         .zIndex(1000)
-        .background(Color.secondary)
+        .background(Color.black.opacity(0.5))
     }
 }

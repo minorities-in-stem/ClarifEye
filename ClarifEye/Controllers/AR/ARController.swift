@@ -30,11 +30,7 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     
     var cameraDepthDelegate: CameraInputReceiver?
     var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
-    
-    // The view controller that displays the status and "restart experience" UI.
-//    private lazy var statusViewController: StatusViewController = {
-//        return children.lazy.compactMap({ $0 as? StatusViewController }).first!
-//    }()
+    var statusViewManager: StatusViewManager?
     
     func start() {
         let configuration = ARWorldTrackingConfiguration()
@@ -61,11 +57,6 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
         sceneView.delegate = self
         sceneView.presentScene(overlayScene)
         sceneView.session.delegate = self
-        
-        // Hook up status view controller callback.
-//        statusViewController.restartExperienceHandler = { [unowned self] in
-//            self.restartSession()
-//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -82,16 +73,16 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     // MARK: - AR Session Handling
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-//        statusViewController.showTrackingQualityInfo(for: camera.trackingState, autoHide: true)
-//        
-//        switch camera.trackingState {
-//        case .notAvailable, .limited:
-//            statusViewController.escalateFeedback(for: camera.trackingState, inSeconds: 3.0)
-//        case .normal:
-//            statusViewController.cancelScheduledMessage(for: .trackingStateEscalation)
-//            // Unhide content after successful relocalization.
-//            setOverlaysHidden(false)
-//        }
+        statusViewManager?.showTrackingQualityInfo(for: camera.trackingState, autoHide: true)
+        
+        switch camera.trackingState {
+        case .notAvailable, .limited:
+            statusViewManager?.escalateFeedback(for: camera.trackingState, inSeconds: 3.0)
+        case .normal:
+            statusViewManager?.cancelScheduledMessage(for: .trackingStateEscalation)
+            // Unhide content after successful relocalization.
+            setOverlaysHidden(false)
+        }
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
@@ -138,8 +129,8 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     }
 
      func restartSession() {
-//        statusViewController.cancelAllScheduledMessages()
-//        statusViewController.showMessage("RESTARTING SESSION")
+        statusViewManager?.cancelAllScheduledMessages()
+        statusViewManager?.showMessage("RESTARTING SESSION")
 
         anchorLabels = [UUID: String]()
         
@@ -216,6 +207,9 @@ extension ARController: ClassificationReceiver {
                 self.placeLabelAtLocation(location: point, label: classification.label)
                 self.lastClassification = self.classification
             }
+            
+            let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(classification.distance)m away"
+            self.statusViewManager?.showMessage(message)
         }
     }
 }

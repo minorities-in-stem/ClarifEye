@@ -3,7 +3,7 @@ import ARKit
 import SpriteKit
 
 struct ARViewWrapper: UIViewControllerRepresentable {
-    @ObservedObject var manager: CameraDepthManager
+    @ObservedObject var manager: CameraManager
     
     func makeUIViewController(context: Context) -> ARController  {
         let controller = manager.arController
@@ -25,7 +25,7 @@ struct ARViewWrapper: UIViewControllerRepresentable {
 
 // Usage in SwiftUI View
 struct ARView: View {
-    @ObservedObject var manager: CameraDepthManager
+    @ObservedObject var manager: CameraManager
     
     var body: some View {
         ARViewWrapper(manager: manager)

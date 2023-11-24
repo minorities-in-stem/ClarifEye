@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ImageView: View {
     @ObservedObject var settings: Settings
-    @ObservedObject var manager: CameraDepthManager
+    @ObservedObject var manager: CameraManager
     
     var body: some View {
         ZStack {
@@ -10,8 +10,14 @@ struct ImageView: View {
                 .zIndex(1000)
 
             VStack {
-                ClassificationTextView(manager: manager)
-                    .padding(.top, 20)
+                StatusView(
+//                    showText: manager.showText,
+//                    text: manager.message
+                    manager: manager
+                )
+                .padding(.top, 20)
+                .zIndex(1000)
+                
                 Spacer()
             }
 
@@ -22,7 +28,8 @@ struct ImageView: View {
 }
 
 struct ButtonSettingsView: View {
-    @ObservedObject var manager: CameraDepthManager
+    @ObservedObject var manager: CameraManager
+    private let buttonSize = CGFloat(30)
     
     var body: some View {
         VStack {
@@ -33,13 +40,16 @@ struct ButtonSettingsView: View {
                     Button(action: manager.toggleStream) {
                         if (manager.waitingForCapture) {
                             Image(systemName: "play.circle")
+                                .font(.system(size: buttonSize))
                         } else {
                             Image(systemName: "pause.circle")
+                                .font(.system(size: buttonSize))
                         }
-                    }
+                    }.controlSize(.large)
                     
                     Button(action: manager.restart) {
                         Image(systemName: "arrow.clockwise")
+                            .font(.system(size: buttonSize))
                     }
                 }
                 .padding(.leading, 20) // Add padding to align with the screen's edge
