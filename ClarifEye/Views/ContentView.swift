@@ -3,22 +3,22 @@ import MetalKit
 import Metal
 
 struct ContentView: View {
-    @State private var maxDepth = Float(15)
-    @State private var minDepth = Float(0.0)
-    @State private var depthFilterOpacity = Float(0.0)
-    @StateObject private var manager = CameraManager()
+    @StateObject private var settings: Settings = Settings()
+    @StateObject private var cameraManager: CameraManager = CameraManager()
     
     var body: some View {
         TabView {
-            ImageView(manager: manager, maxDepth: $maxDepth, minDepth: $minDepth, depthFilterOpacity: $depthFilterOpacity)
+            ImageView(settings: settings, manager: cameraManager)
                 .tabItem {
                     Label("Vision", systemImage: "eyeglasses")
                 }
-            SettingsView(manager: manager, maxDepth: $maxDepth, minDepth: $minDepth, depthFilterOpacity: $depthFilterOpacity)
+            SettingsView(settings: settings)
                 .tabItem {
                     Label("Settings", systemImage: "gear")
                 }
 
         }
+        .zIndex(1000)
+        .background(Color.black.opacity(0.5))
     }
 }
