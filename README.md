@@ -1,4 +1,4 @@
-# Bacon
+# ClarifEye
 
 Module for our app. It performs the following:
 
