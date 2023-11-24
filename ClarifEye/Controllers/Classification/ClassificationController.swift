@@ -8,15 +8,13 @@ import CoreML
 import CoreVideo
 import CoreImage
 
-protocol CameraDepthReceiver: AnyObject {
-    func classifyWithLidar(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer)
+protocol CameraInputReceiver: AnyObject {
+    func classify(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer)
     func classifyWithDepthEstimation(imagePixelBuffer: CVPixelBuffer)
 }
 
 class ClassificationController: NSObject {
     weak var classificationDelegate: ClassificationReceiver?
-    
-    var capturedData: CameraCapturedData = CameraCapturedData()
     
     private var currentBuffer: CVPixelBuffer?
     private let videoQueue = DispatchQueue(label: "com.ClarifEye.VideoQueue", qos: .userInteractive)
@@ -67,25 +65,24 @@ class ClassificationController: NSObject {
     }
 }
 
-extension ClassificationController: CameraDepthReceiver {
-    func classifyWithLidar(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer) {
-        DispatchQueue.main.async {
+extension ClassificationController: CameraInputReceiver {
+    func classify(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer) {
+        videoQueue.async {
             guard self.currentBuffer == nil else {
                 return
             }
             
-            self.currentBuffer = imagePixelBuffer
+            print("classifying")
             self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthDataBuffer)
         }
     }
     
     func classifyWithDepthEstimation(imagePixelBuffer: CVPixelBuffer) {
-        DispatchQueue.main.async {
+        videoQueue.async {
             guard self.currentBuffer == nil else {
                 return
             }
             
-            self.currentBuffer = imagePixelBuffer
             if let estimation = self.depthEstimationDepthMap(imagePixelBuffer: imagePixelBuffer){
                let depthPixelBuffer = estimation
                 self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthPixelBuffer)
@@ -108,6 +105,8 @@ extension ClassificationController: CameraDepthReceiver {
                     let boundingBox = observation.boundingBox
                     let boundingBoxDistance = self.lidarDistance(boundingBox: boundingBox, imagePixelBuffer: imagePixelBuffer, depthPixelBuffer: depthDataBuffer)
                     
+                    print("labels", labels)
+                    
                     if let label = labels.first(where: { l in l.confidence > 0.5 }) {
                         let classification = ClassificationData(label: label.identifier, confidence: label.confidence, distance: boundingBoxDistance, boundingBox: boundingBox)
                         
@@ -128,13 +127,11 @@ extension ClassificationController: CameraDepthReceiver {
         let orientation = CGImagePropertyOrientation(self.orientation)
         let handler = VNImageRequestHandler(cvPixelBuffer: imagePixelBuffer, orientation: orientation, options: [:])
         
-        videoQueue.async {
-            do {
-                defer { self.currentBuffer = nil }
-                try handler.perform([request])
-            } catch {
-                print("could not perform request")
-            }
+        do {
+            defer { self.currentBuffer = nil }
+            try handler.perform([request])
+        } catch {
+            print("could not perform request")
         }
     }
 }

@@ -7,27 +7,19 @@ struct ImageView: View {
     var body: some View {
         ZStack {
             ButtonSettingsView(manager: manager)
-            if (!manager.waitingForCapture && manager.dataAvailable) {
-                VStack {
-                    ClassificationTextView(manager: manager)
-                        .padding(.top, 20)
-                    Spacer()
-                }
+                .zIndex(1000)
+//            if (!manager.waitingForCapture && manager.dataAvailable) {
 
-//                DepthOverlay(manager: manager,
-//                             opacity: $settings.depthFilterOpacity,
-//                             maxDepth: $settings.maxDepth,
-//                             minDepth: $settings.minDepth
-//                )
-//                .aspectRatio(calcAspect(orientation: viewOrientation, texture: manager.capturedData.depth), contentMode: .fit)
-                
-                ARView(manager: manager)
-//                        .edgesIgnoringSafeArea(.all)
-                    .frame(height: 400)
-                
-            } else {
-                Text("Recording paused")
+            VStack {
+                ClassificationTextView(manager: manager)
+                    .padding(.top, 20)
+                Spacer()
             }
+
+            ARView(manager: manager)
+                .zIndex(-1)
+//              .frame(height: 700)
+                
         }
     }
 }

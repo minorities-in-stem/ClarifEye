@@ -22,21 +22,28 @@ extension CGImagePropertyOrientation {
 }
 
 
-class ARController: UIViewController {
+class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDelegate, ARSessionDelegate {
     private var anchorLabels = [UUID: String]()
+//    @IBOutlet weak var sceneView: ARSKView!
+    var sceneView: ARSKView = ARSKView()
     var classification: ClassificationData?
-    var sceneView: ARSKView!
+    
+    var cameraDepthDelegate: CameraInputReceiver?
+    var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
     
     // The view controller that displays the status and "restart experience" UI.
-    private lazy var statusViewController: StatusViewController = {
-        return children.lazy.compactMap({ $0 as? StatusViewController }).first!
-    }()
+//    private lazy var statusViewController: StatusViewController = {
+//        return children.lazy.compactMap({ $0 as? StatusViewController }).first!
+//    }()
     
     
     // MARK: - View controller lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        sceneView.frame = self.view.bounds
+        self.view.addSubview(sceneView)
         
         // Configure and present the SpriteKit scene that draws overlay content.
         let overlayScene = SKScene()
@@ -46,9 +53,9 @@ class ARController: UIViewController {
         sceneView.session.delegate = self
         
         // Hook up status view controller callback.
-        statusViewController.restartExperienceHandler = { [unowned self] in
-            self.restartSession()
-        }
+//        statusViewController.restartExperienceHandler = { [unowned self] in
+//            self.restartSession()
+//        } 
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -56,6 +63,7 @@ class ARController: UIViewController {
         
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
+        configuration.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
         
         // Run the view's session
         sceneView.session.run(configuration)
@@ -72,16 +80,16 @@ class ARController: UIViewController {
     // MARK: - AR Session Handling
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        statusViewController.showTrackingQualityInfo(for: camera.trackingState, autoHide: true)
-        
-        switch camera.trackingState {
-        case .notAvailable, .limited:
-            statusViewController.escalateFeedback(for: camera.trackingState, inSeconds: 3.0)
-        case .normal:
-            statusViewController.cancelScheduledMessage(for: .trackingStateEscalation)
-            // Unhide content after successful relocalization.
-            setOverlaysHidden(false)
-        }
+//        statusViewController.showTrackingQualityInfo(for: camera.trackingState, autoHide: true)
+//        
+//        switch camera.trackingState {
+//        case .notAvailable, .limited:
+//            statusViewController.escalateFeedback(for: camera.trackingState, inSeconds: 3.0)
+//        case .normal:
+//            statusViewController.cancelScheduledMessage(for: .trackingStateEscalation)
+//            // Unhide content after successful relocalization.
+//            setOverlaysHidden(false)
+//        }
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
@@ -128,8 +136,8 @@ class ARController: UIViewController {
     }
 
     private func restartSession() {
-        statusViewController.cancelAllScheduledMessages()
-        statusViewController.showMessage("RESTARTING SESSION")
+//        statusViewController.cancelAllScheduledMessages()
+//        statusViewController.showMessage("RESTARTING SESSION")
 
         anchorLabels = [UUID: String]()
         
@@ -138,6 +146,7 @@ class ARController: UIViewController {
     }
     
     // MARK: - Error handling
+    
     private func displayErrorMessage(title: String, message: String) {
         // Present an alert informing about the error that has occurred.
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -151,15 +160,19 @@ class ARController: UIViewController {
 }
 
 // MARK: - ARSessionDelegate
-extension ARController: ARSessionDelegate {
+extension ARController {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         // Can pass in AR Frame (frame.capturedImage) here for classification if desired
+        print("scene depth", frame.sceneDepth, "capturedDepthData", frame.capturedDepthData)
+        if (frame.sceneDepth != nil) {
+            cameraDepthDelegate?.classify(imagePixelBuffer: frame.capturedImage, depthDataBuffer: frame.sceneDepth!.depthMap)
+        }
     }
 }
 
 
 // MARK: - Tap gesture handler & ARSKViewDelegate
-extension ARController: ARSKViewDelegate {
+extension ARController {
     // When the user taps, add an anchor associated with the current classification result.
     func placeLabelAtLocation(location: CGPoint, label: String) {
         let hitTestResults = sceneView.hitTest(location, types: [.featurePoint, .estimatedHorizontalPlane])

@@ -7,14 +7,14 @@ struct BoundingBoxManager: View {
     
     var body: some View {
         let classification = manager.arController.classification
-        if (manager.dataAvailable && classification != nil) {
-            let boundingBox = classification!.boundingBox
-            Rectangle()
-                .path(in: boundingBox)
-                .stroke(Color.red, lineWidth: 2)
-            
-            BoundingBoxView(boundingBox: boundingBox, parentSize: frameSize)
-        }
+//        if (manager.dataAvailable && classification != nil) {
+//            let boundingBox = classification!.boundingBox
+//            Rectangle()
+//                .path(in: boundingBox)
+//                .stroke(Color.red, lineWidth: 2)
+//            
+//            BoundingBoxView(boundingBox: boundingBox, parentSize: frameSize)
+//        }
     }
 }
 

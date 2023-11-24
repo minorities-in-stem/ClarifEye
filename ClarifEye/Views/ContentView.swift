@@ -3,14 +3,8 @@ import MetalKit
 import Metal
 
 struct ContentView: View {
-    @State private var settings: Settings
-    @State private var cameraDepthManager: CameraDepthManager
-    
-    init() {
-        cameraDepthManager = CameraDepthManager()
-        settings = Settings()
-        settings.cameraDepthManager = cameraDepthManager
-    }
+    @StateObject private var settings: Settings = Settings()
+    @StateObject private var cameraDepthManager: CameraDepthManager = CameraDepthManager()
     
     var body: some View {
         TabView {
@@ -23,6 +17,6 @@ struct ContentView: View {
                     Label("Settings", systemImage: "gear")
                 }
 
-        }
+        }.zIndex(1000)
     }
 }
