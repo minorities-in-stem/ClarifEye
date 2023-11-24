@@ -19,14 +19,14 @@ class CameraDepthManager: ObservableObject, CameraCapturedDataReceiver {
     @Published var orientation = UIDevice.current.orientation
     @Published var waitingForCapture = true
     @Published var dataAvailable = false
-    @Published var depthConfiguration: DepthConfiguration
-    @Published var classifications: [ClassificationData] = []
-    @Published var isFilteringDepth: Bool {
+    @Published var depthConfiguration: DepthConfiguration = DepthConfiguration()
+    
+    @Published var isFilteringDepth: Bool = true {
         didSet {
             controller.isFilteringEnabled = isFilteringDepth
         }
     }
-    @Published var useDepthEstimation: Bool {
+    @Published var useDepthEstimation: Bool = DepthConfiguration().useEstimation {
         didSet {
             depthConfiguration = DepthConfiguration(useEstimation: useDepthEstimation)
             controller.depthConfiguration = depthConfiguration
@@ -34,22 +34,15 @@ class CameraDepthManager: ObservableObject, CameraCapturedDataReceiver {
     }
     
     var cancellables = Set<AnyCancellable>()
-    var capturedData: CameraCapturedData
+    @Published var capturedData: CameraCapturedData = CameraCapturedData()
     
-    var controller: CameraDepthController
-    var classificationController: ClassificationController
-    var arController: ARController
+    @Published var controller: CameraDepthController = CameraDepthController()
+    @Published var classificationController: ClassificationController = ClassificationController()
+    @Published var arController: ARController = ARController()
     init() {
-        // Create an object to store the captured data for the views to present.
-        capturedData = CameraCapturedData()
-        
         // Set up the controllers and assign their delegates
-        arController = ARController()
-        
-        classificationController = ClassificationController()
         classificationController.classificationDelegate = arController
         
-        controller = CameraDepthController()
         controller.isFilteringEnabled = true
         controller.cameraDepthDelegate = classificationController
         

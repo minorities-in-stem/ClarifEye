@@ -1,19 +1,19 @@
 import Foundation
 
 class Settings: ObservableObject {
-    @Published var cameraDepthManager = CameraDepthManager()
+    var cameraDepthManager: CameraDepthManager?
     
     var maxDepth = Float(15)
     var minDepth = Float(0.0)
     var depthFilterOpacity = Float(0.0)
     var useDepthEstimation = false {
         didSet {
-            cameraDepthManager.useDepthEstimation = useDepthEstimation
+            cameraDepthManager?.useDepthEstimation = useDepthEstimation
         }
     }
     var isFilteringDepth = false {
         didSet {
-            cameraDepthManager.isFilteringDepth = isFilteringDepth
+            cameraDepthManager?.isFilteringDepth = isFilteringDepth
         }
     }
 }

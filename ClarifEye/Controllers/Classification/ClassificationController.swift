@@ -69,24 +69,28 @@ class ClassificationController: NSObject {
 
 extension ClassificationController: CameraDepthReceiver {
     func classifyWithLidar(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer) {
-        guard currentBuffer == nil else {
-            return
+        DispatchQueue.main.async {
+            guard self.currentBuffer == nil else {
+                return
+            }
+            
+            self.currentBuffer = imagePixelBuffer
+            self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthDataBuffer)
         }
-        
-        self.currentBuffer = imagePixelBuffer
-        self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthDataBuffer)
     }
     
     func classifyWithDepthEstimation(imagePixelBuffer: CVPixelBuffer) {
-        guard currentBuffer == nil else {
-            return
+        DispatchQueue.main.async {
+            guard self.currentBuffer == nil else {
+                return
+            }
+            
+            self.currentBuffer = imagePixelBuffer
+            if let estimation = self.depthEstimationDepthMap(imagePixelBuffer: imagePixelBuffer){
+               let depthPixelBuffer = estimation
+                self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthPixelBuffer)
+           }
         }
-        
-        self.currentBuffer = imagePixelBuffer
-        if let estimation = depthEstimationDepthMap(imagePixelBuffer: imagePixelBuffer){
-           let depthPixelBuffer = estimation
-            self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthPixelBuffer)
-       }
     }
     
     

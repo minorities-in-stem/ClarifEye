@@ -2,22 +2,18 @@ import SwiftUI
 import UIKit
 
 struct BoundingBoxManager: View {
-    
     @ObservedObject var manager: CameraDepthManager
     var frameSize: CGSize
     
     var body: some View {
-        Group {
-            if manager.dataAvailable {
-                ForEach(manager.classifications.indices, id: \.self) { index in
-                    let boundingBox = manager.classifications[index].boundingBox
-                    Rectangle()
-                        .path(in: boundingBox)
-                        .stroke(Color.red, lineWidth: 2)
-                    
-                    BoundingBoxView(boundingBox: boundingBox, parentSize: frameSize)
-                }
-            }
+        let classification = manager.arController.classification
+        if (manager.dataAvailable && classification != nil) {
+            let boundingBox = classification!.boundingBox
+            Rectangle()
+                .path(in: boundingBox)
+                .stroke(Color.red, lineWidth: 2)
+            
+            BoundingBoxView(boundingBox: boundingBox, parentSize: frameSize)
         }
     }
 }

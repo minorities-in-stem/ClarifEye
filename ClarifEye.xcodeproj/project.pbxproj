@@ -118,6 +118,8 @@
 		A3846CBD2AFCBF8B00A720E9 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				A3AE30002B10855C00DCDC7A /* Vision */,
+				A3AE2FFF2B10855100DCDC7A /* Settings */,
 				A3027A352B09F48B009C644F /* Common */,
 			);
 			path = Components;
@@ -170,6 +172,24 @@
 				A3AE2FF02B0FF01200DCDC7A /* CameraDepth */,
 			);
 			path = Classification;
+			sourceTree = "<group>";
+		};
+		A3AE2FFF2B10855100DCDC7A /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				A3027A3A2B09F61A009C644F /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		A3AE30002B10855C00DCDC7A /* Vision */ = {
+			isa = PBXGroup;
+			children = (
+				A3AE2FF72B0FF29300DCDC7A /* ARView.swift */,
+				A3027A332B09F474009C644F /* ImageView.swift */,
+				AEE83E8F2743EFE800790BF9 /* DepthOverlay.swift */,
+			);
+			path = Vision;
 			sourceTree = "<group>";
 		};
 		AE921D1D270D7B02000E95C6 = {
@@ -242,10 +262,6 @@
 			children = (
 				A3846CBD2AFCBF8B00A720E9 /* Components */,
 				AE921D2B270D7B02000E95C6 /* ContentView.swift */,
-				A3027A3A2B09F61A009C644F /* SettingsView.swift */,
-				A3AE2FF72B0FF29300DCDC7A /* ARView.swift */,
-				A3027A332B09F474009C644F /* ImageView.swift */,
-				AEE83E8F2743EFE800790BF9 /* DepthOverlay.swift */,
 				AE2C81C827396765001BDCC7 /* View+Extensions.swift */,
 				AEC8871A272EAFF200ED6FCC /* Metal */,
 			);

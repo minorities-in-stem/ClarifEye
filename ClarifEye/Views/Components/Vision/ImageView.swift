@@ -2,12 +2,11 @@ import SwiftUI
 
 struct ImageView: View {
     @ObservedObject var settings: Settings
+    @ObservedObject var manager: CameraDepthManager
     
     var body: some View {
-        let manager = settings.cameraDepthManager
         ZStack {
             ButtonSettingsView(manager: manager)
-
             if (!manager.waitingForCapture && manager.dataAvailable) {
                 VStack {
                     ClassificationTextView(manager: manager)
@@ -15,19 +14,17 @@ struct ImageView: View {
                     Spacer()
                 }
 
-
-                if manager.dataAvailable {
-                    DepthOverlay(manager: manager,
-                                 opacity: $settings.depthFilterOpacity,
-                                 maxDepth: $settings.maxDepth,
-                                 minDepth: $settings.minDepth
-                    )
-                    .aspectRatio(calcAspect(orientation: viewOrientation, texture: manager.capturedData.depth), contentMode: .fit)
-                    
-                    ARView(settings: settings)
+//                DepthOverlay(manager: manager,
+//                             opacity: $settings.depthFilterOpacity,
+//                             maxDepth: $settings.maxDepth,
+//                             minDepth: $settings.minDepth
+//                )
+//                .aspectRatio(calcAspect(orientation: viewOrientation, texture: manager.capturedData.depth), contentMode: .fit)
+                
+                ARView(manager: manager)
 //                        .edgesIgnoringSafeArea(.all)
-                        .frame(height: 400)
-                }
+                    .frame(height: 400)
+                
             } else {
                 Text("Recording paused")
             }

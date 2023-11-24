@@ -4,17 +4,15 @@ struct ClassificationTextView: View {
     @ObservedObject var manager: CameraDepthManager
     
     var body: some View {
-            VStack {
-                List {
-                    Text("Classification Text")
-                    ForEach(manager.classifications.indices, id: \.self) { index in
-                        let classification = manager.classifications[index]
-                        let text = "\(classification.label), \(classification.distance)m away, confidence: \(classification.confidence)"
-                        
-                        Text(text)
-                    }
-                }.frame(minHeight: 200)
-                
+        VStack {
+            Text("Classification Text")
+            let arClassification = manager.arController.classification
+            if (arClassification != nil ) {
+                let classification = arClassification!
+                let text = "\(classification.label), \(classification.distance)m away, confidence: \(classification.confidence)"
+                    
+                Text(text)
             }
+        }.frame(minHeight: 200)
     }
 }

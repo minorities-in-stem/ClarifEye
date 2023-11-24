@@ -24,6 +24,7 @@ extension CGImagePropertyOrientation {
 
 class ARController: UIViewController {
     private var anchorLabels = [UUID: String]()
+    var classification: ClassificationData?
     var sceneView: ARSKView!
     
     // The view controller that displays the status and "restart experience" UI.
@@ -137,7 +138,6 @@ class ARController: UIViewController {
     }
     
     // MARK: - Error handling
-    
     private func displayErrorMessage(title: String, message: String) {
         // Present an alert informing about the error that has occurred.
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -152,8 +152,6 @@ class ARController: UIViewController {
 
 // MARK: - ARSessionDelegate
 extension ARController: ARSessionDelegate {
-    // Pass camera frames received from ARKit to Vision (when not already processing one)
-    /// - Tag: ConsumeARFrames
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         // Can pass in AR Frame (frame.capturedImage) here for classification if desired
     }
@@ -190,8 +188,11 @@ extension ARController: ARSKViewDelegate {
 // MARK: - Handle classification display
 extension ARController: ClassificationReceiver {
     func onClassification(classification: ClassificationData) {
-        let boundingBox = classification.boundingBox
-        let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
-        self.placeLabelAtLocation(location: point, label: classification.label)
+        DispatchQueue.main.async {
+            let boundingBox = classification.boundingBox
+            let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
+            self.placeLabelAtLocation(location: point, label: classification.label)
+            self.classification = classification
+        }
     }
 }
