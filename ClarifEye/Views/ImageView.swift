@@ -1,14 +1,10 @@
 import SwiftUI
 
 struct ImageView: View {
-    
-    @ObservedObject var manager: CameraDepthManager
-    @Binding var maxDepth: Float
-    @Binding var minDepth: Float
-    @Binding var depthFilterOpacity: Float
-    
+    @Binding var settings: Settings
     
     var body: some View {
+        let manager = settings.cameraDepthManager
         ZStack {
             ButtonSettingsView(manager: manager)
 
@@ -21,12 +17,15 @@ struct ImageView: View {
 
 
                 if manager.dataAvailable {
-                    DepthOverlay(manager: manager,
-                                 opacity: $depthFilterOpacity,
-                                 maxDepth: $maxDepth,
-                                 minDepth: $minDepth
-                    )
-                    .aspectRatio(calcAspect(orientation: viewOrientation, texture: manager.capturedData.depth), contentMode: .fit)
+//                    DepthOverlay(manager: manager,
+//                                 opacity: $settings.depthFilterOpacity,
+//                                 maxDepth: $settings.maxDepth,
+//                                 minDepth: $settings.minDepth
+//                    )
+//                    .aspectRatio(calcAspect(orientation: viewOrientation, texture: manager.capturedData.depth), contentMode: .fit)
+                    
+                    ARView(settings: $settings)
+                        .edgesIgnoringSafeArea(.all)
                 }
             } else {
                 Text("Recording paused")

@@ -17,7 +17,7 @@ protocol CameraCapturedDataReceiver: AnyObject {
 
 class CameraDepthManager: ObservableObject, CameraCapturedDataReceiver {
 
-    var capturedData: CameraCapturedData
+
     @Published var orientation = UIDevice.current.orientation
     @Published var waitingForCapture = true
     @Published var dataAvailable = false
@@ -36,13 +36,24 @@ class CameraDepthManager: ObservableObject, CameraCapturedDataReceiver {
     }
     
     var cancellables = Set<AnyCancellable>()
+    var capturedData: CameraCapturedData
     
-    let controller: CameraDepthController
+    var controller: CameraDepthController
+    var classificationController: ClassificationController
+    var arController: ARController
     init() {
         // Create an object to store the captured data for the views to present.
         capturedData = CameraCapturedData()
+        
+        // Set up the controllers and assign their delegates
+        arController = ARController()
+        
+        classificationController = ClassificationController()
+        classificationController.classificationDelegate = arController
+        
         controller = CameraDepthController()
         controller.isFilteringEnabled = true
+        controller.cameraDepthDelegate = classificationController
         
         isFilteringDepth = controller.isFilteringEnabled
         depthConfiguration = controller.depthConfiguration

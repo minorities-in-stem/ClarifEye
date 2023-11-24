@@ -3,8 +3,10 @@ import ARKit
 import SpriteKit
 
 struct ARViewWrapper: UIViewRepresentable {
+    @Binding var settings: Settings
+    
     func makeUIView(context: Context) -> ARSKView {
-        let controller = ARController()
+        let controller = settings.cameraDepthManager.arController
         return controller.sceneView
     }
 
@@ -23,8 +25,9 @@ struct ARViewWrapper: UIViewRepresentable {
 
 // Usage in SwiftUI View
 struct ARView: View {
+    @Binding var settings: Settings
+    
     var body: some View {
-        ARViewWrapper()
-            .edgesIgnoringSafeArea(.all)
+        ARViewWrapper(settings: $settings)
     }
 }

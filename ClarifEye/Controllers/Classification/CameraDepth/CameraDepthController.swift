@@ -33,12 +33,11 @@ class CameraDepthController: NSObject {
     private var textureCache: CVMetalTextureCache!
     
     // Delegates
-    var cameraDepthDelegate: CameraDepthReceiver?
-    var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
+    weak var cameraDepthDelegate: CameraDepthReceiver?
+    weak var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
      
     override init() {
         super.init()
-
         
         do {
             #if !targetEnvironment(simulator)

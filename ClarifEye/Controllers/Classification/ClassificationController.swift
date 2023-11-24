@@ -9,22 +9,19 @@ import CoreVideo
 import CoreImage
 
 protocol CameraDepthReceiver: AnyObject {
-    func onNewData(capturedData: CameraCapturedData)
     func classifyWithLidar(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer)
     func classifyWithDepthEstimation(imagePixelBuffer: CVPixelBuffer)
 }
 
-class ClassificationController: NSObject, ObservableObject {
-    @Published var orientation = UIDevice.current.orientation
-    @Published var dataAvailable = false
-    
-    
+class ClassificationController: NSObject {
     weak var classificationDelegate: ClassificationReceiver?
     
     var capturedData: CameraCapturedData = CameraCapturedData()
     
     private var currentBuffer: CVPixelBuffer?
     private let videoQueue = DispatchQueue(label: "com.ClarifEye.VideoQueue", qos: .userInteractive)
+    private let orientation =  UIDevice.current.orientation
+    
     
     // MARK: -Setup for object classification/identification model
     private var _classificationModel: YOLOv3!
@@ -71,19 +68,6 @@ class ClassificationController: NSObject, ObservableObject {
 }
 
 extension ClassificationController: CameraDepthReceiver {
-    func onNewData(capturedData: CameraCapturedData) {
-        DispatchQueue.main.async {
-            // Because the views hold a reference to `capturedData`, the app updates each texture separately.
-            self.capturedData.depth = capturedData.depth
-            self.capturedData.colorY = capturedData.colorY
-            self.capturedData.cameraIntrinsics = capturedData.cameraIntrinsics
-            self.capturedData.cameraReferenceDimensions = capturedData.cameraReferenceDimensions
-            if self.dataAvailable == false {
-                self.dataAvailable = true
-            }
-        }
-    }
-    
     func classifyWithLidar(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer) {
         guard currentBuffer == nil else {
             return

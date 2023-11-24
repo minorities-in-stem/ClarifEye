@@ -24,6 +24,7 @@
 		A3AE2FF62B0FF0C000DCDC7A /* CameraDepthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FF52B0FF0C000DCDC7A /* CameraDepthController.swift */; };
 		A3AE2FF82B0FF29300DCDC7A /* ARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FF72B0FF29300DCDC7A /* ARView.swift */; };
 		A3AE2FFB2B10013100DCDC7A /* CameraDepthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FFA2B10013100DCDC7A /* CameraDepthManager.swift */; };
+		A3AE2FFE2B10547000DCDC7A /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FFD2B10547000DCDC7A /* Settings.swift */; };
 		A3C1181E2AFC528700FC4F23 /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C1181D2AFC528700FC4F23 /* BoundingBoxView.swift */; };
 		A3C118202AFC935100FC4F23 /* ClassificationText.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C1181F2AFC935100FC4F23 /* ClassificationText.swift */; };
 		AE2C81C3273961FF001BDCC7 /* MetalTextureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE921D37270D7B41000E95C6 /* MetalTextureView.swift */; };
@@ -59,6 +60,7 @@
 		A3AE2FF52B0FF0C000DCDC7A /* CameraDepthController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraDepthController.swift; sourceTree = "<group>"; };
 		A3AE2FF72B0FF29300DCDC7A /* ARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARView.swift; sourceTree = "<group>"; };
 		A3AE2FFA2B10013100DCDC7A /* CameraDepthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraDepthManager.swift; sourceTree = "<group>"; };
+		A3AE2FFD2B10547000DCDC7A /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		A3C1181D2AFC528700FC4F23 /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
 		A3C1181F2AFC935100FC4F23 /* ClassificationText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationText.swift; sourceTree = "<group>"; };
 		AE18F046274A126C008BC9E3 /* AVFCapture.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AVFCapture.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -127,6 +129,7 @@
 				A3846CC22AFCC68400A720E9 /* CameraCapturedData.swift */,
 				A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */,
 				A3027A2A2B09AE54009C644F /* DepthConfiguration.swift */,
+				A3AE2FFD2B10547000DCDC7A /* Settings.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -136,7 +139,6 @@
 			children = (
 				AEAC8EBC27291512001CC1D5 /* CVPixelBuffer+Extension.swift */,
 				A3AE2FF92B0FFA5600DCDC7A /* Classification */,
-				A3AE2FF02B0FF01200DCDC7A /* CameraDepth */,
 				A3AE2FEF2B0FF00900DCDC7A /* AR */,
 			);
 			path = Controllers;
@@ -148,7 +150,6 @@
 				A3AE2FE82B0F5E0A00DCDC7A /* TemplateLabelNode.swift */,
 				A3AE2FEA2B0F5E3800DCDC7A /* StatusViewController.swift */,
 				A3AE2FF32B0FF0A800DCDC7A /* ARController.swift */,
-				A3AE2FF72B0FF29300DCDC7A /* ARView.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -157,7 +158,6 @@
 			isa = PBXGroup;
 			children = (
 				A3AE2FF52B0FF0C000DCDC7A /* CameraDepthController.swift */,
-				A3AE2FFA2B10013100DCDC7A /* CameraDepthManager.swift */,
 			);
 			path = CameraDepth;
 			sourceTree = "<group>";
@@ -166,8 +166,17 @@
 			isa = PBXGroup;
 			children = (
 				A3AE2FF12B0FF08800DCDC7A /* ClassificationController.swift */,
+				A3AE2FF02B0FF01200DCDC7A /* CameraDepth */,
 			);
 			path = Classification;
+			sourceTree = "<group>";
+		};
+		A3AE2FFC2B10384D00DCDC7A /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				A3AE2FFA2B10013100DCDC7A /* CameraDepthManager.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 		AE921D1D270D7B02000E95C6 = {
@@ -191,6 +200,7 @@
 		AE921D28270D7B02000E95C6 /* ClarifEye */ = {
 			isa = PBXGroup;
 			children = (
+				A3AE2FFC2B10384D00DCDC7A /* Managers */,
 				A3AE2FEE2B0FEFAB00DCDC7A /* Controllers */,
 				A3AE2FEC2B0F6CEA00DCDC7A /* LabelScene.sks */,
 				A37940AB2AF0A3AD0064540A /* Models */,
@@ -241,6 +251,7 @@
 				A3846CBD2AFCBF8B00A720E9 /* Components */,
 				AE921D2B270D7B02000E95C6 /* ContentView.swift */,
 				A3027A3A2B09F61A009C644F /* SettingsView.swift */,
+				A3AE2FF72B0FF29300DCDC7A /* ARView.swift */,
 				A3027A332B09F474009C644F /* ImageView.swift */,
 				AEE83E8F2743EFE800790BF9 /* DepthOverlay.swift */,
 				AE2C81C827396765001BDCC7 /* View+Extensions.swift */,
@@ -354,6 +365,7 @@
 				AE2C81C52739620A001BDCC7 /* MetalTextureViewDepth.swift in Sources */,
 				A3AE2FF82B0FF29300DCDC7A /* ARView.swift in Sources */,
 				AE921D2C270D7B02000E95C6 /* ContentView.swift in Sources */,
+				A3AE2FFE2B10547000DCDC7A /* Settings.swift in Sources */,
 				A3AE2FF62B0FF0C000DCDC7A /* CameraDepthController.swift in Sources */,
 				AE2C81C3273961FF001BDCC7 /* MetalTextureView.swift in Sources */,
 				AE921D2A270D7B02000E95C6 /* ClarifEye.swift in Sources */,

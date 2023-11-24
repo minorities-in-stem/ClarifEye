@@ -3,10 +3,7 @@ import MetalKit
 import Metal
 
 struct SettingsView: View {
-    @ObservedObject var manager: CameraDepthManager
-    @Binding var maxDepth: Float
-    @Binding var minDepth: Float
-    @Binding var depthFilterOpacity: Float
+    @Binding var settings: Settings
     
     let maxRangeDepth = Float(15)
     let minRangeDepth = Float(0)
@@ -20,31 +17,31 @@ struct SettingsView: View {
             Section(header: Text("Depth Settings")) {
                 HStack {
                     Text("Use Depth Estimation")
-                    Toggle("Use Depth Estimation", isOn: $manager.useDepthEstimation).labelsHidden()
+                    Toggle("Use Depth Estimation", isOn: $settings.useDepthEstimation).labelsHidden()
                 }
                 
                 HStack {
                     Text("Depth Filtering")
-                    Toggle("Depth Filtering", isOn: $manager.isFilteringDepth).labelsHidden()
+                    Toggle("Depth Filtering", isOn: $settings.isFilteringDepth).labelsHidden()
                 }
                 
                 SliderDepthBoundaryView(
-                    val: $maxDepth, label: "Max Depth",
+                    val: $settings.maxDepth, label: "Max Depth",
                     minVal: minRangeDepth,
                     maxVal: maxRangeDepth,
-                    disabled: !manager.isFilteringDepth
+                    disabled: !settings.isFilteringDepth
                 )
                 SliderDepthBoundaryView(
-                    val: $minDepth, label: "Min Depth",
+                    val: $settings.minDepth, label: "Min Depth",
                     minVal: minRangeDepth,
                     maxVal: maxRangeDepth,
-                    disabled: !manager.isFilteringDepth
+                    disabled: !settings.isFilteringDepth
                 )
                 SliderDepthBoundaryView(
-                    val: $depthFilterOpacity, label: "Filtering Overlay Opacity",
+                    val: $settings.depthFilterOpacity, label: "Filtering Overlay Opacity",
                     minVal: minRangeOpacity,
                     maxVal: maxRangeOpacity,
-                    disabled: !manager.isFilteringDepth
+                    disabled: !settings.isFilteringDepth
                 )
             }
         }

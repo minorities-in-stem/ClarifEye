@@ -23,32 +23,8 @@ extension CGImagePropertyOrientation {
 
 
 class ARController: UIViewController {
-    
-    var classificationDelegate: ClassificationReceiver?
-    var cameraDepthDelegate: CameraDepthReceiver?
-    
-    // Labels for classified objects by ARAnchor UUID
     private var anchorLabels = [UUID: String]()
-    
-    
     @IBOutlet weak var sceneView: ARSKView!
-    
-    /// The ML model to be used for recognition of arbitrary objects.
-    private var _inceptionv3Model: Inceptionv3!
-    private var inceptionv3Model: Inceptionv3! {
-        get {
-            if let model = _inceptionv3Model { return model }
-            _inceptionv3Model = {
-                do {
-                    let configuration = MLModelConfiguration()
-                    return try Inceptionv3(configuration: configuration)
-                } catch {
-                    fatalError("Couldn't create Inceptionv3 due to: \(error)")
-                }
-            }()
-            return _inceptionv3Model
-        }
-    }
     
     // The view controller that displays the status and "restart experience" UI.
     private lazy var statusViewController: StatusViewController = {
