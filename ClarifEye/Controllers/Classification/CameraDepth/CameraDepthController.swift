@@ -36,8 +36,15 @@ class CameraDepthController: NSObject {
     weak var cameraDepthDelegate: CameraDepthReceiver?
     weak var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
      
-    override init() {
+    override init() { 
         super.init()
+        
+        // Create a texture cache to hold sample buffer textures.
+        CVMetalTextureCacheCreate(kCFAllocatorDefault,
+                                  nil,
+                                  MetalEnvironment.shared.metalDevice,
+                                  nil,
+                                  &textureCache)
         
         do {
             #if !targetEnvironment(simulator)
@@ -149,7 +156,7 @@ extension CameraDepthController: AVCaptureDataOutputSynchronizerDelegate {
     func dataOutputSynchronizer(_ synchronizer: AVCaptureDataOutputSynchronizer,
                                 didOutput synchronizedDataCollection: AVCaptureSynchronizedDataCollection) {
         
-        var depthConfiguration: DepthConfiguration = cameraCapturedDataDelegate?.depthConfiguration ?? DepthConfiguration()
+        let depthConfiguration: DepthConfiguration = cameraCapturedDataDelegate?.depthConfiguration ?? DepthConfiguration()
         
         // Retrieve the synchronized depth and sample buffer container objects.
         guard let syncedDepthData = synchronizedDataCollection.synchronizedData(for: depthDataOutput) as? AVCaptureSynchronizedDepthData,
@@ -164,7 +171,7 @@ extension CameraDepthController: AVCaptureDataOutputSynchronizerDelegate {
                 if (depthConfiguration.useEstimation) {
                     cameraDepthDelegate?.classifyWithDepthEstimation(imagePixelBuffer: imagePixelBuffer)
                 } else {
-                    var depthPixelBuffer = syncedDepthData.depthData.depthDataMap
+                    let depthPixelBuffer = syncedDepthData.depthData.depthDataMap
                     cameraDepthDelegate?.classifyWithLidar(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthPixelBuffer)
                 }
             }
