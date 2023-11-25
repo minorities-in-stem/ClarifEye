@@ -171,21 +171,16 @@ extension ClassificationController {
     
     func scaleBoundingBox(boundingBox: CGRect, colorImageSize: CGSize, depthDataSize: CGSize) -> CGRect {
         // 1. Denormalize the bounding box
-//        let denormalizedBox = denormalizeBoundingBox(boundingBox: boundingBox, colorImageSize: colorImageSize)
+        let denormalizedBox = denormalizeBoundingBox(boundingBox: boundingBox, colorImageSize: colorImageSize)
         
         // 2. Scale to depth data size
-//        let scaleX = depthDataSize.width / colorImageSize.width
-//        let scaleY = depthDataSize.height / colorImageSize.height
+        let scaleX = depthDataSize.width / colorImageSize.width
+        let scaleY = depthDataSize.height / colorImageSize.height
 
-//        let depthBoundingBox = CGRect(x: denormalizedBox.origin.x * scaleX,
-//                                    y: denormalizedBox.origin.y * scaleY,
-//                                    width: denormalizedBox.width * scaleX,
-//                                    height: denormalizedBox.height * scaleY)
-        
-        let depthBoundingBox = CGRect(x: boundingBox.origin.x * depthDataSize.width,
-                                      y: boundingBox.origin.y * depthDataSize.height,
-                                      width: boundingBox.width * depthDataSize.width,
-                                      height: boundingBox.height * depthDataSize.height)
+        let depthBoundingBox = CGRect(x: denormalizedBox.origin.x * scaleX,
+                                    y: denormalizedBox.origin.y * scaleY,
+                                    width: denormalizedBox.width * scaleX,
+                                    height: denormalizedBox.height * scaleY)
         
         return depthBoundingBox
     }
@@ -208,8 +203,6 @@ extension ClassificationController {
         // Get the distance to middle of bounding box
         let x = depthBoundingBox.midX
         let y = depthBoundingBox.midY
-        
-        print("depth pixel format type", CVPixelBufferGetPixelFormatType(depthPixelBuffer))
         
         // Lock the pixel buffer for reading
         CVPixelBufferLockBaseAddress(depthPixelBuffer, CVPixelBufferLockFlags.readOnly)
