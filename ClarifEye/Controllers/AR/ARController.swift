@@ -155,8 +155,8 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
 // MARK: - ARSessionDelegate
 extension ARController {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        if (frame.sceneDepth != nil) {
-            cameraDepthDelegate?.classify(imagePixelBuffer: frame.capturedImage, depthDataBuffer: frame.sceneDepth!.depthMap)
+        if (frame.smoothedSceneDepth != nil) {
+            cameraDepthDelegate?.classify(imagePixelBuffer: frame.capturedImage, depthDataBuffer: frame.smoothedSceneDepth!.depthMap)
         }
     }
 }
