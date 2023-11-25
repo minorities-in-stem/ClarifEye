@@ -102,7 +102,7 @@ extension ClassificationController: CameraInputReceiver {
                     
                     // Extract bounding box
                     let boundingBox = observation.boundingBox
-                    let boundingBoxDistance = self.lidarDistance(boundingBox: boundingBox, imagePixelBuffer: imagePixelBuffer, depthPixelBuffer: depthDataBuffer)
+                    let boundingBoxDistance = self.getDistanceFromDepthMap(boundingBox: boundingBox, imagePixelBuffer: imagePixelBuffer, depthPixelBuffer: depthDataBuffer)
                     
                     // Use the denormalized box to preserve relativity to initial input
                     let denormalizedBox = self.denormalizeBoundingBox(boundingBox: boundingBox, colorImageSize: self.getPixelBufferSize(pixelBuffer: imagePixelBuffer))
@@ -176,7 +176,7 @@ extension ClassificationController {
         // 2. Scale to depth data size
         let scaleX = depthDataSize.width / colorImageSize.width
         let scaleY = depthDataSize.height / colorImageSize.height
-        
+
         let depthBoundingBox = CGRect(x: denormalizedBox.origin.x * scaleX,
                                     y: denormalizedBox.origin.y * scaleY,
                                     width: denormalizedBox.width * scaleX,
@@ -194,7 +194,7 @@ extension ClassificationController {
     }
 
     
-    func lidarDistance(boundingBox: CGRect, imagePixelBuffer: CVPixelBuffer, depthPixelBuffer: CVPixelBuffer) -> Float {
+    func getDistanceFromDepthMap(boundingBox: CGRect, imagePixelBuffer: CVPixelBuffer, depthPixelBuffer: CVPixelBuffer) -> Float {
         let colorImageSize = self.getPixelBufferSize(pixelBuffer: imagePixelBuffer)
         let depthDataSize = self.getPixelBufferSize(pixelBuffer: depthPixelBuffer)
         
@@ -211,9 +211,8 @@ extension ClassificationController {
         let pixelBytesPerRow = CVPixelBufferGetBytesPerRow(depthPixelBuffer)
         let pixelBufferBaseAddress = CVPixelBufferGetBaseAddress(depthPixelBuffer)!
         
-        let byteOffset = Int(y) * pixelBytesPerRow + Int(x) * 2 // Assuming 16-bit float per pixel
-        let depthInMeters = pixelBufferBaseAddress.load(fromByteOffset: byteOffset, as: Float16.self)
-        
+        let byteOffset = Int(y) * pixelBytesPerRow + Int(x) * 4 // Multiply by 4 for CVPixelBuffer of Float32, 2 for Float16
+        let depthInMeters = pixelBufferBaseAddress.load(fromByteOffset: byteOffset, as: Float32.self)
         
         // Unlock the pixel buffer after reading
         CVPixelBufferUnlockBaseAddress(depthPixelBuffer, CVPixelBufferLockFlags.readOnly)
