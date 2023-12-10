@@ -1,6 +1,6 @@
 import Foundation
 
-enum Label: Int {
+enum ObstacleLabel: Int {
     case PERSON = 0
     case BICYCLE = 1
     case CAR = 2
@@ -88,4 +88,21 @@ enum Label: Int {
             case .FIRE_HYDRANT: return "fire_hydrant"
         }
     }
+    
+    var obstacleClass: Obstacle {
+        switch self {
+            case .CAR, .TRUCK, .BUS: return .VEHICLE
+            case .BICYCLE, .BICYCLER: return .CYCLIST
+            case .STAIRS, .STEPS: return .STAIRS
+            case .SAFETY_CONE: return .CONSTRUCTION
+            case .WALL: return .WALL
+            case .FENCE: return .FENCE
+            case .GUARDRAIL: return .BARRIER
+            case .POLE: return .POLE
+            case .TREE: return .TREE
+            case .PERSON: return .PERSON
+            default: return .NONE
+        }
+    }
 }
+    

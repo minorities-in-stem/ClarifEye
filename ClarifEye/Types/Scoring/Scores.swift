@@ -1,5 +1,24 @@
 import Foundation
 
+// TODO: move to a different file
+func CalculateScore(label: ObstacleLabel, depth: Float, speed: Float) -> Float {
+    var a: Float = 0.5
+    var b: Float = 1.8
+    var c: Float = 1
+    
+    var obstacle = label.obstacleClass
+    
+    var s = obstacle.hazardScore
+    var g = DepthSeverity.severity(forDepth: depth).rawValue
+    var f = SpeedSeverity.severity(forSpeed: speed).rawValue
+    
+    var sev1 = a*s
+    var sev2 = b*g
+    var sev3 = c*f
+    
+    return sev1 + sev2 + sev3
+}
+
 enum Obstacle: String {
     case VEHICLE
     case CYCLIST
@@ -13,24 +32,8 @@ enum Obstacle: String {
     case PERSON
     case NONE // Use for obstacles we don't really case about for now
     
-    func mapLabelToObstacle(label: Label) -> Obstacle {
-        switch label {
-            case .CAR, .TRUCK, .BUS: return .VEHICLE
-            case .BICYCLE, .BICYCLER: return .CYCLIST
-            case .STAIRS, .STEPS: return .STAIRS
-            case .SAFETY_CONE: return .CONSTRUCTION
-            case .WALL: return .WALL
-            case .FENCE: return .FENCE
-            case .GUARDRAIL: return .BARRIER
-            case .POLE: return .POLE
-            case .TREE: return .TREE
-            case .PERSON: return .PERSON
-            default: return .NONE
-        }
-    }
-    
-    func hazardScore(obstacle: Obstacle) -> Int {
-        switch obstacle {
+    var hazardScore: Float {
+        switch self {
             case .VEHICLE: return 4
             case .CYCLIST: return 3
             case .STAIRS: return 3
@@ -47,7 +50,7 @@ enum Obstacle: String {
 }
 
 struct DepthSeverity {
-    enum Severity: Int {
+    enum SeverityScore: Float {
         case UNKNOWN = -1
         case NONE = 0
         case VERY_LOW = 1
@@ -57,7 +60,7 @@ struct DepthSeverity {
         case VERY_HIGH = 5
     }
     
-    static func severity(forDepth depth: Float) -> Severity {
+    static func severity(forDepth depth: Float) -> SeverityScore {
         switch depth {
         case ..<1.0:
             return .VERY_HIGH
@@ -78,7 +81,7 @@ struct DepthSeverity {
 }
 
 struct SpeedSeverity {
-    enum Severity: Int {
+    enum SeverityScore: Float {
         case UNKNOWN = -1
         case NONE = 0
         case VERY_LOW = 1
@@ -88,7 +91,7 @@ struct SpeedSeverity {
         case VERY_HIGH = 5
     }
     
-    static func severity(forSpeed speed: Float) -> Severity {
+    static func severity(forSpeed speed: Float) -> SeverityScore {
         switch speed {
         case ..<0.5:
             return .NONE
