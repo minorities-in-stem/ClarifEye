@@ -48,21 +48,21 @@ class ClassificationController: NSObject {
     }()
     
     // MARK: -Setup for depth estimation model
-    private var _depthModel: FCRNFP16!
-    private var depthModel: FCRNFP16! {
-        get {
-            if let model = _depthModel { return model }
-            _depthModel = {
-                do {
-                    let configuration = MLModelConfiguration()
-                    return try FCRNFP16(configuration: configuration)
-                } catch {
-                    fatalError("Couldn't create depth model due to: \(error)")
-                }
-            }()
-            return _depthModel
-        }
-    }
+//    private var _depthModel: FCRNFP16!
+//    private var depthModel: FCRNFP16! {
+//        get {
+//            if let model = _depthModel { return model }
+//            _depthModel = {
+//                do {
+//                    let configuration = MLModelConfiguration()
+//                    return try FCRNFP16(configuration: configuration)
+//                } catch {
+//                    fatalError("Couldn't create depth model due to: \(error)")
+//                }
+//            }()
+//            return _depthModel
+//        }
+//    }
 }
 
 extension ClassificationController: CameraInputReceiver {
@@ -222,10 +222,11 @@ extension ClassificationController {
     
     func depthEstimationDepthMap(imagePixelBuffer: CVPixelBuffer) -> CVPixelBuffer? {
         let image = downsample(pixelBuffer: imagePixelBuffer, toSize: CGSize(width: 304, height: 228))
-        let input = FCRNFP16Input(image: image!)
-        let prediction = try? self.depthModel.prediction(input: input)
+//        let input = FCRNFP16Input(image: image!)
+//        let prediction = try? self.depthModel.prediction(input: input)
 
         
-        return prediction?.depthmap.pixelBuffer
+//        return prediction?.depthmap.pixelBuffer
+        fatalError("not implemented")
     }
 }
