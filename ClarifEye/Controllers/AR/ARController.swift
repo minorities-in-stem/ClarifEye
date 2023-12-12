@@ -163,8 +163,11 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
 extension ARController {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         if (frame.smoothedSceneDepth != nil) {
-            let transform = frame.camera.transform
-            cameraDepthDelegate?.classify(imagePixelBuffer: frame.capturedImage, depthDataBuffer: frame.smoothedSceneDepth!.depthMap, transform: transform)
+            DispatchQueue.main.async {
+                let transform = frame.camera.transform
+                self.cameraDepthDelegate?.classify(imagePixelBuffer: frame.capturedImage, depthDataBuffer: frame.smoothedSceneDepth!.depthMap, transform: transform)
+                
+            }
         }
     }
 }

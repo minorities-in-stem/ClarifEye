@@ -56,9 +56,10 @@ extension ClassificationController: CameraInputReceiver {
             
             // Downsample image to 640 x 640
             // TODO: this might not actually be needed (but try for now)
-            guard let image = self.downsample(pixelBuffer: imagePixelBuffer, toSize: CGSize(width: 640, height: 640)) else {
-                return
-            }
+//            guard let image = self.downsample(pixelBuffer: imagePixelBuffer, toSize: CGSize(width: 640, height: 640)) else {
+//                return
+//            }
+            let image = imagePixelBuffer
             self.getClassificationAndDistance(imagePixelBuffer: image, depthDataBuffer: depthDataBuffer, transform: transform)
         }
     }
@@ -150,11 +151,16 @@ extension ClassificationController {
         let originalY = boundingBox.origin.y * imageSize.height
         let originalWidth = boundingBox.width * imageSize.width
         let originalHeight = boundingBox.height * imageSize.height
+        
+        let newX = originalX * scaleX
+        let newY = originalY * scaleY
+        let newWidth = originalWidth * scaleX
+        let newHeight = originalHeight * scaleY
 
-        let depthBoundingBox = CGRect(x: originalX * scaleX,
-                                      y: originalY * scaleY,
-                                      width: originalWidth * scaleX,
-                                      height: originalHeight * scaleY)
+        let depthBoundingBox = CGRect(x: newX / targetSize.width,
+                                      y: newY / targetSize.height,
+                                      width: newWidth / targetSize.width,
+                                      height: newHeight / targetSize.height)
         
         return depthBoundingBox
     }
