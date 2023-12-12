@@ -28,8 +28,7 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     var scoreThreshold: Float = 3
     var maxNumOfObjectsToDisplay: Int = 3 // Maximum number of observations per frame to display
     
-    private var anchorLabels = [UUID: String]()
-    private var anchorBoundingBoxes = [UUID: CGRect]()
+    private var anchorToClassification = [UUID: ClassificationData]()
     var sceneView: ARSKView = ARSKView()
     var classificationsSinceLastOutput: [ImageClassification] = []
     
@@ -156,7 +155,7 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
         statusViewManager?.cancelAllScheduledMessages()
         statusViewManager?.showMessage("RESTARTING SESSION")
 
-        anchorLabels = [UUID: String]()
+        anchorToClassification = [UUID: ClassificationData]()
         
         let configuration = ARWorldTrackingConfiguration()
         configuration.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
@@ -196,10 +195,28 @@ extension ARController {
 
 // MARK: - Tap gesture handler & ARSKViewDelegate
 extension ARController {
-    func placeLabelAtLocation(boundingBox: CGRect, distance: Float, label: String, transform: simd_float4x4) {
+    func placeClassificationLabel(classification: ClassificationData, originalImageSize: CGSize, transform: simd_float4x4) {
+        // Scale bounding box to current frame size
+        let targetSize = self.sceneView.bounds.size
+        let boundingBox = ClassificationController.scaleToTargetSize(
+            boundingBox: classification.boundingBox, imageSize: originalImageSize, targetSize: targetSize)
+        
         let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
-        let hitTestResults = sceneView.hitTest(point, types: [.featurePoint, .estimatedHorizontalPlane])
-        let cgDistance = CGFloat(distance)
+        if let anchor = self.getAnchorForLocation(location: point, distance: classification.distance, label: classification.label, transform: transform) {
+            // Track anchor ID to associate text and bounding boxes with the anchor
+            anchorToClassification[anchor.identifier] = classification
+            sceneView.session.add(anchor: anchor)
+            
+            // Remove the anchor
+            DispatchQueue.main.asyncAfter(deadline: .now() + (self.statusViewManager?.displayDuration ?? 3)) { [self] in
+                self.anchorToClassification.removeValue(forKey: anchor.identifier)
+                self.sceneView.session.remove(anchor: anchor)
+            }
+        }
+    }
+    
+    func getAnchorForLocation(location: CGPoint, distance: Float, label: String, transform: simd_float4x4) -> ARAnchor? {
+        let hitTestResults = sceneView.hitTest(location, types: [.featurePoint, .estimatedHorizontalPlane])
         
         if let result = hitTestResults.first {
             // TODO: figure out how to account for when the current camera position is different than when the image was processed
@@ -212,46 +229,37 @@ extension ARController {
             
             let anchorTransform = simd_mul(result.worldTransform, translation)
             let anchor = ARAnchor(transform: anchorTransform)
-            sceneView.session.add(anchor: anchor)
             
-            // Track anchor ID to associate text and bounding boxes with the anchor
-            anchorLabels[anchor.identifier] = label
-            anchorBoundingBoxes[anchor.identifier] = boundingBox
-            
-            // Remove the anchor
-            DispatchQueue.main.asyncAfter(deadline: .now() + (self.statusViewManager?.displayDuration ?? 3)) { [self] in
-                self.anchorLabels.removeValue(forKey: anchor.identifier)
-                self.anchorBoundingBoxes.removeValue(forKey: anchor.identifier)
-                self.sceneView.session.remove(anchor: anchor)
-            }
+            return anchor
         }
+        return nil
     }
     
     // When an anchor is added, provide a SpriteKit node for it and set its text to the classification label.
     /// - Tag: UpdateARContent
     func view(_ view: ARSKView, didAdd node: SKNode, for anchor: ARAnchor) {
-        // Add Label
-        guard let labelText = anchorLabels[anchor.identifier] else {
-            fatalError("missing expected associated label for anchor")
+        guard let classification = anchorToClassification[anchor.identifier] else {
+            fatalError("missing expected classification for anchor")
         }
+        
+        // Add Label
+        let labelText = classification.label
         let label = TemplateLabelNode(text: labelText)
         node.addChild(label)
         
         // Add Bounding Box
-        guard let boundingBox = anchorBoundingBoxes[anchor.identifier] else {
-            fatalError("missing expected associated bounding box for anchor")
-        }
+        let boundingBox = classification.boundingBox
 //        let target = self.sceneView.bounds.size
 //        let boxSize = CGSize(width: boundingBox.width/target.width, height: boundingBox.height/target.height)
 //        let boxSize = CGSize(width: boundingBox.width, height: boundingBox.height)
+        
         let boxSize = CGSize(width: 400, height: 400)
-        print("BOX SIZE", boxSize)
         let boxNode = SKShapeNode(rectOf: boxSize)
         boxNode.lineWidth = 2
         boxNode.strokeColor = .red
 //        boxNode.fillColor = .clear
         boxNode.fillColor = UIColor.red.withAlphaComponent(0.3) // use this for testing
-        boxNode.position = boundingBox.origin
+        boxNode.zPosition = CGFloat(classification.distance)
         node.addChild(boxNode)
     }
 }
@@ -271,25 +279,18 @@ extension ARController: ClassificationReceiver {
                 
                 let threshold = min(self.maxNumOfObjectsToDisplay, scoredClassifications.count)
                 let topObjects = (scoredClassifications.sorted { $0.score > $1.score })[..<threshold]
-                let targetSize = self.sceneView.bounds.size
                 
                 for i in 0..<topObjects.count {
                     let classification = topObjects[i].classification
                     let score = topObjects[i].score
                     
                     if (score >= self.scoreThreshold) {
-                        let boundingBox = classification.boundingBox
-                    
-                        // Scale bounding box to current frame size
-                        let boundingBoxForFrame = ClassificationController.scaleToTargetSize(boundingBox: boundingBox, imageSize: imageClassification.imageSize, targetSize: targetSize)
-                        
-                        self.placeLabelAtLocation(
-                            boundingBox: boundingBoxForFrame,
-                            distance: classification.distance,
-                            label: classification.label,
+                        self.placeClassificationLabel(
+                            classification: classification,
+                            originalImageSize: imageClassification.imageSize,
                             transform: imageClassification.transform
                         )
-                        
+    
                         // Display the message for the object at the first index; which is the object with the highest hazard score
                         if (i == 0) {
                             let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(classification.distance)m away"
