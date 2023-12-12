@@ -161,7 +161,7 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
 extension ARController {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         if (frame.smoothedSceneDepth != nil) {
-            var transform = frame.camera.transform
+            let transform = frame.camera.transform
             cameraDepthDelegate?.classify(imagePixelBuffer: frame.capturedImage, depthDataBuffer: frame.smoothedSceneDepth!.depthMap, transform: transform)
         }
     }
@@ -170,15 +170,14 @@ extension ARController {
 
 // MARK: - Tap gesture handler & ARSKViewDelegate
 extension ARController {
-    // When the user taps, add an anchor associated with the current classification result.
     func placeLabelAtLocation(location: CGPoint, distance: Float, label: String, transform: simd_float4x4) {
         let hitTestResults = sceneView.hitTest(location, types: [.featurePoint, .estimatedHorizontalPlane])
         let cgDistance = CGFloat(distance)
         
         if let result = hitTestResults.first(where: { res in res.distance >= cgDistance }) ?? hitTestResults.first {
-            // Add a new anchor at the tap location.
 //            let anchor = ARAnchor(transform: result.worldTransform)
-            let anchor = ARAnchor(transform: transform)
+            let updatedPosition = simd_mul(result.worldTransform, transform)
+            let anchor = ARAnchor(transform: updatedPosition)
             sceneView.session.add(anchor: anchor)
             
             // Track anchor ID to associate text with the anchor after ARKit creates a corresponding SKNode.
