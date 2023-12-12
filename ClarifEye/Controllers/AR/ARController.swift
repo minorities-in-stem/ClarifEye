@@ -37,16 +37,33 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
     var statusViewManager: StatusViewManager?
     
-    var displayingOutput: Bool = false
+    private var shouldClassify: Bool = true
+    private var classificationTimer: Timer?
+    
+    deinit {
+        removeClassificationTimer()
+    }
+    
+    func addClassificationTimer() {
+        self.classificationTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
+            self?.shouldClassify.toggle()
+        }
+    }
+    
+    func removeClassificationTimer() {
+        classificationTimer?.invalidate()
+    }
     
     func start() {
         let configuration = ARWorldTrackingConfiguration()
         configuration.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
         sceneView.session.run(configuration)
+        addClassificationTimer()
     }
     
     func pause() {
         sceneView.session.pause()
+        removeClassificationTimer()
     }
     
     
@@ -144,6 +161,9 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
         let configuration = ARWorldTrackingConfiguration()
         configuration.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+         
+        removeClassificationTimer()
+        addClassificationTimer()
     }
     
     // MARK: - Error handling
@@ -163,11 +183,11 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
 // MARK: - ARSessionDelegate
 extension ARController {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        if (frame.smoothedSceneDepth != nil) {
+        if (frame.smoothedSceneDepth != nil && self.shouldClassify) {
             DispatchQueue.main.async {
                 let transform = frame.camera.transform
                 self.classificationController.classify(imagePixelBuffer: frame.capturedImage, depthDataBuffer: frame.smoothedSceneDepth!.depthMap, transform: transform)
-                
+                self.shouldClassify = false
             }
         }
     }
@@ -221,7 +241,7 @@ extension ARController {
         guard let boundingBox = anchorBoundingBoxes[anchor.identifier] else {
             fatalError("missing expected associated bounding box for anchor")
         }
-        let target = self.sceneView.bounds.size
+//        let target = self.sceneView.bounds.size
 //        let boxSize = CGSize(width: boundingBox.width/target.width, height: boundingBox.height/target.height)
 //        let boxSize = CGSize(width: boundingBox.width, height: boundingBox.height)
         let boxSize = CGSize(width: 400, height: 400)
