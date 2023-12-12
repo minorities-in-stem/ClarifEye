@@ -198,10 +198,18 @@ extension ARController {
     func placeClassificationLabel(classification: ClassificationData, originalImageSize: CGSize, transform: simd_float4x4) {
         // Scale bounding box to current frame size
         let targetSize = self.sceneView.bounds.size
-        let boundingBox = ClassificationController.scaleToTargetSize(
-            boundingBox: classification.boundingBox, imageSize: originalImageSize, targetSize: targetSize)
-        
+        let boundingBox = ClassificationController.scaleToTargetSize(boundingBox: classification.boundingBox, imageSize: originalImageSize, targetSize: targetSize)
         let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
+                            
+        // TESTING
+//        let flipped = CGRect(
+//            x: boundingBox.minX,
+//            y: 1 - boundingBox.maxY,
+//            width: boundingBox.width,
+//            height: boundingBox.height
+//        )
+//        let point = CGPoint(x: flipped.midX, y: flipped.midY)
+                            
         if let anchor = self.getAnchorForLocation(location: point, distance: classification.distance, label: classification.label, transform: transform) {
             // Track anchor ID to associate text and bounding boxes with the anchor
             anchorToClassification[anchor.identifier] = classification
@@ -248,18 +256,7 @@ extension ARController {
         node.addChild(label)
         
         // Add Bounding Box
-        let boundingBox = classification.boundingBox
-//        let target = self.sceneView.bounds.size
-//        let boxSize = CGSize(width: boundingBox.width/target.width, height: boundingBox.height/target.height)
-//        let boxSize = CGSize(width: boundingBox.width, height: boundingBox.height)
-        
-        let boxSize = CGSize(width: 400, height: 400)
-        let boxNode = SKShapeNode(rectOf: boxSize)
-        boxNode.lineWidth = 2
-        boxNode.strokeColor = .red
-//        boxNode.fillColor = .clear
-        boxNode.fillColor = UIColor.red.withAlphaComponent(0.3) // use this for testing
-        boxNode.zPosition = CGFloat(classification.distance)
+        let boxNode = BoundingBoxNode(classification.boundingBox, self.sceneView.frame.size)
         node.addChild(boxNode)
     }
 }

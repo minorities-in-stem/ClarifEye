@@ -86,7 +86,7 @@ extension ClassificationController {
                         
                         // For debugging
                         let text = "\(label.identifier), distance: \(boundingBoxDistance) m, confidence: \(label.confidence)"
-                        print("CLASSIFICATION", text)
+//                        print("CLASSIFICATION", text)
                         
                         classifications.append(classification)
                     }

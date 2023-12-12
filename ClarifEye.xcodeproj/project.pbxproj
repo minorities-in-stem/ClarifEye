@@ -14,6 +14,7 @@
 		A3200B262B26797A00DFBD64 /* best.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A3200B252B26797A00DFBD64 /* best.mlmodel */; };
 		A3331B6D2B10B9DD00EADE34 /* LabelScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A3331B6C2B10B9DD00EADE34 /* LabelScene.sks */; };
 		A3331B6F2B10BD2C00EADE34 /* TrackingState+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3331B6E2B10BD2C00EADE34 /* TrackingState+Extensions.swift */; };
+		A382882F2B28F988005A7522 /* BoundingBoxNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382882E2B28F988005A7522 /* BoundingBoxNode.swift */; };
 		A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */; };
 		A3AE2FF22B0FF08800DCDC7A /* ClassificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FF12B0FF08800DCDC7A /* ClassificationController.swift */; };
 		A3AE2FF82B0FF29300DCDC7A /* ARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FF72B0FF29300DCDC7A /* ARView.swift */; };
@@ -38,6 +39,7 @@
 		A3200B252B26797A00DFBD64 /* best.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = best.mlmodel; path = Models/best.mlmodel; sourceTree = "<group>"; };
 		A3331B6C2B10B9DD00EADE34 /* LabelScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LabelScene.sks; sourceTree = "<group>"; };
 		A3331B6E2B10BD2C00EADE34 /* TrackingState+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackingState+Extensions.swift"; sourceTree = "<group>"; };
+		A382882E2B28F988005A7522 /* BoundingBoxNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxNode.swift; sourceTree = "<group>"; };
 		A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationData.swift; sourceTree = "<group>"; };
 		A3AE2FF12B0FF08800DCDC7A /* ClassificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationController.swift; sourceTree = "<group>"; };
 		A3AE2FF72B0FF29300DCDC7A /* ARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARView.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 				A3AE30062B1099DF00DCDC7A /* ARController.swift */,
 				A3AE30082B1099F700DCDC7A /* StatusViewManager.swift */,
 				A3AE300A2B109A1100DCDC7A /* TemplateLabelNode.swift */,
+				A382882E2B28F988005A7522 /* BoundingBoxNode.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -286,6 +289,7 @@
 				A3AE30092B1099F700DCDC7A /* StatusViewManager.swift in Sources */,
 				A3C118202AFC935100FC4F23 /* StatusView.swift in Sources */,
 				A3AE30072B1099DF00DCDC7A /* ARController.swift in Sources */,
+				A382882F2B28F988005A7522 /* BoundingBoxNode.swift in Sources */,
 				A3AE300B2B109A1100DCDC7A /* TemplateLabelNode.swift in Sources */,
 				A3AE2FFB2B10013100DCDC7A /* CameraManager.swift in Sources */,
 				A3027A342B09F474009C644F /* ImageView.swift in Sources */,
