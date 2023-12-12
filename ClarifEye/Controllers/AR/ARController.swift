@@ -206,15 +206,21 @@ extension ARController {
 extension ARController: ClassificationReceiver {
     func onClassification(imageClassification: ImageClassification) {
         DispatchQueue.main.async {
-            if (self.statusViewManager != nil && self.statusViewManager!.showText) {
-                let threshold = min(self.maxNumOfObjectsToDisplay, imageClassification.classifications.count)
-                let topObjects = (imageClassification.classifications.sorted { $0.confidence > $1.confidence })[..<threshold]
-                for i in 0..<topObjects.count {
-                    let classification = topObjects[i]
-                    
+            if (self.statusViewManager != nil && !self.statusViewManager!.showText) {
+                var scoredClassifications: [ScoredClassification] = []
+                for classification in imageClassification.classifications {
                     // ASSUME OBJECTS ARE STATIC FOR NOW
                     let obstacleLabel = ObstacleLabel.fromString(classification.label)
                     let score = CalculateScore(label: obstacleLabel, depth: classification.distance, speed: 0)
+                    scoredClassifications.append(ScoredClassification(classification: classification, score: score))
+                }
+                
+                let threshold = min(self.maxNumOfObjectsToDisplay, scoredClassifications.count)
+                let topObjects = (scoredClassifications.sorted { $0.score > $1.score })[..<threshold]
+                
+                for i in 0..<topObjects.count {
+                    let classification = topObjects[i].classification
+                    let score = topObjects[i].score
                     
                     if (score >= self.scoreThreshold) {
                         let boundingBox = classification.boundingBox
@@ -229,7 +235,7 @@ extension ARController: ClassificationReceiver {
                         
                         if (i == 0) {
                             let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(classification.distance)m away"
-                            self.statusViewManager?.showMessage(message)
+                            self.statusViewManager?.showMessage(message, autoHide: true)
                         }
                     }
                 }

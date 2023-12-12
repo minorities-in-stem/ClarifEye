@@ -2,29 +2,19 @@ import SwiftUI
 import UIKit
 import ARKit
 
-class ClassificationData {
+struct ClassificationData {
     var label: String
     var confidence: Float
     var distance: Float
     var boundingBox: CGRect
-
-    init(label: String,
-         confidence: Float,
-         distance: Float,
-         boundingBox: CGRect) {
-        self.label = label
-        self.confidence = confidence
-        self.distance = distance
-        self.boundingBox = boundingBox
-    }
 }
 
-class ImageClassification {
+struct ImageClassification {
     var classifications: [ClassificationData]
     var transform: simd_float4x4
-    
-    init(classifications: [ClassificationData], transform: simd_float4x4) {
-        self.classifications = classifications
-        self.transform = transform
-    }
+}
+
+struct ScoredClassification {
+    var classification: ClassificationData
+    var score: Float
 }

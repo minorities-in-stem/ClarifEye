@@ -89,7 +89,7 @@ class StatusViewManager: ObservableObject {
                 message.append(": \(recommendation)")
             }
             
-            self.showMessage(message, autoHide: false)
+            self.showMessage(message, autoHide: true)
         })
         
         timers[.trackingStateEscalation] = timer
@@ -98,7 +98,7 @@ class StatusViewManager: ObservableObject {
     
     // MARK: - Panel Visibility
     private func setMessageHidden(_ hide: Bool) {
-        self.showText = hide
+        self.showText = !hide
     }
 }
 
