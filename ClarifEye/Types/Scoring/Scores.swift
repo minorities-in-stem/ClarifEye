@@ -2,35 +2,35 @@ import Foundation
 
 // TODO: move to a different file
 func CalculateScore(label: ObstacleLabel, depth: Float, speed: Float) -> Float {
-    var a: Float = 0.5
-    var b: Float = 1.8
-    var c: Float = 1
+    let a: Float = 0.5
+    let b: Float = 1.8
+    let c: Float = 1
     
-    var obstacle = label.obstacleClass
+    let obstacle = label.obstacleClass
     
-    var s = obstacle.hazardScore
-    var g = DepthSeverity.severity(forDepth: depth).rawValue
-    var f = SpeedSeverity.severity(forSpeed: speed).rawValue
+    let s = obstacle.hazardScore
+    let g = DepthSeverity.severity(forDepth: depth).rawValue
+    let f = SpeedSeverity.severity(forSpeed: speed).rawValue
     
-    var sev1 = a*s
-    var sev2 = b*g
-    var sev3 = c*f
+    let sev1 = a*s
+    let sev2 = b*g
+    let sev3 = c*f
     
     return sev1 + sev2 + sev3
 }
 
 enum Obstacle: String {
-    case VEHICLE
-    case CYCLIST
-    case STAIRS
-    case CONSTRUCTION
-    case WALL
-    case FENCE
-    case BARRIER
-    case POLE
-    case TREE
-    case PERSON
-    case NONE // Use for obstacles we don't really case about for now
+    case VEHICLE = "vehicle"
+    case CYCLIST = "cyclist"
+    case STAIRS = "stairs"
+    case CONSTRUCTION = "construction"
+    case WALL = "wall"
+    case FENCE = "fence"
+    case BARRIER = "barrier"
+    case POLE = "pole"
+    case TREE = "tree"
+    case PERSON = "person"
+    case NONE = "none" // Use for obstacles we don't really case about for now
     
     var hazardScore: Float {
         switch self {

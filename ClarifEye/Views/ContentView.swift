@@ -12,7 +12,13 @@ struct ContentView: View {
                 .tabItem {
                     Label("Vision", systemImage: "eyeglasses")
                 }
+                .onTapGesture {
+                    self.cameraManager.startStream()
+                }
             SettingsView(settings: settings)
+                .onTapGesture {
+                    self.cameraManager.stopStream()
+                }
                 .tabItem {
                     Label("Settings", systemImage: "gear")
                 }

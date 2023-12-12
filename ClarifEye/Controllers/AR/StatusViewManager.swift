@@ -19,17 +19,17 @@ class StatusViewManager: ObservableObject {
     
     @Published var message: String! = "" {
         didSet {
-            self.statusViewListener?.onMessage(message: message)
+            self.delegate?.onMessage(message: message)
         }
     }
     @Published var showText: Bool = false {
         didSet {
-            self.statusViewListener?.onShowText(showText: showText)
+            self.delegate?.onShowText(showText: showText)
         }
     }
     
-    var statusViewListener: StatusViewListener?
-    private let displayDuration: TimeInterval = 6
+    var delegate: StatusViewManagerDelegate?
+    var displayDuration: TimeInterval = 3 // THIS IS THE LENGTH OF THE FEEDBACK CYCLE
     private var messageHideTimer: Timer?
 
     private var timers: [MessageType: Timer] = [:]
@@ -89,7 +89,7 @@ class StatusViewManager: ObservableObject {
                 message.append(": \(recommendation)")
             }
             
-            self.showMessage(message, autoHide: false)
+            self.showMessage(message, autoHide: true)
         })
         
         timers[.trackingStateEscalation] = timer
@@ -98,7 +98,7 @@ class StatusViewManager: ObservableObject {
     
     // MARK: - Panel Visibility
     private func setMessageHidden(_ hide: Bool) {
-        self.showText = hide
+        self.showText = !hide
     }
 }
 

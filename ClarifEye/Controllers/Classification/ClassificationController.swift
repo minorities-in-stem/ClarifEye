@@ -8,11 +8,6 @@ import CoreML
 import CoreVideo
 import CoreImage
 
-protocol CameraInputReceiver: AnyObject {
-    func classify(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer)
-    func classifyWithDepthEstimation(imagePixelBuffer: CVPixelBuffer)
-}
-
 class ClassificationController: NSObject {
     weak var classificationDelegate: ClassificationReceiver?
     
@@ -22,14 +17,14 @@ class ClassificationController: NSObject {
     
     
     // MARK: -Setup for object classification/identification model
-    private var _classificationModel: YOLOv3!
-    private var classificationModel: YOLOv3! {
+    private var _classificationModel: best!
+    private var classificationModel: best! {
         get {
             if let model = _classificationModel { return model }
             _classificationModel = {
                 do {
                     let configuration = MLModelConfiguration()
-                    return try YOLOv3(configuration: configuration)
+                    return try best(configuration: configuration)
                 } catch {
                     fatalError("Couldn't create classification model due to: \(error)")
                 }
@@ -46,57 +41,33 @@ class ClassificationController: NSObject {
             fatalError("Cannot load model")
         }
     }()
-    
-    // MARK: -Setup for depth estimation model
-//    private var _depthModel: FCRNFP16!
-//    private var depthModel: FCRNFP16! {
-//        get {
-//            if let model = _depthModel { return model }
-//            _depthModel = {
-//                do {
-//                    let configuration = MLModelConfiguration()
-//                    return try FCRNFP16(configuration: configuration)
-//                } catch {
-//                    fatalError("Couldn't create depth model due to: \(error)")
-//                }
-//            }()
-//            return _depthModel
-//        }
-//    }
 }
 
-extension ClassificationController: CameraInputReceiver {
-    func classify(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer) {
+extension ClassificationController {
+    func classify(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer, transform: simd_float4x4) {
         videoQueue.async {
             guard self.currentBuffer == nil else {
                 return
             }
             
-            self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthDataBuffer)
-        }
-    }
-    
-    func classifyWithDepthEstimation(imagePixelBuffer: CVPixelBuffer) {
-        videoQueue.async {
-            guard self.currentBuffer == nil else {
-                return
-            }
-            
-            if let estimation = self.depthEstimationDepthMap(imagePixelBuffer: imagePixelBuffer){
-               let depthPixelBuffer = estimation
-                self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthPixelBuffer)
-           }
+            // Downsample image to 640 x 640
+            // TODO: this might not actually be needed (but try for now)
+//            guard let image = self.downsample(pixelBuffer: imagePixelBuffer, toSize: CGSize(width: 640, height: 640)) else {
+//                return
+//            }
+            let image = imagePixelBuffer
+            self.getClassificationAndDistance(imagePixelBuffer: image, depthDataBuffer: depthDataBuffer, transform: transform)
         }
     }
     
     
-    func getClassificationAndDistance(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer) {
+    func getClassificationAndDistance(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer, transform: simd_float4x4) {
         self.currentBuffer = imagePixelBuffer
-
-        // Create a Vision request
+        
         let request = VNCoreMLRequest(model: self.coreMLClassificationModel) { request, error in
 
             if let results = request.results as? [VNRecognizedObjectObservation] {
+                var classifications: [ClassificationData] = []
                 for observation in results {
                     let labels = observation.labels
                     
@@ -104,27 +75,35 @@ extension ClassificationController: CameraInputReceiver {
                     let boundingBox = observation.boundingBox
                     let boundingBoxDistance = self.getDistanceFromDepthMap(boundingBox: boundingBox, imagePixelBuffer: imagePixelBuffer, depthPixelBuffer: depthDataBuffer)
                     
-                    // Use the denormalized box to preserve relativity to initial input
-                    let denormalizedBox = self.denormalizeBoundingBox(boundingBox: boundingBox, colorImageSize: self.getPixelBufferSize(pixelBuffer: imagePixelBuffer))
-                    
-                    
                     if let label = labels.first(where: { l in l.confidence > 0.5 }) {
-                        let classification = ClassificationData(label: label.identifier, confidence: label.confidence, distance: boundingBoxDistance, boundingBox: denormalizedBox)
+                        let obstacleLabel = ObstacleLabel.fromString(label.identifier)
+                        let classification = ClassificationData(
+                            label: cleanLabel(obstacleLabel.rawValue),
+                            confidence: label.confidence,
+                            distance: boundingBoxDistance,
+                            boundingBox: boundingBox
+                        )
                         
                         // For debugging
                         let text = "\(label.identifier), distance: \(boundingBoxDistance) m, confidence: \(label.confidence)"
-                        print("CLASSIFICATION", text)
+//                        print("CLASSIFICATION", text)
                         
-                        
-                        self.classificationDelegate?.onClassification(classification: classification)
+                        classifications.append(classification)
                     }
+                    
+                    let imageClassification = ImageClassification(
+                        imageSize: self.getPixelBufferSize(imagePixelBuffer),
+                        classifications: classifications,
+                        transform: transform
+                    )
+                    
+                    self.classificationDelegate?.onClassification(imageClassification: imageClassification)
                 }
             }
         }
         // Use CPU for Vision processing to ensure that there are adequate GPU resources for rendering.
         request.usesCPUOnly = true
         
-        // Use Vision to perform the request on the color image
         let orientation = CGImagePropertyOrientation(self.orientation)
         let handler = VNImageRequestHandler(cvPixelBuffer: imagePixelBuffer, orientation: orientation, options: [:])
         
@@ -160,32 +139,19 @@ extension ClassificationController {
         return nil
     }
     
-    func denormalizeBoundingBox(boundingBox: CGRect, colorImageSize: CGSize) -> CGRect {
-        let denormalizedBox = CGRect(x: boundingBox.origin.x * colorImageSize.width,
-                                    y: boundingBox.origin.y * colorImageSize.height,
-                                    width: boundingBox.width * colorImageSize.width,
-                                    height: boundingBox.height * colorImageSize.height)
+    static func scaleToTargetSize(boundingBox: CGRect, imageSize: CGSize, targetSize: CGSize) -> CGRect {
+        let scaleX = targetSize.width
+        let scaleY = targetSize.height
         
-        return denormalizedBox
-    }
-    
-    func scaleBoundingBox(boundingBox: CGRect, colorImageSize: CGSize, depthDataSize: CGSize) -> CGRect {
-        // 1. Denormalize the bounding box
-        let denormalizedBox = denormalizeBoundingBox(boundingBox: boundingBox, colorImageSize: colorImageSize)
-        
-        // 2. Scale to depth data size
-        let scaleX = depthDataSize.width / colorImageSize.width
-        let scaleY = depthDataSize.height / colorImageSize.height
-
-        let depthBoundingBox = CGRect(x: denormalizedBox.origin.x * scaleX,
-                                    y: denormalizedBox.origin.y * scaleY,
-                                    width: denormalizedBox.width * scaleX,
-                                    height: denormalizedBox.height * scaleY)
+        let depthBoundingBox = CGRect(x: boundingBox.origin.x * scaleX,
+                                      y: boundingBox.origin.y * scaleY,
+                                      width: boundingBox.width * scaleX,
+                                      height: boundingBox.height * scaleY)
         
         return depthBoundingBox
     }
     
-    func getPixelBufferSize(pixelBuffer: CVPixelBuffer) -> CGSize {
+    func getPixelBufferSize(_ pixelBuffer: CVPixelBuffer) -> CGSize {
         let width = CVPixelBufferGetWidth(pixelBuffer)
         let height = CVPixelBufferGetHeight(pixelBuffer)
         let size = CGSize(width: width, height: height)
@@ -195,10 +161,10 @@ extension ClassificationController {
 
     
     func getDistanceFromDepthMap(boundingBox: CGRect, imagePixelBuffer: CVPixelBuffer, depthPixelBuffer: CVPixelBuffer) -> Float {
-        let colorImageSize = self.getPixelBufferSize(pixelBuffer: imagePixelBuffer)
-        let depthDataSize = self.getPixelBufferSize(pixelBuffer: depthPixelBuffer)
+        let colorImageSize = self.getPixelBufferSize(imagePixelBuffer)
+        let depthDataSize = self.getPixelBufferSize(depthPixelBuffer)
         
-        let depthBoundingBox = scaleBoundingBox(boundingBox: boundingBox, colorImageSize: colorImageSize, depthDataSize: depthDataSize)
+        let depthBoundingBox = ClassificationController.scaleToTargetSize(boundingBox: boundingBox, imageSize: colorImageSize, targetSize: depthDataSize)
         
         // Get the distance to middle of bounding box
         let x = depthBoundingBox.midX
@@ -218,15 +184,5 @@ extension ClassificationController {
         CVPixelBufferUnlockBaseAddress(depthPixelBuffer, CVPixelBufferLockFlags.readOnly)
         
         return Float(depthInMeters)
-    }
-    
-    func depthEstimationDepthMap(imagePixelBuffer: CVPixelBuffer) -> CVPixelBuffer? {
-        let image = downsample(pixelBuffer: imagePixelBuffer, toSize: CGSize(width: 304, height: 228))
-//        let input = FCRNFP16Input(image: image!)
-//        let prediction = try? self.depthModel.prediction(input: input)
-
-        
-//        return prediction?.depthmap.pixelBuffer
-        fatalError("not implemented")
     }
 }
