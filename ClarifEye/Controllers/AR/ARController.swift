@@ -29,6 +29,7 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     var maxNumOfObjectsToDisplay: Int = 3 // Maximum number of observations per frame to display
     
     private var anchorLabels = [UUID: String]()
+    private var anchorBoundingBoxes = [UUID: CGRect]()
     var sceneView: ARSKView = ARSKView()
     var classificationsSinceLastOutput: [ImageClassification] = []
     
@@ -175,8 +176,9 @@ extension ARController {
 
 // MARK: - Tap gesture handler & ARSKViewDelegate
 extension ARController {
-    func placeLabelAtLocation(location: CGPoint, distance: Float, label: String, transform: simd_float4x4) {
-        let hitTestResults = sceneView.hitTest(location, types: [.featurePoint, .estimatedHorizontalPlane])
+    func placeLabelAtLocation(boundingBox: CGRect, distance: Float, label: String, transform: simd_float4x4) {
+        let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
+        let hitTestResults = sceneView.hitTest(point, types: [.featurePoint, .estimatedHorizontalPlane])
         let cgDistance = CGFloat(distance)
         
         if let result = hitTestResults.first {
@@ -192,12 +194,14 @@ extension ARController {
             let anchor = ARAnchor(transform: anchorTransform)
             sceneView.session.add(anchor: anchor)
             
-            // Track anchor ID to associate text with the anchor after ARKit creates a corresponding SKNode.
+            // Track anchor ID to associate text and bounding boxes with the anchor
             anchorLabels[anchor.identifier] = label
+            anchorBoundingBoxes[anchor.identifier] = boundingBox
             
             // Remove the anchor
             DispatchQueue.main.asyncAfter(deadline: .now() + (self.statusViewManager?.displayDuration ?? 3)) { [self] in
                 self.anchorLabels.removeValue(forKey: anchor.identifier)
+                self.anchorBoundingBoxes.removeValue(forKey: anchor.identifier)
                 self.sceneView.session.remove(anchor: anchor)
             }
         }
@@ -206,11 +210,29 @@ extension ARController {
     // When an anchor is added, provide a SpriteKit node for it and set its text to the classification label.
     /// - Tag: UpdateARContent
     func view(_ view: ARSKView, didAdd node: SKNode, for anchor: ARAnchor) {
+        // Add Label
         guard let labelText = anchorLabels[anchor.identifier] else {
             fatalError("missing expected associated label for anchor")
         }
         let label = TemplateLabelNode(text: labelText)
         node.addChild(label)
+        
+        // Add Bounding Box
+        guard let boundingBox = anchorBoundingBoxes[anchor.identifier] else {
+            fatalError("missing expected associated bounding box for anchor")
+        }
+        let target = self.sceneView.bounds.size
+//        let boxSize = CGSize(width: boundingBox.width/target.width, height: boundingBox.height/target.height)
+//        let boxSize = CGSize(width: boundingBox.width, height: boundingBox.height)
+        let boxSize = CGSize(width: 400, height: 400)
+        print("BOX SIZE", boxSize)
+        let boxNode = SKShapeNode(rectOf: boxSize)
+        boxNode.lineWidth = 2
+        boxNode.strokeColor = .red
+//        boxNode.fillColor = .clear
+        boxNode.fillColor = UIColor.red.withAlphaComponent(0.3) // use this for testing
+        boxNode.position = boundingBox.origin
+        node.addChild(boxNode)
     }
 }
 
@@ -240,10 +262,9 @@ extension ARController: ClassificationReceiver {
                     
                         // Scale bounding box to current frame size
                         let boundingBoxForFrame = ClassificationController.scaleToTargetSize(boundingBox: boundingBox, imageSize: imageClassification.imageSize, targetSize: targetSize)
-                        let boundingBoxMiddle = CGPoint(x: boundingBoxForFrame.midX, y: boundingBoxForFrame.midY)
                         
                         self.placeLabelAtLocation(
-                            location: boundingBoxMiddle,
+                            boundingBox: boundingBoxForFrame,
                             distance: classification.distance,
                             label: classification.label,
                             transform: imageClassification.transform
