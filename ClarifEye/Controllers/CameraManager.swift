@@ -8,20 +8,19 @@ protocol CameraCapturedDataReceiver: AnyObject {
     
 }
 
-protocol StatusViewListener: AnyObject {
+protocol StatusViewManagerDelegate: AnyObject {
     func onMessage(message: String)
     func onShowText(showText: Bool)
 }
 
 
-class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewListener {
+class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewManagerDelegate {
     @Published var orientation = UIDevice.current.orientation
     @Published var waitingForCapture = false
     @Published var dataAvailable = false
     
     var cancellables = Set<AnyCancellable>()
     
-    @Published var classificationController: ClassificationController = ClassificationController()
     @Published var arController: ARController = ARController()
     @Published var statusViewManager: StatusViewManager = StatusViewManager()
     
@@ -30,16 +29,15 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewLis
     
     init() {
         // Set up the controllers and assign their delegates
-        classificationController.classificationDelegate = arController
-        arController.cameraDepthDelegate = classificationController
-        arController.cameraCapturedDataDelegate = self
+        arController.classificationController.classificationDelegate = arController
         arController.statusViewManager = statusViewManager
         
         NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification).sink { _ in
             self.orientation = UIDevice.current.orientation
         }.store(in: &cancellables)
         
-        statusViewManager.statusViewListener = self
+        arController.cameraCapturedDataDelegate = self
+        statusViewManager.delegate = self
     }
     
     func onMessage(message: String) {

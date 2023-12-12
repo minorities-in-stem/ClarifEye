@@ -8,10 +8,6 @@ import CoreML
 import CoreVideo
 import CoreImage
 
-protocol CameraInputReceiver: AnyObject {
-    func classify(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer, transform: simd_float4x4)
-}
-
 class ClassificationController: NSObject {
     weak var classificationDelegate: ClassificationReceiver?
     
@@ -47,7 +43,7 @@ class ClassificationController: NSObject {
     }()
 }
 
-extension ClassificationController: CameraInputReceiver {
+extension ClassificationController {
     func classify(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer, transform: simd_float4x4) {
         videoQueue.async {
             guard self.currentBuffer == nil else {

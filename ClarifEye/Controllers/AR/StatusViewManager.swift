@@ -19,16 +19,16 @@ class StatusViewManager: ObservableObject {
     
     @Published var message: String! = "" {
         didSet {
-            self.statusViewListener?.onMessage(message: message)
+            self.delegate?.onMessage(message: message)
         }
     }
     @Published var showText: Bool = false {
         didSet {
-            self.statusViewListener?.onShowText(showText: showText)
+            self.delegate?.onShowText(showText: showText)
         }
     }
     
-    var statusViewListener: StatusViewListener?
+    var delegate: StatusViewManagerDelegate?
     var displayDuration: TimeInterval = 3 // THIS IS THE LENGTH OF THE FEEDBACK CYCLE
     private var messageHideTimer: Timer?
 

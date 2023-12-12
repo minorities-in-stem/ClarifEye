@@ -32,7 +32,7 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     var sceneView: ARSKView = ARSKView()
     var classificationsSinceLastOutput: [ImageClassification] = []
     
-    var cameraDepthDelegate: CameraInputReceiver?
+    var classificationController: ClassificationController = ClassificationController()
     var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
     var statusViewManager: StatusViewManager?
     
@@ -165,7 +165,7 @@ extension ARController {
         if (frame.smoothedSceneDepth != nil) {
             DispatchQueue.main.async {
                 let transform = frame.camera.transform
-                self.cameraDepthDelegate?.classify(imagePixelBuffer: frame.capturedImage, depthDataBuffer: frame.smoothedSceneDepth!.depthMap, transform: transform)
+                self.classificationController.classify(imagePixelBuffer: frame.capturedImage, depthDataBuffer: frame.smoothedSceneDepth!.depthMap, transform: transform)
                 
             }
         }
