@@ -54,15 +54,19 @@ extension ClassificationController: CameraInputReceiver {
                 return
             }
             
-            self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthDataBuffer, transform: transform)
+            // Downsample image to 640 x 640
+            // TODO: this might not actually be needed (but try for now)
+            guard let image = self.downsample(pixelBuffer: imagePixelBuffer, toSize: CGSize(width: 640, height: 640)) else {
+                return
+            }
+            self.getClassificationAndDistance(imagePixelBuffer: image, depthDataBuffer: depthDataBuffer, transform: transform)
         }
     }
     
     
     func getClassificationAndDistance(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer, transform: simd_float4x4) {
         self.currentBuffer = imagePixelBuffer
-
-        // Create a Vision request
+        
         let request = VNCoreMLRequest(model: self.coreMLClassificationModel) { request, error in
 
             if let results = request.results as? [VNRecognizedObjectObservation] {
@@ -74,17 +78,13 @@ extension ClassificationController: CameraInputReceiver {
                     let boundingBox = observation.boundingBox
                     let boundingBoxDistance = self.getDistanceFromDepthMap(boundingBox: boundingBox, imagePixelBuffer: imagePixelBuffer, depthPixelBuffer: depthDataBuffer)
                     
-                    // Use the denormalized box to preserve relativity to initial input
-                    let denormalizedBox = self.denormalizeBoundingBox(boundingBox: boundingBox, colorImageSize: self.getPixelBufferSize(pixelBuffer: imagePixelBuffer))
-                    
-                    
                     if let label = labels.first(where: { l in l.confidence > 0.5 }) {
                         let obstacleLabel = ObstacleLabel.fromString(label.identifier)
                         let classification = ClassificationData(
                             label: cleanLabel(obstacleLabel.rawValue),
                             confidence: label.confidence,
                             distance: boundingBoxDistance,
-                            boundingBox: denormalizedBox
+                            boundingBox: boundingBox
                         )
                         
                         // For debugging
@@ -94,15 +94,19 @@ extension ClassificationController: CameraInputReceiver {
                         classifications.append(classification)
                     }
                     
+                    let imageClassification = ImageClassification(
+                        imageSize: self.getPixelBufferSize(imagePixelBuffer),
+                        classifications: classifications,
+                        transform: transform
+                    )
                     
-                    self.classificationDelegate?.onClassification(imageClassification: ImageClassification(classifications: classifications, transform: transform))
+                    self.classificationDelegate?.onClassification(imageClassification: imageClassification)
                 }
             }
         }
         // Use CPU for Vision processing to ensure that there are adequate GPU resources for rendering.
         request.usesCPUOnly = true
         
-        // Use Vision to perform the request on the color image
         let orientation = CGImagePropertyOrientation(self.orientation)
         let handler = VNImageRequestHandler(cvPixelBuffer: imagePixelBuffer, orientation: orientation, options: [:])
         
@@ -138,32 +142,24 @@ extension ClassificationController {
         return nil
     }
     
-    func denormalizeBoundingBox(boundingBox: CGRect, colorImageSize: CGSize) -> CGRect {
-        let denormalizedBox = CGRect(x: boundingBox.origin.x * colorImageSize.width,
-                                    y: boundingBox.origin.y * colorImageSize.height,
-                                    width: boundingBox.width * colorImageSize.width,
-                                    height: boundingBox.height * colorImageSize.height)
+    static func scaleBoundingBox(boundingBox: CGRect, imageSize: CGSize, targetSize: CGSize) -> CGRect {
+        let scaleX = targetSize.width / imageSize.width
+        let scaleY = targetSize.height / imageSize.height
         
-        return denormalizedBox
-    }
-    
-    func scaleBoundingBox(boundingBox: CGRect, colorImageSize: CGSize, depthDataSize: CGSize) -> CGRect {
-        // 1. Denormalize the bounding box
-        let denormalizedBox = denormalizeBoundingBox(boundingBox: boundingBox, colorImageSize: colorImageSize)
-        
-        // 2. Scale to depth data size
-        let scaleX = depthDataSize.width / colorImageSize.width
-        let scaleY = depthDataSize.height / colorImageSize.height
+        let originalX = boundingBox.origin.x * imageSize.width
+        let originalY = boundingBox.origin.y * imageSize.height
+        let originalWidth = boundingBox.width * imageSize.width
+        let originalHeight = boundingBox.height * imageSize.height
 
-        let depthBoundingBox = CGRect(x: denormalizedBox.origin.x * scaleX,
-                                    y: denormalizedBox.origin.y * scaleY,
-                                    width: denormalizedBox.width * scaleX,
-                                    height: denormalizedBox.height * scaleY)
+        let depthBoundingBox = CGRect(x: originalX * scaleX,
+                                      y: originalY * scaleY,
+                                      width: originalWidth * scaleX,
+                                      height: originalHeight * scaleY)
         
         return depthBoundingBox
     }
     
-    func getPixelBufferSize(pixelBuffer: CVPixelBuffer) -> CGSize {
+    func getPixelBufferSize(_ pixelBuffer: CVPixelBuffer) -> CGSize {
         let width = CVPixelBufferGetWidth(pixelBuffer)
         let height = CVPixelBufferGetHeight(pixelBuffer)
         let size = CGSize(width: width, height: height)
@@ -173,10 +169,10 @@ extension ClassificationController {
 
     
     func getDistanceFromDepthMap(boundingBox: CGRect, imagePixelBuffer: CVPixelBuffer, depthPixelBuffer: CVPixelBuffer) -> Float {
-        let colorImageSize = self.getPixelBufferSize(pixelBuffer: imagePixelBuffer)
-        let depthDataSize = self.getPixelBufferSize(pixelBuffer: depthPixelBuffer)
+        let colorImageSize = self.getPixelBufferSize(imagePixelBuffer)
+        let depthDataSize = self.getPixelBufferSize(depthPixelBuffer)
         
-        let depthBoundingBox = scaleBoundingBox(boundingBox: boundingBox, colorImageSize: colorImageSize, depthDataSize: depthDataSize)
+        let depthBoundingBox = ClassificationController.scaleBoundingBox(boundingBox: boundingBox, imageSize: colorImageSize, targetSize: depthDataSize)
         
         // Get the distance to middle of bounding box
         let x = depthBoundingBox.midX

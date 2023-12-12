@@ -23,7 +23,9 @@ extension CGImagePropertyOrientation {
 
 
 class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDelegate, ARSessionDelegate {
-    var scoreThreshold: Float = 10 // Minimum severity score to display feedback
+    // Minimum severity score to display feedback
+    // FOR NOW, set this to be low so we can test UI interactions
+    var scoreThreshold: Float = 3
     var maxNumOfObjectsToDisplay: Int = 3 // Maximum number of observations per frame to display
     
     private var anchorLabels = [UUID: String]()
@@ -175,7 +177,6 @@ extension ARController {
         let cgDistance = CGFloat(distance)
         
         if let result = hitTestResults.first(where: { res in res.distance >= cgDistance }) ?? hitTestResults.first {
-//            let anchor = ARAnchor(transform: result.worldTransform)
             let updatedPosition = simd_mul(result.worldTransform, transform)
             let anchor = ARAnchor(transform: updatedPosition)
             sceneView.session.add(anchor: anchor)
@@ -216,6 +217,7 @@ extension ARController: ClassificationReceiver {
                 
                 let threshold = min(self.maxNumOfObjectsToDisplay, scoredClassifications.count)
                 let topObjects = (scoredClassifications.sorted { $0.score > $1.score })[..<threshold]
+                let frameSize = self.sceneView.frame.size
                 
                 for i in 0..<topObjects.count {
                     let classification = topObjects[i].classification
@@ -223,15 +225,19 @@ extension ARController: ClassificationReceiver {
                     
                     if (score >= self.scoreThreshold) {
                         let boundingBox = classification.boundingBox
-                        let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
+                    
+                        // Scale bounding box to current frame size
+                        let boundingBoxForFrame = ClassificationController.scaleBoundingBox(boundingBox: boundingBox, imageSize: imageClassification.imageSize, targetSize: frameSize)
                         
-                            self.placeLabelAtLocation(
-                                location: point,
-                                distance: classification.distance,
-                                label: classification.label,
-                                transform: imageClassification.transform
-                            )
+                        let boundingBoxMiddle = CGPoint(x: boundingBoxForFrame.midX, y: boundingBoxForFrame.midY)
+                        self.placeLabelAtLocation(
+                            location: boundingBoxMiddle,
+                            distance: classification.distance,
+                            label: classification.label,
+                            transform: imageClassification.transform
+                        )
                         
+                        // Display the message for the object at the first index; which is the object with the highest hazard score
                         if (i == 0) {
                             let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(classification.distance)m away"
                             self.statusViewManager?.showMessage(message, autoHide: true)

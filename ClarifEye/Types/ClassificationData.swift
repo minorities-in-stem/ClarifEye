@@ -10,6 +10,7 @@ struct ClassificationData {
 }
 
 struct ImageClassification {
+    var imageSize: CGSize
     var classifications: [ClassificationData]
     var transform: simd_float4x4
 }
