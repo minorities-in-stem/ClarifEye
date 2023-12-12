@@ -66,6 +66,7 @@ extension ClassificationController: CameraInputReceiver {
         let request = VNCoreMLRequest(model: self.coreMLClassificationModel) { request, error in
 
             if let results = request.results as? [VNRecognizedObjectObservation] {
+                var classifications: [ClassificationData] = []
                 for observation in results {
                     let labels = observation.labels
                     
@@ -78,8 +79,9 @@ extension ClassificationController: CameraInputReceiver {
                     
                     
                     if let label = labels.first(where: { l in l.confidence > 0.5 }) {
+                        let obstacleLabel = ObstacleLabel.fromString(label.identifier)
                         let classification = ClassificationData(
-                            label: label.identifier,
+                            label: cleanLabel(obstacleLabel.rawValue),
                             confidence: label.confidence,
                             distance: boundingBoxDistance,
                             boundingBox: denormalizedBox
@@ -89,9 +91,11 @@ extension ClassificationController: CameraInputReceiver {
                         let text = "\(label.identifier), distance: \(boundingBoxDistance) m, confidence: \(label.confidence)"
                         print("CLASSIFICATION", text)
                         
-                        
-                        self.classificationDelegate?.onClassification(imageClassification: ImageClassification(classifications: [classification], transform: transform))
+                        classifications.append(classification)
                     }
+                    
+                    
+                    self.classificationDelegate?.onClassification(imageClassification: ImageClassification(classifications: classifications, transform: transform))
                 }
             }
         }

@@ -23,6 +23,9 @@ extension CGImagePropertyOrientation {
 
 
 class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDelegate, ARSessionDelegate {
+    var scoreThreshold: Float = 10 // Minimum severity score to display feedback
+    var maxNumOfObjectsToDisplay: Int = 3 // Maximum number of observations per frame to display
+    
     private var anchorLabels = [UUID: String]()
     var sceneView: ARSKView = ARSKView()
     var classificationsSinceLastOutput: [ImageClassification] = []
@@ -170,7 +173,7 @@ extension ARController {
     // When the user taps, add an anchor associated with the current classification result.
     func placeLabelAtLocation(location: CGPoint, distance: Float, label: String, transform: simd_float4x4) {
         let hitTestResults = sceneView.hitTest(location, types: [.featurePoint, .estimatedHorizontalPlane])
-        var cgDistance = CGFloat(distance)
+        let cgDistance = CGFloat(distance)
         
         if let result = hitTestResults.first(where: { res in res.distance >= cgDistance }) ?? hitTestResults.first {
             // Add a new anchor at the tap location.
@@ -204,19 +207,31 @@ extension ARController: ClassificationReceiver {
     func onClassification(imageClassification: ImageClassification) {
         DispatchQueue.main.async {
             if (self.statusViewManager != nil && self.statusViewManager!.showText) {
-                for classification in imageClassification.classifications {
-                    let boundingBox = classification.boundingBox
-                    let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
+                let threshold = min(self.maxNumOfObjectsToDisplay, imageClassification.classifications.count)
+                let topObjects = (imageClassification.classifications.sorted { $0.confidence > $1.confidence })[..<threshold]
+                for i in 0..<topObjects.count {
+                    let classification = topObjects[i]
                     
-                        self.placeLabelAtLocation(
-                            location: point,
-                            distance: classification.distance,
-                            label: classification.label,
-                            transform: imageClassification.transform
-                        )
-
-                    let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(classification.distance)m away"
-                    self.statusViewManager?.showMessage(message)
+                    // ASSUME OBJECTS ARE STATIC FOR NOW
+                    let obstacleLabel = ObstacleLabel.fromString(classification.label)
+                    let score = CalculateScore(label: obstacleLabel, depth: classification.distance, speed: 0)
+                    
+                    if (score >= self.scoreThreshold) {
+                        let boundingBox = classification.boundingBox
+                        let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
+                        
+                            self.placeLabelAtLocation(
+                                location: point,
+                                distance: classification.distance,
+                                label: classification.label,
+                                transform: imageClassification.transform
+                            )
+                        
+                        if (i == 0) {
+                            let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(classification.distance)m away"
+                            self.statusViewManager?.showMessage(message)
+                        }
+                    }
                 }
                 
                 // Reset the cycle
