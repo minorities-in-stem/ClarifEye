@@ -179,9 +179,17 @@ extension ARController {
         let hitTestResults = sceneView.hitTest(location, types: [.featurePoint, .estimatedHorizontalPlane])
         let cgDistance = CGFloat(distance)
         
-        if let result = hitTestResults.first(where: { res in res.distance >= cgDistance }) ?? hitTestResults.first {
-            let updatedPosition = simd_mul(result.worldTransform, transform)
-            let anchor = ARAnchor(transform: updatedPosition)
+        if let result = hitTestResults.first {
+            // TODO: figure out how to account for when the current camera position is different than when the image was processed
+//            let inverseCameraTransform = simd_inverse(transform)
+//            let updatedPosition = simd_mul(result.worldTransform, inverseCameraTransform)
+            
+            // Make sure the anchor is the desired distance away from the camera
+            var translation = matrix_identity_float4x4
+            translation.columns.3.z = -distance
+            
+            let anchorTransform = simd_mul(result.worldTransform, translation)
+            let anchor = ARAnchor(transform: anchorTransform)
             sceneView.session.add(anchor: anchor)
             
             // Track anchor ID to associate text with the anchor after ARKit creates a corresponding SKNode.
@@ -189,6 +197,7 @@ extension ARController {
             
             // Remove the anchor
             DispatchQueue.main.asyncAfter(deadline: .now() + (self.statusViewManager?.displayDuration ?? 3)) { [self] in
+                self.anchorLabels.removeValue(forKey: anchor.identifier)
                 self.sceneView.session.remove(anchor: anchor)
             }
         }
@@ -220,7 +229,7 @@ extension ARController: ClassificationReceiver {
                 
                 let threshold = min(self.maxNumOfObjectsToDisplay, scoredClassifications.count)
                 let topObjects = (scoredClassifications.sorted { $0.score > $1.score })[..<threshold]
-                let frameSize = self.sceneView.frame.size
+                let targetSize = self.sceneView.bounds.size
                 
                 for i in 0..<topObjects.count {
                     let classification = topObjects[i].classification
@@ -230,9 +239,9 @@ extension ARController: ClassificationReceiver {
                         let boundingBox = classification.boundingBox
                     
                         // Scale bounding box to current frame size
-                        let boundingBoxForFrame = ClassificationController.scaleBoundingBox(boundingBox: boundingBox, imageSize: imageClassification.imageSize, targetSize: frameSize)
-                        
+                        let boundingBoxForFrame = ClassificationController.scaleToTargetSize(boundingBox: boundingBox, imageSize: imageClassification.imageSize, targetSize: targetSize)
                         let boundingBoxMiddle = CGPoint(x: boundingBoxForFrame.midX, y: boundingBoxForFrame.midY)
+                        
                         self.placeLabelAtLocation(
                             location: boundingBoxMiddle,
                             distance: classification.distance,

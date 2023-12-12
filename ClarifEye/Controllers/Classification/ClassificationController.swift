@@ -139,24 +139,14 @@ extension ClassificationController {
         return nil
     }
     
-    static func scaleBoundingBox(boundingBox: CGRect, imageSize: CGSize, targetSize: CGSize) -> CGRect {
-        let scaleX = targetSize.width / imageSize.width
-        let scaleY = targetSize.height / imageSize.height
+    static func scaleToTargetSize(boundingBox: CGRect, imageSize: CGSize, targetSize: CGSize) -> CGRect {
+        let scaleX = targetSize.width
+        let scaleY = targetSize.height
         
-        let originalX = boundingBox.origin.x * imageSize.width
-        let originalY = boundingBox.origin.y * imageSize.height
-        let originalWidth = boundingBox.width * imageSize.width
-        let originalHeight = boundingBox.height * imageSize.height
-        
-        let newX = originalX * scaleX
-        let newY = originalY * scaleY
-        let newWidth = originalWidth * scaleX
-        let newHeight = originalHeight * scaleY
-
-        let depthBoundingBox = CGRect(x: newX / targetSize.width,
-                                      y: newY / targetSize.height,
-                                      width: newWidth / targetSize.width,
-                                      height: newHeight / targetSize.height)
+        let depthBoundingBox = CGRect(x: boundingBox.origin.x * scaleX,
+                                      y: boundingBox.origin.y * scaleY,
+                                      width: boundingBox.width * scaleX,
+                                      height: boundingBox.height * scaleY)
         
         return depthBoundingBox
     }
@@ -174,7 +164,7 @@ extension ClassificationController {
         let colorImageSize = self.getPixelBufferSize(imagePixelBuffer)
         let depthDataSize = self.getPixelBufferSize(depthPixelBuffer)
         
-        let depthBoundingBox = ClassificationController.scaleBoundingBox(boundingBox: boundingBox, imageSize: colorImageSize, targetSize: depthDataSize)
+        let depthBoundingBox = ClassificationController.scaleToTargetSize(boundingBox: boundingBox, imageSize: colorImageSize, targetSize: depthDataSize)
         
         // Get the distance to middle of bounding box
         let x = depthBoundingBox.midX
