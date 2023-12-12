@@ -29,7 +29,7 @@ class StatusViewManager: ObservableObject {
     }
     
     var statusViewListener: StatusViewListener?
-    private let displayDuration: TimeInterval = 6
+    var displayDuration: TimeInterval = 3 // THIS IS THE LENGTH OF THE FEEDBACK CYCLE
     private var messageHideTimer: Timer?
 
     private var timers: [MessageType: Timer] = [:]

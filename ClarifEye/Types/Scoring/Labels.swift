@@ -98,7 +98,7 @@ enum ObstacleLabel: Int {
             case .WALL: return .WALL
             case .FENCE: return .FENCE
             case .GUARDRAIL: return .BARRIER
-            case .POLE: return .POLE
+            case .POLE, .BOLLARD: return .POLE
             case .TREE: return .TREE
             case .PERSON: return .PERSON
             default: return .NONE

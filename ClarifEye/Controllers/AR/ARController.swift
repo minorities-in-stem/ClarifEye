@@ -6,7 +6,7 @@ import Foundation
 
 
 protocol ClassificationReceiver: AnyObject {
-    func onClassification(classification: ClassificationData)
+    func onClassification(imageClassification: ImageClassification)
 }
 
 // Convert device orientation to image orientation for use by Vision analysis.
@@ -25,12 +25,13 @@ extension CGImagePropertyOrientation {
 class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDelegate, ARSessionDelegate {
     private var anchorLabels = [UUID: String]()
     var sceneView: ARSKView = ARSKView()
-    var classification: ClassificationData?
-    var lastClassification: ClassificationData?
+    var classificationsSinceLastOutput: [ImageClassification] = []
     
     var cameraDepthDelegate: CameraInputReceiver?
     var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
     var statusViewManager: StatusViewManager?
+    
+    var displayingOutput: Bool = false
     
     func start() {
         let configuration = ARWorldTrackingConfiguration()
@@ -135,6 +136,7 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
         anchorLabels = [UUID: String]()
         
         let configuration = ARWorldTrackingConfiguration()
+        configuration.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
     }
     
@@ -156,7 +158,8 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
 extension ARController {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         if (frame.smoothedSceneDepth != nil) {
-            cameraDepthDelegate?.classify(imagePixelBuffer: frame.capturedImage, depthDataBuffer: frame.smoothedSceneDepth!.depthMap)
+            var transform = frame.camera.transform
+            cameraDepthDelegate?.classify(imagePixelBuffer: frame.capturedImage, depthDataBuffer: frame.smoothedSceneDepth!.depthMap, transform: transform)
         }
     }
 }
@@ -165,19 +168,21 @@ extension ARController {
 // MARK: - Tap gesture handler & ARSKViewDelegate
 extension ARController {
     // When the user taps, add an anchor associated with the current classification result.
-    func placeLabelAtLocation(location: CGPoint, label: String) {
+    func placeLabelAtLocation(location: CGPoint, distance: Float, label: String, transform: simd_float4x4) {
         let hitTestResults = sceneView.hitTest(location, types: [.featurePoint, .estimatedHorizontalPlane])
-        if let result = hitTestResults.first {
-            
+        var cgDistance = CGFloat(distance)
+        
+        if let result = hitTestResults.first(where: { res in res.distance >= cgDistance }) ?? hitTestResults.first {
             // Add a new anchor at the tap location.
-            let anchor = ARAnchor(transform: result.worldTransform)
+//            let anchor = ARAnchor(transform: result.worldTransform)
+            let anchor = ARAnchor(transform: transform)
             sceneView.session.add(anchor: anchor)
             
             // Track anchor ID to associate text with the anchor after ARKit creates a corresponding SKNode.
             anchorLabels[anchor.identifier] = label
             
-            // Remove the anchor after 8 seconds
-            DispatchQueue.main.asyncAfter(deadline: .now() + 8) { [self] in
+            // Remove the anchor
+            DispatchQueue.main.asyncAfter(deadline: .now() + (self.statusViewManager?.displayDuration ?? 3)) { [self] in
                 self.sceneView.session.remove(anchor: anchor)
             }
         }
@@ -196,20 +201,29 @@ extension ARController {
 
 // MARK: - Handle classification display
 extension ARController: ClassificationReceiver {
-    func onClassification(classification: ClassificationData) {
+    func onClassification(imageClassification: ImageClassification) {
         DispatchQueue.main.async {
-            let boundingBox = classification.boundingBox
-            let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
-            self.classification = classification
-            
-            // Use this as a safe guard from placing too many labels down
-            if (self.lastClassification == nil || self.lastClassification!.label != classification.label) {
-                self.placeLabelAtLocation(location: point, label: classification.label)
-                self.lastClassification = self.classification
+            if (self.statusViewManager != nil && self.statusViewManager!.showText) {
+                for classification in imageClassification.classifications {
+                    let boundingBox = classification.boundingBox
+                    let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
+                    
+                        self.placeLabelAtLocation(
+                            location: point,
+                            distance: classification.distance,
+                            label: classification.label,
+                            transform: imageClassification.transform
+                        )
+
+                    let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(classification.distance)m away"
+                    self.statusViewManager?.showMessage(message)
+                }
+                
+                // Reset the cycle
+                self.classificationsSinceLastOutput = []
             }
             
-            let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(classification.distance)m away"
-            self.statusViewManager?.showMessage(message)
+            self.classificationsSinceLastOutput.append(imageClassification)
         }
     }
 }

@@ -11,6 +11,7 @@
 		A3027A3B2B09F61A009C644F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3027A3A2B09F61A009C644F /* SettingsView.swift */; };
 		A3200B222B264B7300DFBD64 /* Scores.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3200B212B264B7300DFBD64 /* Scores.swift */; };
 		A3200B242B264F5F00DFBD64 /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3200B232B264F5F00DFBD64 /* Labels.swift */; };
+		A3200B262B26797A00DFBD64 /* best.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A3200B252B26797A00DFBD64 /* best.mlmodel */; };
 		A3331B6D2B10B9DD00EADE34 /* LabelScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A3331B6C2B10B9DD00EADE34 /* LabelScene.sks */; };
 		A3331B6F2B10BD2C00EADE34 /* TrackingState+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3331B6E2B10BD2C00EADE34 /* TrackingState+Extensions.swift */; };
 		A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */; };
@@ -35,6 +36,7 @@
 		A3027A3A2B09F61A009C644F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A3200B212B264B7300DFBD64 /* Scores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scores.swift; sourceTree = "<group>"; };
 		A3200B232B264F5F00DFBD64 /* Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
+		A3200B252B26797A00DFBD64 /* best.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = best.mlmodel; path = Models/best.mlmodel; sourceTree = "<group>"; };
 		A3331B6C2B10B9DD00EADE34 /* LabelScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LabelScene.sks; sourceTree = "<group>"; };
 		A3331B6E2B10BD2C00EADE34 /* TrackingState+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackingState+Extensions.swift"; sourceTree = "<group>"; };
 		A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationData.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 		A37940AB2AF0A3AD0064540A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A3200B252B26797A00DFBD64 /* best.mlmodel */,
 				A3AE2FE42B0F594B00DCDC7A /* YOLOv3.mlmodel */,
 			);
 			name = Models;
@@ -290,6 +293,7 @@
 				A3AE300B2B109A1100DCDC7A /* TemplateLabelNode.swift in Sources */,
 				A3AE2FFB2B10013100DCDC7A /* CameraManager.swift in Sources */,
 				A3027A342B09F474009C644F /* ImageView.swift in Sources */,
+				A3200B262B26797A00DFBD64 /* best.mlmodel in Sources */,
 				AE2C81C927396765001BDCC7 /* View+Extensions.swift in Sources */,
 				A3331B6F2B10BD2C00EADE34 /* TrackingState+Extensions.swift in Sources */,
 				A3AE2FF82B0FF29300DCDC7A /* ARView.swift in Sources */,

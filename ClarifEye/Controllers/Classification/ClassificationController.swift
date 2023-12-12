@@ -9,8 +9,8 @@ import CoreVideo
 import CoreImage
 
 protocol CameraInputReceiver: AnyObject {
-    func classify(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer)
-    func classifyWithDepthEstimation(imagePixelBuffer: CVPixelBuffer)
+    func classify(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer, transform: simd_float4x4)
+    func classifyWithDepthEstimation(imagePixelBuffer: CVPixelBuffer, transform: simd_float4x4)
 }
 
 class ClassificationController: NSObject {
@@ -22,14 +22,14 @@ class ClassificationController: NSObject {
     
     
     // MARK: -Setup for object classification/identification model
-    private var _classificationModel: YOLOv3!
-    private var classificationModel: YOLOv3! {
+    private var _classificationModel: best!
+    private var classificationModel: best! {
         get {
             if let model = _classificationModel { return model }
             _classificationModel = {
                 do {
                     let configuration = MLModelConfiguration()
-                    return try YOLOv3(configuration: configuration)
+                    return try best(configuration: configuration)
                 } catch {
                     fatalError("Couldn't create classification model due to: \(error)")
                 }
@@ -66,17 +66,17 @@ class ClassificationController: NSObject {
 }
 
 extension ClassificationController: CameraInputReceiver {
-    func classify(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer) {
+    func classify(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer, transform: simd_float4x4) {
         videoQueue.async {
             guard self.currentBuffer == nil else {
                 return
             }
             
-            self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthDataBuffer)
+            self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthDataBuffer, transform: transform)
         }
     }
     
-    func classifyWithDepthEstimation(imagePixelBuffer: CVPixelBuffer) {
+    func classifyWithDepthEstimation(imagePixelBuffer: CVPixelBuffer, transform: simd_float4x4) {
         videoQueue.async {
             guard self.currentBuffer == nil else {
                 return
@@ -84,13 +84,13 @@ extension ClassificationController: CameraInputReceiver {
             
             if let estimation = self.depthEstimationDepthMap(imagePixelBuffer: imagePixelBuffer){
                let depthPixelBuffer = estimation
-                self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthPixelBuffer)
+                self.getClassificationAndDistance(imagePixelBuffer: imagePixelBuffer, depthDataBuffer: depthPixelBuffer, transform: transform)
            }
         }
     }
     
     
-    func getClassificationAndDistance(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer) {
+    func getClassificationAndDistance(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer, transform: simd_float4x4) {
         self.currentBuffer = imagePixelBuffer
 
         // Create a Vision request
@@ -109,14 +109,19 @@ extension ClassificationController: CameraInputReceiver {
                     
                     
                     if let label = labels.first(where: { l in l.confidence > 0.5 }) {
-                        let classification = ClassificationData(label: label.identifier, confidence: label.confidence, distance: boundingBoxDistance, boundingBox: denormalizedBox)
+                        let classification = ClassificationData(
+                            label: label.identifier,
+                            confidence: label.confidence,
+                            distance: boundingBoxDistance,
+                            boundingBox: denormalizedBox
+                        )
                         
                         // For debugging
                         let text = "\(label.identifier), distance: \(boundingBoxDistance) m, confidence: \(label.confidence)"
                         print("CLASSIFICATION", text)
                         
                         
-                        self.classificationDelegate?.onClassification(classification: classification)
+                        self.classificationDelegate?.onClassification(imageClassification: ImageClassification(classifications: [classification], transform: transform))
                     }
                 }
             }
