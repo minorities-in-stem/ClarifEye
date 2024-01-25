@@ -224,23 +224,12 @@ extension ARController {
     }
     
     func getAnchorForLocation(location: CGPoint, distance: Float, label: String, transform: simd_float4x4) -> ARAnchor? {
-        let hitTestResults = sceneView.hitTest(location, types: [.featurePoint, .estimatedHorizontalPlane])
+        var translation = matrix_identity_float4x4
+        translation.columns.3.z = -distance
+        let anchorTransform = simd_mul(transform, translation)
+        let anchor = ARAnchor(transform: anchorTransform)
         
-        if let result = hitTestResults.first {
-            // TODO: figure out how to account for when the current camera position is different than when the image was processed
-//            let inverseCameraTransform = simd_inverse(transform)
-//            let updatedPosition = simd_mul(result.worldTransform, inverseCameraTransform)
-            
-            // Make sure the anchor is the desired distance away from the camera
-            var translation = matrix_identity_float4x4
-            translation.columns.3.z = -distance
-            
-            let anchorTransform = simd_mul(result.worldTransform, translation)
-            let anchor = ARAnchor(transform: anchorTransform)
-            
-            return anchor
-        }
-        return nil
+        return anchor
     }
     
     // When an anchor is added, provide a SpriteKit node for it and set its text to the classification label.
@@ -256,7 +245,17 @@ extension ARController {
         node.addChild(label)
         
         // Add Bounding Box
-        let boxNode = BoundingBoxNode(classification.boundingBox, self.sceneView.frame.size)
+        guard let frame = self.sceneView.session.currentFrame else { return }
+        let viewPortSize = self.sceneView.bounds.size
+        let interfaceOrientation = self.sceneView.window!.windowScene!.interfaceOrientation
+        
+        let displayTransform = frame.displayTransform(for: interfaceOrientation, viewportSize: viewPortSize)
+        let toViewPortTransform = CGAffineTransform(scaleX: viewPortSize.width, y: viewPortSize.height)
+        
+        let boundingBox = classification.boundingBox.applying(displayTransform).applying(toViewPortTransform)
+        
+        let scale = max(viewPortSize.width, viewPortSize.height)
+        let boxNode = BoundingBoxNode(boundingBox, CGSize(width: scale, height: scale))
         node.addChild(boxNode)
     }
 }

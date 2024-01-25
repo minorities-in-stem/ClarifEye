@@ -18,10 +18,8 @@ class BoundingBoxNode: SKNode {
     }
     
     private func addBox(_ boundingBox: CGRect, _ scale: CGSize?) {
-        let width = scale != nil ? boundingBox.width * scale!.width : boundingBox.width
-        let height = scale != nil ? boundingBox.height * scale!.height : boundingBox.height
-        print("BOUNDING BOX", boundingBox)
-        print("SCALED", width, height)
+        let width = boundingBox.width
+        let height = boundingBox.height
         
         let boxNode = SKShapeNode(rectOf: CGSize(width: width, height: height))
         boxNode.lineWidth = 1
