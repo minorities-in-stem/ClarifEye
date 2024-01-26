@@ -6,7 +6,7 @@ enum MeasurementSystem: String {
 }
 
 class Settings: ObservableObject {
-    var measurementSystem: MeasurementSystem = MeasurementSystem.Metric
-    var audioOutput: Bool = true
-    var audioSpeed: Float = 1
+    @Published var measurementSystem: MeasurementSystem = MeasurementSystem.Metric
+    @Published var audioOutput: Bool = true
+    @Published var audioSpeed: Float = 1
 }
