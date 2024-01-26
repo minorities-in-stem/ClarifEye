@@ -299,6 +299,9 @@ extension ARController: ClassificationReceiver {
                 self.classificationsSinceLastOutput = []
             }
             
+            for classification in imageClassification.classifications {
+                
+            }
             self.classificationsSinceLastOutput.append(imageClassification)
         }
     }
