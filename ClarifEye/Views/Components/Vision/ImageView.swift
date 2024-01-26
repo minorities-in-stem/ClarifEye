@@ -5,16 +5,13 @@ struct ImageView: View {
     @ObservedObject var manager: CameraManager
     
     var body: some View {
+        let paused = manager.waitingForCapture
         ZStack {
             ButtonSettingsView(manager: manager)
                 .zIndex(1000)
-
+            
             VStack {
-                StatusView(
-//                    showText: manager.showText,
-//                    text: manager.message
-                    manager: manager
-                )
+                StatusView(manager: manager)
                 .padding(.top, 20)
                 .zIndex(1000)
                 
@@ -24,13 +21,18 @@ struct ImageView: View {
             ARView(manager: manager)
                 .zIndex(-1)
         }
+        .overlay {
+            if (paused) {
+                OverlayView(paused: paused)
+                    .allowsHitTesting(false)
+            }
+        }
     }
 }
 
 struct ButtonSettingsView: View {
     @ObservedObject var manager: CameraManager
     private let buttonSize = CGFloat(30)
-    
     var body: some View {
         VStack {
             Spacer() // Pushes everything to the bottom
