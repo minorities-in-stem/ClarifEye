@@ -30,7 +30,10 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     
     private var anchorToClassification = [UUID: ClassificationData]()
     var sceneView: ARSKView = ARSKView()
-    var classificationsSinceLastOutput: [ImageClassification] = []
+    var classificationsSinceLastOutput: [ImageClassification] = [] // TODO: remove
+    
+    var depthPerClassificationSinceLastOutput: Dictionary<String, [Float]> = [:]
+    var lastTransformPerClassificationSinceLastOutput: Dictionary<String, simd_float4x4> = [:]
     
     var classificationController: ClassificationController = ClassificationController()
     var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
@@ -264,7 +267,8 @@ extension ARController {
 extension ARController: ClassificationReceiver {
     func onClassification(imageClassification: ImageClassification) {
         DispatchQueue.main.async {
-            if (self.statusViewManager != nil && !self.statusViewManager!.showText) {
+            let outputIsActive = self.statusViewManager != nil && !self.statusViewManager!.showText
+            if (outputIsActive) {
                 var scoredClassifications: [ScoredClassification] = []
                 for classification in imageClassification.classifications {
                     // ASSUME OBJECTS ARE STATIC FOR NOW
@@ -297,10 +301,21 @@ extension ARController: ClassificationReceiver {
                 
                 // Reset the cycle
                 self.classificationsSinceLastOutput = []
+                
+                self.depthPerClassificationSinceLastOutput = [:]
+                self.lastTransformPerClassificationSinceLastOutput = [:]
             }
             
+            
             for classification in imageClassification.classifications {
+                if (!self.depthPerClassificationSinceLastOutput.keys.contains(classification.label)) {
+                    self.depthPerClassificationSinceLastOutput[classification.label] = []
+                }
                 
+                self.depthPerClassificationSinceLastOutput[classification.label]!.append(classification.distance)
+                
+                // This marks the last known relative position for a given label
+                self.lastTransformPerClassificationSinceLastOutput[classification.label] = imageClassification.transform
             }
             self.classificationsSinceLastOutput.append(imageClassification)
         }
