@@ -97,15 +97,15 @@ extension ClassificationController {
                             classifications[cleanedLabel] = classification
                         }
                     }
-                    
-                    let imageClassification = ImageClassification(
-                        imageSize: self.getPixelBufferSize(imagePixelBuffer),
-                        classifications: Array(classifications.values),
-                        transform: transform
-                    )
-                    
-                    self.classificationDelegate?.onClassification(imageClassification: imageClassification)
+        
                 }
+                let imageClassification = ImageClassification(
+                    imageSize: self.getPixelBufferSize(imagePixelBuffer),
+                    classifications: classifications,
+                    transform: transform
+                )
+                
+                self.classificationDelegate?.onClassification(imageClassification: imageClassification)
             }
         }
         // Use CPU for Vision processing to ensure that there are adequate GPU resources for rendering.

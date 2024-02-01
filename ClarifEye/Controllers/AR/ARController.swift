@@ -27,13 +27,14 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     // FOR NOW, set this to be low so we can test UI interactions
     var scoreThreshold: Float = 3
     var maxNumOfObjectsToDisplay: Int = 3 // Maximum number of observations per frame to display
+    var missingCountThresholdForDeletion: Int = 5 // How many counts before an object is deleted
     
     private var anchorToClassification = [UUID: ClassificationData]()
     var sceneView: ARSKView = ARSKView()
-    var classificationsSinceLastOutput: [ImageClassification] = [] // TODO: remove
     
     var depthPerClassificationSinceLastOutput: Dictionary<String, [Float]> = [:]
     var lastTransformPerClassificationSinceLastOutput: Dictionary<String, simd_float4x4> = [:]
+    var missingCounterPerClassificationSinceLastOutput: Dictionary<String, Int>  = [:]
     
     var classificationController: ClassificationController = ClassificationController()
     var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
@@ -270,7 +271,7 @@ extension ARController: ClassificationReceiver {
             let outputIsActive = self.statusViewManager != nil && !self.statusViewManager!.showText
             if (outputIsActive) {
                 var scoredClassifications: [ScoredClassification] = []
-                for classification in imageClassification.classifications {
+                for classification in imageClassification.classifications.values {
                     // ASSUME OBJECTS ARE STATIC FOR NOW
                     let obstacleLabel = ObstacleLabel.fromString(classification.label)
                     let score = CalculateScore(label: obstacleLabel, depth: classification.distance, speed: 0)
@@ -299,15 +300,15 @@ extension ARController: ClassificationReceiver {
                     }
                 }
                 
-                // Reset the cycle
-                self.classificationsSinceLastOutput = []
                 
                 self.depthPerClassificationSinceLastOutput = [:]
                 self.lastTransformPerClassificationSinceLastOutput = [:]
+                self.missingCounterPerClassificationSinceLastOutput = [:]
             }
+        
             
-            
-            for classification in imageClassification.classifications {
+            // Add current labels
+            for classification in imageClassification.classifications.values {
                 if (!self.depthPerClassificationSinceLastOutput.keys.contains(classification.label)) {
                     self.depthPerClassificationSinceLastOutput[classification.label] = []
                 }
@@ -317,7 +318,21 @@ extension ARController: ClassificationReceiver {
                 // This marks the last known relative position for a given label
                 self.lastTransformPerClassificationSinceLastOutput[classification.label] = imageClassification.transform
             }
-            self.classificationsSinceLastOutput.append(imageClassification)
+            
+            // Compare previous labels with current labels and delete if necessary
+            for existingClassificationLabel in self.depthPerClassificationSinceLastOutput.keys {
+                // If the object was in a previous frame but is no longer in the frame
+                if (!imageClassification.classifications.keys.contains(existingClassificationLabel)) {
+                    if (!self.missingCounterPerClassificationSinceLastOutput.keys.contains(existingClassificationLabel)) {
+                        self.missingCounterPerClassificationSinceLastOutput[existingClassificationLabel] = 0
+                    }
+                    self.missingCounterPerClassificationSinceLastOutput[existingClassificationLabel]! += 1
+                    
+                    if (self.missingCounterPerClassificationSinceLastOutput[existingClassificationLabel] == self.missingCountThresholdForDeletion) {
+                        self.depthPerClassificationSinceLastOutput.removeValue(forKey: existingClassificationLabel)
+                    }
+                }
+            }
         }
     }
 }
