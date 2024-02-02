@@ -291,7 +291,7 @@ extension ARController: ClassificationReceiver {
                     
                     // Perform depth smoothing based on all the times it's appeared in previous time steps
                     var previousDepths = self.depthPerClassificationSinceLastOutput[classification.label]
-                    let smoothedDepth = previousDepths == nil ? classification.distance : performSmoothing(data: [], alpha: self.smoothingFactor)
+                    let smoothedDepth = previousDepths == nil || previousDepths!.count == 0 ? classification.distance : performSmoothing(data: previousDepths!, alpha: self.smoothingFactor)!.last
                     let smoothedClassification = ClassificationData(
                         label: classification.label,
                         confidence: classification.confidence,
