@@ -5,7 +5,7 @@ import ARKit
 struct ClassificationData {
     var label: String
     var confidence: Float
-    var distance: Float
+    var distance: Float?
     var boundingBox: CGRect
 }
 

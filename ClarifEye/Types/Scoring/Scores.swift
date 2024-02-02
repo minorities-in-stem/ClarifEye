@@ -1,7 +1,7 @@
 import Foundation
 
 // TODO: move to a different file
-func CalculateScore(label: ObstacleLabel, depth: Float, speed: Float) -> Float {
+func CalculateScore(label: ObstacleLabel, depth: Float?, speed: Float) -> Float {
     let a: Float = 0.5
     let b: Float = 1.8
     let c: Float = 1
@@ -9,7 +9,7 @@ func CalculateScore(label: ObstacleLabel, depth: Float, speed: Float) -> Float {
     let obstacle = label.obstacleClass
     
     let s = obstacle.hazardScore
-    let g = DepthSeverity.severity(forDepth: depth).rawValue
+    let g = depth == nil ? 0 : DepthSeverity.severity(forDepth: depth!).rawValue
     let f = SpeedSeverity.severity(forSpeed: speed).rawValue
     
     let sev1 = a*s

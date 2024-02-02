@@ -27,7 +27,9 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     // FOR NOW, set this to be low so we can test UI interactions
     var scoreThreshold: Float = 3
     var maxNumOfObjectsToDisplay: Int = 3 // Maximum number of observations per frame to display
-    var missingCountThresholdForDeletion: Int = 5 // How many counts before an object is deleted
+    private var missingCountThresholdForDeletion: Int = 5 // How many counts before an object is deleted
+    
+    private var smoothingFactor: Float = 0.2 // For depth smoothing
     
     private var anchorToClassification = [UUID: ClassificationData]()
     var sceneView: ARSKView = ARSKView()
@@ -227,9 +229,11 @@ extension ARController {
         }
     }
     
-    func getAnchorForLocation(location: CGPoint, distance: Float, label: String, transform: simd_float4x4) -> ARAnchor? {
+    func getAnchorForLocation(location: CGPoint, distance: Float?, label: String, transform: simd_float4x4) -> ARAnchor? {
         var translation = matrix_identity_float4x4
-        translation.columns.3.z = -distance
+        if (distance != nil) {
+            translation.columns.3.z = -distance!
+        }
         let anchorTransform = simd_mul(transform, translation)
         let anchor = ARAnchor(transform: anchorTransform)
         
@@ -268,8 +272,8 @@ extension ARController {
 extension ARController: ClassificationReceiver {
     func onClassification(imageClassification: ImageClassification) {
         DispatchQueue.main.async {
-            let outputIsActive = self.statusViewManager != nil && !self.statusViewManager!.showText
-            if (outputIsActive) {
+            let displayOutput = self.statusViewManager != nil && !self.statusViewManager!.showText
+            if (displayOutput) {
                 var scoredClassifications: [ScoredClassification] = []
                 for classification in imageClassification.classifications.values {
                     // ASSUME OBJECTS ARE STATIC FOR NOW
@@ -285,9 +289,20 @@ extension ARController: ClassificationReceiver {
                     let classification = topObjects[i].classification
                     let score = topObjects[i].score
                     
+                    // Perform depth smoothing based on all the times it's appeared in previous time steps
+                    var previousDepths = self.depthPerClassificationSinceLastOutput[classification.label]
+                    let smoothedDepth = previousDepths == nil ? classification.distance : performSmoothing(data: [], alpha: self.smoothingFactor)
+                    let smoothedClassification = ClassificationData(
+                        label: classification.label,
+                        confidence: classification.confidence,
+                        distance: smoothedDepth,
+                        boundingBox: classification.boundingBox
+                    )
+                    
+                    
                     if (score >= self.scoreThreshold) {
                         self.placeClassificationLabel(
-                            classification: classification,
+                            classification: smoothedClassification,
                             originalImageSize: imageClassification.imageSize,
                             transform: imageClassification.transform
                         )
@@ -313,7 +328,9 @@ extension ARController: ClassificationReceiver {
                     self.depthPerClassificationSinceLastOutput[classification.label] = []
                 }
                 
-                self.depthPerClassificationSinceLastOutput[classification.label]!.append(classification.distance)
+                if (classification.distance != nil) {
+                    self.depthPerClassificationSinceLastOutput[classification.label]!.append(classification.distance!)
+                }
                 
                 // This marks the last known relative position for a given label
                 self.lastTransformPerClassificationSinceLastOutput[classification.label] = imageClassification.transform
