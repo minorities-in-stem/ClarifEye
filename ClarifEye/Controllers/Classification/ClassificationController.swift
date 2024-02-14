@@ -64,8 +64,8 @@ extension ClassificationController {
     func getClassificationAndDistance(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer, transform: simd_float4x4) {
         self.currentBuffer = imagePixelBuffer
         
-        let request = VNCoreMLRequest(model: self.coreMLClassificationModel) { request, error in
-
+        let request = VNCoreMLRequest(model: self.coreMLClassificationModel)
+        { request, error in
             if let results = request.results as? [VNRecognizedObjectObservation] {
                 var classifications: [ClassificationData] = []
                 for observation in results {
@@ -85,7 +85,7 @@ extension ClassificationController {
                         )
                         
                         // For debugging
-                        let text = "\(label.identifier), distance: \(boundingBoxDistance) m, confidence: \(label.confidence)"
+//                        let text = "\(label.identifier), distance: \(boundingBoxDistance) m, confidence: \(label.confidence)"
 //                        print("CLASSIFICATION", text)
                         
                         classifications.append(classification)

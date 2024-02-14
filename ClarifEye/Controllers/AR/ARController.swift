@@ -35,6 +35,7 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     var classificationController: ClassificationController = ClassificationController()
     var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
     var statusViewManager: StatusViewManager?
+    var speechController: SpeechController?
     
     private var shouldClassify: Bool = true
     private var classificationTimer: Timer?
@@ -55,8 +56,12 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     
     func start() {
         let configuration = ARWorldTrackingConfiguration()
+        if ARWorldTrackingConfiguration.supportsFrameSemantics(.sceneDepth) {
         configuration.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
         sceneView.session.run(configuration)
+        } else {
+            print("Device does not support lidar sensor")
+        }
         addClassificationTimer()
     }
     
@@ -158,9 +163,13 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
         anchorToClassification = [UUID: ClassificationData]()
         
         let configuration = ARWorldTrackingConfiguration()
+        if ARWorldTrackingConfiguration.supportsFrameSemantics(.sceneDepth) {
         configuration.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
+        } else {
+            statusViewManager?.showMessage("NO LIDAR")
+        }
+
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-         
         removeClassificationTimer()
         addClassificationTimer()
     }
@@ -290,17 +299,15 @@ extension ARController: ClassificationReceiver {
                         // Display the message for the object at the first index; which is the object with the highest hazard score
                         if (i == 0) {
                             let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(classification.distance)m away"
+                            print("message")
                             self.statusViewManager?.showMessage(message, autoHide: true)
+                            self.speechController?.playMessage("undesirable ahead.")
                         }
                     }
                 }
                 
                 // Reset the cycle
                 self.classificationsSinceLastOutput = []
-            }
-            
-            for classification in imageClassification.classifications {
-                
             }
             self.classificationsSinceLastOutput.append(imageClassification)
         }

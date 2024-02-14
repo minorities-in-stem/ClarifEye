@@ -22,6 +22,7 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
     var cancellables = Set<AnyCancellable>()
     
     @Published var arController: ARController = ARController()
+    @Published var speechController: SpeechController = SpeechController()
     @Published var statusViewManager: StatusViewManager = StatusViewManager()
     
     @Published var message: String = "Hello!"
@@ -31,6 +32,7 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
         // Set up the controllers and assign their delegates
         arController.classificationController.classificationDelegate = arController
         arController.statusViewManager = statusViewManager
+        arController.speechController = speechController
         
         NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification).sink { _ in
             self.orientation = UIDevice.current.orientation

@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		836E27042B7C2F0A009C9DCC /* SpeechController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836E27032B7C2F0A009C9DCC /* SpeechController.swift */; };
+		83CB2CF12B741B8E00248717 /* best.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 83CB2CF02B741B8E00248717 /* best.mlmodel */; };
 		A3027A342B09F474009C644F /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3027A332B09F474009C644F /* ImageView.swift */; };
 		A3027A3B2B09F61A009C644F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3027A3A2B09F61A009C644F /* SettingsView.swift */; };
 		A3200B222B264B7300DFBD64 /* Scores.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3200B212B264B7300DFBD64 /* Scores.swift */; };
 		A3200B242B264F5F00DFBD64 /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3200B232B264F5F00DFBD64 /* Labels.swift */; };
-		A3200B262B26797A00DFBD64 /* best.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A3200B252B26797A00DFBD64 /* best.mlmodel */; };
 		A3331B6D2B10B9DD00EADE34 /* LabelScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A3331B6C2B10B9DD00EADE34 /* LabelScene.sks */; };
 		A3331B6F2B10BD2C00EADE34 /* TrackingState+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3331B6E2B10BD2C00EADE34 /* TrackingState+Extensions.swift */; };
 		A382882F2B28F988005A7522 /* BoundingBoxNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382882E2B28F988005A7522 /* BoundingBoxNode.swift */; };
@@ -33,11 +34,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		836E27032B7C2F0A009C9DCC /* SpeechController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechController.swift; sourceTree = "<group>"; };
+		83CB2CF02B741B8E00248717 /* best.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = best.mlmodel; sourceTree = "<group>"; };
 		A3027A332B09F474009C644F /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		A3027A3A2B09F61A009C644F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A3200B212B264B7300DFBD64 /* Scores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scores.swift; sourceTree = "<group>"; };
 		A3200B232B264F5F00DFBD64 /* Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
-		A3200B252B26797A00DFBD64 /* best.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = best.mlmodel; path = Models/best.mlmodel; sourceTree = "<group>"; };
 		A3331B6C2B10B9DD00EADE34 /* LabelScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LabelScene.sks; sourceTree = "<group>"; };
 		A3331B6E2B10BD2C00EADE34 /* TrackingState+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackingState+Extensions.swift"; sourceTree = "<group>"; };
 		A382882E2B28F988005A7522 /* BoundingBoxNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxNode.swift; sourceTree = "<group>"; };
@@ -75,6 +77,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		83CB2CEF2B741B6300248717 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				83CB2CF02B741B8E00248717 /* best.mlmodel */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		A3200B202B264B6500DFBD64 /* Scoring */ = {
 			isa = PBXGroup;
 			children = (
@@ -82,14 +92,6 @@
 				A3200B232B264F5F00DFBD64 /* Labels.swift */,
 			);
 			path = Scoring;
-			sourceTree = "<group>";
-		};
-		A37940AB2AF0A3AD0064540A /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				A3200B252B26797A00DFBD64 /* best.mlmodel */,
-			);
-			name = Models;
 			sourceTree = "<group>";
 		};
 		A3846CBD2AFCBF8B00A720E9 /* Components */ = {
@@ -116,6 +118,7 @@
 		A3AE2FEE2B0FEFAB00DCDC7A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				836E27032B7C2F0A009C9DCC /* SpeechController.swift */,
 				A3AE2FFA2B10013100DCDC7A /* CameraManager.swift */,
 				A3AE30052B1099D600DCDC7A /* AR */,
 				A3AE2FF92B0FFA5600DCDC7A /* Classification */,
@@ -183,8 +186,8 @@
 			isa = PBXGroup;
 			children = (
 				A3AE2FEE2B0FEFAB00DCDC7A /* Controllers */,
+				83CB2CEF2B741B6300248717 /* Models */,
 				A3846CC02AFCC64900A720E9 /* Types */,
-				A37940AB2AF0A3AD0064540A /* Models */,
 				AEC8871B272EB01200ED6FCC /* Views */,
 				AE921D29270D7B02000E95C6 /* ClarifEye.swift */,
 				AE921D2D270D7B04000E95C6 /* Assets.xcassets */,
@@ -297,7 +300,6 @@
 				A3AE300B2B109A1100DCDC7A /* TemplateLabelNode.swift in Sources */,
 				A3AE2FFB2B10013100DCDC7A /* CameraManager.swift in Sources */,
 				A3027A342B09F474009C644F /* ImageView.swift in Sources */,
-				A3200B262B26797A00DFBD64 /* best.mlmodel in Sources */,
 				AE2C81C927396765001BDCC7 /* View+Extensions.swift in Sources */,
 				A3331B6F2B10BD2C00EADE34 /* TrackingState+Extensions.swift in Sources */,
 				A3AE2FF82B0FF29300DCDC7A /* ARView.swift in Sources */,
@@ -306,7 +308,9 @@
 				A3200B242B264F5F00DFBD64 /* Labels.swift in Sources */,
 				A3AE300D2B109BA700DCDC7A /* Settings.swift in Sources */,
 				A3027A3B2B09F61A009C644F /* SettingsView.swift in Sources */,
+				83CB2CF12B741B8E00248717 /* best.mlmodel in Sources */,
 				A3200B222B264B7300DFBD64 /* Scores.swift in Sources */,
+				836E27042B7C2F0A009C9DCC /* SpeechController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,7 +442,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = G68699Q862;
+				DEVELOPMENT_TEAM = M94H4528QV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClarifEye/Info.plist;
@@ -487,7 +491,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = G68699Q862;
+				DEVELOPMENT_TEAM = M94H4528QV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClarifEye/Info.plist;
