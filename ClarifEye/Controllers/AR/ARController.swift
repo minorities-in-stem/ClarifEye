@@ -205,6 +205,7 @@ extension ARController {
         // Scale bounding box to current frame size
         let targetSize = self.sceneView.bounds.size
         let boundingBox = ClassificationController.scaleToTargetSize(boundingBox: classification.boundingBox, imageSize: originalImageSize, targetSize: targetSize)
+//        let boundingBox = classification.boundingBox
         let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
                             
         // TESTING
@@ -230,10 +231,14 @@ extension ARController {
     }
     
     func getAnchorForLocation(location: CGPoint, distance: Float?, label: String, transform: simd_float4x4) -> ARAnchor? {
-        var translation = matrix_identity_float4x4
-        if (distance != nil) {
-            translation.columns.3.z = -distance!
+        // If no distance, don't place a label; the distance is treated as unknown
+        if (distance == nil) {
+            return nil
         }
+        
+        var translation = matrix_identity_float4x4
+        translation.columns.3.z = -distance!
+        
         let anchorTransform = simd_mul(transform, translation)
         let anchor = ARAnchor(transform: anchorTransform)
         
@@ -253,18 +258,15 @@ extension ARController {
         node.addChild(label)
         
         // Add Bounding Box
-        guard let frame = self.sceneView.session.currentFrame else { return }
-        let viewPortSize = self.sceneView.bounds.size
-        let interfaceOrientation = self.sceneView.window!.windowScene!.interfaceOrientation
-        
-        let displayTransform = frame.displayTransform(for: interfaceOrientation, viewportSize: viewPortSize)
-        let toViewPortTransform = CGAffineTransform(scaleX: viewPortSize.width, y: viewPortSize.height)
-        
-        let boundingBox = classification.boundingBox.applying(displayTransform).applying(toViewPortTransform)
-        
-        let scale = max(viewPortSize.width, viewPortSize.height)
-        let boxNode = BoundingBoxNode(boundingBox, CGSize(width: scale, height: scale))
-        node.addChild(boxNode)
+//        guard let frame = self.sceneView.session.currentFrame else { return }
+//        let viewPortSize = self.sceneView.bounds.size
+//        let interfaceOrientation = self.sceneView.window!.windowScene!.interfaceOrientation
+//        
+//        let boundingBox = classification.boundingBox
+//        
+//        let scale = max(viewPortSize.width, viewPortSize.height)
+//        let boxNode = BoundingBoxNode(boundingBox, CGSize(width: scale, height: scale))
+//        node.addChild(boxNode)
     }
 }
 
@@ -290,7 +292,7 @@ extension ARController: ClassificationReceiver {
                     let score = topObjects[i].score
                     
                     // Perform depth smoothing based on all the times it's appeared in previous time steps
-                    var previousDepths = self.depthPerClassificationSinceLastOutput[classification.label]
+                    let previousDepths = self.depthPerClassificationSinceLastOutput[classification.label]
                     let smoothedDepth = previousDepths == nil || previousDepths!.count == 0 ? classification.distance : performSmoothing(data: previousDepths!, alpha: self.smoothingFactor)!.last
                     let smoothedClassification = ClassificationData(
                         label: classification.label,
