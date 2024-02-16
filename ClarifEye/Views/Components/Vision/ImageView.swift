@@ -5,17 +5,19 @@ struct ImageView: View {
     @ObservedObject var manager: CameraManager
     
     var body: some View {
-        let paused = manager.waitingForCapture
+        let paused = manager.streamPaused
         ZStack {
             ButtonSettingsView(manager: manager)
                 .zIndex(1000)
             
-            VStack {
-                StatusView(manager: manager)
-                .padding(.top, 20)
-                .zIndex(1000)
-                
-                Spacer()
+            if (!paused) {
+                VStack {
+                    StatusView(manager: manager)
+                    .padding(.top, 20)
+                    .zIndex(1000)
+                    
+                    Spacer()
+                }
             }
 
             ARView(manager: manager)
@@ -23,8 +25,10 @@ struct ImageView: View {
         }
         .overlay {
             if (paused) {
-                OverlayView(paused: paused)
-                    .allowsHitTesting(false)
+                PausedOverlayView(
+                    message: manager.isError ? manager.message : nil
+                )
+                .allowsHitTesting(false)
             }
         }
     }
@@ -40,7 +44,7 @@ struct ButtonSettingsView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 10) {
                     Button(action: manager.toggleStream) {
-                        if (manager.waitingForCapture) {
+                        if (manager.streamPaused) {
                             Image(systemName: "play.circle")
                                 .font(.system(size: buttonSize))
                         } else {

@@ -105,12 +105,15 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
         statusViewManager?.showTrackingQualityInfo(for: camera.trackingState, autoHide: true)
         
         switch camera.trackingState {
-        case .notAvailable, .limited:
-            statusViewManager?.escalateFeedback(for: camera.trackingState, inSeconds: 3.0)
-        case .normal:
-            statusViewManager?.cancelScheduledMessage(for: .trackingStateEscalation)
-            // Unhide content after successful relocalization.
-            setOverlaysHidden(false)
+            case .notAvailable, .limited:
+                statusViewManager?.escalateFeedback(for: camera.trackingState, inSeconds: 3.0)
+                cameraCapturedDataDelegate?.setStreamAvailable(false)
+            case .normal:
+                statusViewManager?.cancelScheduledMessage(for: .trackingStateEscalation)
+                cameraCapturedDataDelegate?.setStreamAvailable(true)
+
+                // Unhide content after successful relocalization.
+                setOverlaysHidden(false)
         }
     }
     
@@ -159,7 +162,7 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
 
      func restartSession() {
         statusViewManager?.cancelAllScheduledMessages()
-        statusViewManager?.showMessage("RESTARTING SESSION")
+        statusViewManager?.showMessage("Restarting Session", isError: true)
 
         anchorToClassification = [UUID: ClassificationData]()
         

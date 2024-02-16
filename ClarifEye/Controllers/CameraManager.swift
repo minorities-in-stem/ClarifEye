@@ -5,18 +5,18 @@ import simd
 import AVFoundation
 
 protocol CameraCapturedDataReceiver: AnyObject {
-    
+    func setStreamAvailable(_ avail: Bool)
 }
 
 protocol StatusViewManagerDelegate: AnyObject {
-    func onMessage(message: String)
+    func onMessage(_ message: String, isError: Bool?)
     func onShowText(showText: Bool)
 }
 
 
 class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewManagerDelegate {
     @Published var orientation = UIDevice.current.orientation
-    @Published var waitingForCapture = false
+    @Published var streamPaused = false
     @Published var dataAvailable = false
     
     var cancellables = Set<AnyCancellable>()
@@ -25,6 +25,7 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
     @Published var statusViewManager: StatusViewManager = StatusViewManager()
     
     @Published var message: String = "Hello!"
+    @Published var isError: Bool = false
     @Published var showText: Bool = true
     
     init() {
@@ -40,9 +41,10 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
         statusViewManager.delegate = self
     }
     
-    func onMessage(message: String) {
+    func onMessage(_ message: String, isError: Bool? = false) {
         DispatchQueue.main.async {
             self.message = message
+            self.isError = isError!
         }
     }
     
@@ -51,20 +53,23 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
             self.showText = showText
         }
     }
-
     
+    func setStreamAvailable(_ avail: Bool) {
+        streamPaused = !avail
+    }
+
     func startStream() {
-        waitingForCapture = false
+        streamPaused = false
         arController.start()
     }
     
     func stopStream() {
-        waitingForCapture = true
+        streamPaused = true
         arController.pause()
     }
     
     func toggleStream() {
-        if (waitingForCapture) {
+        if (streamPaused) {
             startStream()
         } else {
             stopStream()

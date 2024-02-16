@@ -16,10 +16,10 @@ class StatusViewManager: ObservableObject {
         ]
     }
 
-    
+    @Published var isError: Bool = false
     @Published var message: String! = "" {
         didSet {
-            self.delegate?.onMessage(message: message)
+            self.delegate?.onMessage(message, isError: self.isError)
         }
     }
     @Published var showText: Bool = false {
@@ -35,10 +35,12 @@ class StatusViewManager: ObservableObject {
     private var timers: [MessageType: Timer] = [:]
     
     // MARK: - Message Handling
-    func showMessage(_ text: String, autoHide: Bool = true) {
+    func showMessage(_ text: String, autoHide: Bool = true, isError: Bool = false) {
         // Cancel any previous hide timer.
         messageHideTimer?.invalidate()
-        message = text
+        
+        self.isError = isError
+        self.message = text
         
         // Make sure status is showing.
         setMessageHidden(false)
@@ -89,7 +91,11 @@ class StatusViewManager: ObservableObject {
                 message.append(": \(recommendation)")
             }
             
-            self.showMessage(message, autoHide: true)
+            if (trackingState == .normal) {
+                self.showMessage(message, autoHide: true, isError: false)
+            } else {
+                self.showMessage(message, autoHide: false, isError: true)
+            }
         })
         
         timers[.trackingStateEscalation] = timer
