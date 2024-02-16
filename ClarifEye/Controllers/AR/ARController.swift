@@ -102,18 +102,17 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     // MARK: - AR Session Handling
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        statusViewManager?.showTrackingQualityInfo(for: camera.trackingState, autoHide: true)
+        statusViewManager?.escalateFeedback(for: camera.trackingState, inSeconds: 1.0)
         
-        switch camera.trackingState {
-            case .notAvailable, .limited:
-                statusViewManager?.escalateFeedback(for: camera.trackingState, inSeconds: 3.0)
-                cameraCapturedDataDelegate?.setStreamAvailable(false)
-            case .normal:
-                statusViewManager?.cancelScheduledMessage(for: .trackingStateEscalation)
-                cameraCapturedDataDelegate?.setStreamAvailable(true)
-
-                // Unhide content after successful relocalization.
-                setOverlaysHidden(false)
+        if (camera.trackingState == .normal) {
+            self.cameraCapturedDataDelegate?.setStreamAvailable(true)
+            self.addClassificationTimer()
+            // Unhide content after successful relocalization.
+            setOverlaysHidden(false)
+        } else {
+            self.cameraCapturedDataDelegate?.setStreamAvailable(false)
+            self.removeClassificationTimer()
+            setOverlaysHidden(true)
         }
     }
     
@@ -134,20 +133,6 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
         }
     }
     
-    func sessionWasInterrupted(_ session: ARSession) {
-        setOverlaysHidden(true)
-    }
-    
-    func sessionShouldAttemptRelocalization(_ session: ARSession) -> Bool {
-        /*
-         Allow the session to attempt to resume after an interruption.
-         This process may not succeed, so the app must be prepared
-         to reset the session if the relocalizing status continues
-         for a long time -- see `escalateFeedback` in `StatusViewController`.
-         */
-        return true
-    }
-
     private func setOverlaysHidden(_ shouldHide: Bool) {
         sceneView.scene!.children.forEach { node in
             if shouldHide {
@@ -161,17 +146,19 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     }
 
      func restartSession() {
-        statusViewManager?.cancelAllScheduledMessages()
-        statusViewManager?.showMessage("Restarting Session", isError: true)
+         statusViewManager?.cancelAllScheduledMessages()
+         statusViewManager?.showMessage("Restarting Session", isError: true)
 
-        anchorToClassification = [UUID: ClassificationData]()
+         anchorToClassification = [UUID: ClassificationData]()
         
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
-        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+         let configuration = ARWorldTrackingConfiguration()
+         configuration.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
+         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
          
-        removeClassificationTimer()
-        addClassificationTimer()
+         self.removeClassificationTimer()
+         self.addClassificationTimer()
+         
+         self.resetClassificationTracking()
     }
     
     // MARK: - Error handling
@@ -275,6 +262,12 @@ extension ARController {
 
 // MARK: - Handle classification display
 extension ARController: ClassificationReceiver {
+    func resetClassificationTracking() {
+        self.depthPerClassificationSinceLastOutput = [:]
+        self.lastTransformPerClassificationSinceLastOutput = [:]
+        self.missingCounterPerClassificationSinceLastOutput = [:]
+    }
+    
     func onClassification(imageClassification: ImageClassification) {
         DispatchQueue.main.async {
             let displayOutput = self.statusViewManager != nil && !self.statusViewManager!.showText
@@ -320,10 +313,7 @@ extension ARController: ClassificationReceiver {
                     }
                 }
                 
-                
-                self.depthPerClassificationSinceLastOutput = [:]
-                self.lastTransformPerClassificationSinceLastOutput = [:]
-                self.missingCounterPerClassificationSinceLastOutput = [:]
+                self.resetClassificationTracking()
             }
         
             
