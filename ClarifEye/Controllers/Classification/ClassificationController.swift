@@ -93,7 +93,7 @@ extension ClassificationController {
                         
                         // Assume that there is only one type of each object per image/frame
                         // Take the one with the closest distance
-                        if (!classifications.keys.contains(cleanedLabel) ||  boundingBoxDistance < classifications[cleanedLabel]!.distance) {
+                        if (!classifications.keys.contains(cleanedLabel) ||  boundingBoxDistance < classifications[cleanedLabel]!.distance!) {
                             classifications[cleanedLabel] = classification
                         }
                     }
