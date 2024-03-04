@@ -212,7 +212,7 @@ extension ARController {
     }
     
     func getAnchorForLocation(location: CGPoint, distance: Float?, label: String, transform: simd_float4x4) -> ARAnchor? {
-        // If no distance, don't place a label; ewq the distance is treated as unknown
+        // If no distance, don't place a label; the distance is treated as unknown
         if (distance == nil) {
             print("No distance found")
             return nil
