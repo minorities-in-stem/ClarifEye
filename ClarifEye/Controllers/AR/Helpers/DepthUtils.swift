@@ -14,7 +14,8 @@ func performSmoothing(data: [Float], alpha: Float) -> [Float]? {
         arr = arr + padding
         
     }
-    let convolved = vDSP.convolve(arr[..<timePoints], withKernel:  [0.2, 0.2, 0.2, 0.2, 0.2])
     
+    arr.append(0.0)
+    let convolved = vDSP.convolve(arr, withKernel:  [0.2, 0.2, 0.2, 0.2, 0.2])
     return convolved
 }
