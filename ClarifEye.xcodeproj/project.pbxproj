@@ -17,6 +17,7 @@
 		A382882F2B28F988005A7522 /* BoundingBoxNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382882E2B28F988005A7522 /* BoundingBoxNode.swift */; };
 		A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */; };
 		A38FE1352B634C2B008C3DD8 /* Overlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38FE1342B634C2B008C3DD8 /* Overlay.swift */; };
+		A38FE1382B6C6B65008C3DD8 /* DepthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38FE1372B6C6B65008C3DD8 /* DepthUtils.swift */; };
 		A3AE2FF22B0FF08800DCDC7A /* ClassificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FF12B0FF08800DCDC7A /* ClassificationController.swift */; };
 		A3AE2FF82B0FF29300DCDC7A /* ARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FF72B0FF29300DCDC7A /* ARView.swift */; };
 		A3AE2FFB2B10013100DCDC7A /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FFA2B10013100DCDC7A /* CameraManager.swift */; };
@@ -43,6 +44,7 @@
 		A382882E2B28F988005A7522 /* BoundingBoxNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxNode.swift; sourceTree = "<group>"; };
 		A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationData.swift; sourceTree = "<group>"; };
 		A38FE1342B634C2B008C3DD8 /* Overlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Overlay.swift; sourceTree = "<group>"; };
+		A38FE1372B6C6B65008C3DD8 /* DepthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepthUtils.swift; sourceTree = "<group>"; };
 		A3AE2FF12B0FF08800DCDC7A /* ClassificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationController.swift; sourceTree = "<group>"; };
 		A3AE2FF72B0FF29300DCDC7A /* ARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARView.swift; sourceTree = "<group>"; };
 		A3AE2FFA2B10013100DCDC7A /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
@@ -113,6 +115,17 @@
 			path = Types;
 			sourceTree = "<group>";
 		};
+		A38FE1362B6C6B41008C3DD8 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				A3AE30082B1099F700DCDC7A /* StatusViewManager.swift */,
+				A3AE300A2B109A1100DCDC7A /* TemplateLabelNode.swift */,
+				A382882E2B28F988005A7522 /* BoundingBoxNode.swift */,
+				A38FE1372B6C6B65008C3DD8 /* DepthUtils.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		A3AE2FEE2B0FEFAB00DCDC7A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -153,10 +166,8 @@
 		A3AE30052B1099D600DCDC7A /* AR */ = {
 			isa = PBXGroup;
 			children = (
+				A38FE1362B6C6B41008C3DD8 /* Helpers */,
 				A3AE30062B1099DF00DCDC7A /* ARController.swift */,
-				A3AE30082B1099F700DCDC7A /* StatusViewManager.swift */,
-				A3AE300A2B109A1100DCDC7A /* TemplateLabelNode.swift */,
-				A382882E2B28F988005A7522 /* BoundingBoxNode.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -304,6 +315,7 @@
 				AE921D2C270D7B02000E95C6 /* ContentView.swift in Sources */,
 				AE921D2A270D7B02000E95C6 /* ClarifEye.swift in Sources */,
 				A3200B242B264F5F00DFBD64 /* Labels.swift in Sources */,
+				A38FE1382B6C6B65008C3DD8 /* DepthUtils.swift in Sources */,
 				A3AE300D2B109BA700DCDC7A /* Settings.swift in Sources */,
 				A3027A3B2B09F61A009C644F /* SettingsView.swift in Sources */,
 				A3200B222B264B7300DFBD64 /* Scores.swift in Sources */,
@@ -464,7 +476,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = clarifeye.com;
+				PRODUCT_BUNDLE_IDENTIFIER = com.clarifeye;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -513,7 +525,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = clarifeye.com;
+				PRODUCT_BUNDLE_IDENTIFIER = com.clarifeye;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

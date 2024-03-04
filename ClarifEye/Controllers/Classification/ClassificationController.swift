@@ -67,7 +67,7 @@ extension ClassificationController {
         let request = VNCoreMLRequest(model: self.coreMLClassificationModel) { request, error in
 
             if let results = request.results as? [VNRecognizedObjectObservation] {
-                var classifications: [ClassificationData] = []
+                var classifications: Dictionary<String, ClassificationData> = [:]
                 for observation in results {
                     let labels = observation.labels
                     
@@ -75,30 +75,37 @@ extension ClassificationController {
                     let boundingBox = observation.boundingBox
                     let boundingBoxDistance = self.getDistanceFromDepthMap(boundingBox: boundingBox, imagePixelBuffer: imagePixelBuffer, depthPixelBuffer: depthDataBuffer)
                     
+                    // TODO: rethink; do we want to take the label with the highest confidence or only one with a confidence higher than 0.5
+                    // Do we need to take confidence of prediction into consideration before reporting to the user? Ex. a closer object with low confidence/unknown vs. slightly further object with more confidence
                     if let label = labels.first(where: { l in l.confidence > 0.5 }) {
                         let obstacleLabel = ObstacleLabel.fromString(label.identifier)
+                        let cleanedLabel = cleanLabel(obstacleLabel.rawValue)
                         let classification = ClassificationData(
-                            label: cleanLabel(obstacleLabel.rawValue),
+                            label: cleanedLabel,
                             confidence: label.confidence,
                             distance: boundingBoxDistance,
                             boundingBox: boundingBox
                         )
                         
                         // For debugging
-                        let text = "\(label.identifier), distance: \(boundingBoxDistance) m, confidence: \(label.confidence)"
-//                        print("CLASSIFICATION", text)
+                        // let text = "\(label.identifier), distance: \(boundingBoxDistance) m, confidence: \(label.confidence)"
+                        // print(text)
                         
-                        classifications.append(classification)
+                        // Assume that there is only one type of each object per image/frame
+                        // Take the one with the closest distance
+                        if (!classifications.keys.contains(cleanedLabel) ||  boundingBoxDistance < classifications[cleanedLabel]!.distance!) {
+                            classifications[cleanedLabel] = classification
+                        }
                     }
-                    
-                    let imageClassification = ImageClassification(
-                        imageSize: self.getPixelBufferSize(imagePixelBuffer),
-                        classifications: classifications,
-                        transform: transform
-                    )
-                    
-                    self.classificationDelegate?.onClassification(imageClassification: imageClassification)
+        
                 }
+                let imageClassification = ImageClassification(
+                    imageSize: self.getPixelBufferSize(imagePixelBuffer),
+                    classifications: classifications,
+                    transform: transform
+                )
+                
+                self.classificationDelegate?.onClassification(imageClassification: imageClassification)
             }
         }
         // Use CPU for Vision processing to ensure that there are adequate GPU resources for rendering.

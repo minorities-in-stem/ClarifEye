@@ -27,10 +27,16 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     // FOR NOW, set this to be low so we can test UI interactions
     var scoreThreshold: Float = 3
     var maxNumOfObjectsToDisplay: Int = 3 // Maximum number of observations per frame to display
+    private var missingCountThresholdForDeletion: Int = 5 // How many counts before an object is deleted
+    
+    private var smoothingFactor: Float = 0.2 // For depth smoothing
     
     private var anchorToClassification = [UUID: ClassificationData]()
     var sceneView: ARSKView = ARSKView()
-    var classificationsSinceLastOutput: [ImageClassification] = []
+    
+    var depthPerClassificationSinceLastOutput: Dictionary<String, [Float]> = [:]
+    var lastTransformPerClassificationSinceLastOutput: Dictionary<String, simd_float4x4> = [:]
+    var missingCounterPerClassificationSinceLastOutput: Dictionary<String, Int>  = [:]
     
     var classificationController: ClassificationController = ClassificationController()
     var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
@@ -199,6 +205,7 @@ extension ARController {
         // Scale bounding box to current frame size
         let targetSize = self.sceneView.bounds.size
         let boundingBox = ClassificationController.scaleToTargetSize(boundingBox: classification.boundingBox, imageSize: originalImageSize, targetSize: targetSize)
+//        let boundingBox = classification.boundingBox
         let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
                             
         // TESTING
@@ -223,9 +230,15 @@ extension ARController {
         }
     }
     
-    func getAnchorForLocation(location: CGPoint, distance: Float, label: String, transform: simd_float4x4) -> ARAnchor? {
+    func getAnchorForLocation(location: CGPoint, distance: Float?, label: String, transform: simd_float4x4) -> ARAnchor? {
+        // If no distance, don't place a label; the distance is treated as unknown
+        if (distance == nil) {
+            return nil
+        }
+        
         var translation = matrix_identity_float4x4
-        translation.columns.3.z = -distance
+        translation.columns.3.z = -distance!
+        
         let anchorTransform = simd_mul(transform, translation)
         let anchor = ARAnchor(transform: anchorTransform)
         
@@ -245,18 +258,15 @@ extension ARController {
         node.addChild(label)
         
         // Add Bounding Box
-        guard let frame = self.sceneView.session.currentFrame else { return }
-        let viewPortSize = self.sceneView.bounds.size
-        let interfaceOrientation = self.sceneView.window!.windowScene!.interfaceOrientation
-        
-        let displayTransform = frame.displayTransform(for: interfaceOrientation, viewportSize: viewPortSize)
-        let toViewPortTransform = CGAffineTransform(scaleX: viewPortSize.width, y: viewPortSize.height)
-        
-        let boundingBox = classification.boundingBox.applying(displayTransform).applying(toViewPortTransform)
-        
-        let scale = max(viewPortSize.width, viewPortSize.height)
-        let boxNode = BoundingBoxNode(boundingBox, CGSize(width: scale, height: scale))
-        node.addChild(boxNode)
+//        guard let frame = self.sceneView.session.currentFrame else { return }
+//        let viewPortSize = self.sceneView.bounds.size
+//        let interfaceOrientation = self.sceneView.window!.windowScene!.interfaceOrientation
+//        
+//        let boundingBox = classification.boundingBox
+//        
+//        let scale = max(viewPortSize.width, viewPortSize.height)
+//        let boxNode = BoundingBoxNode(boundingBox, CGSize(width: scale, height: scale))
+//        node.addChild(boxNode)
     }
 }
 
@@ -264,9 +274,10 @@ extension ARController {
 extension ARController: ClassificationReceiver {
     func onClassification(imageClassification: ImageClassification) {
         DispatchQueue.main.async {
-            if (self.statusViewManager != nil && !self.statusViewManager!.showText) {
+            let displayOutput = self.statusViewManager != nil && !self.statusViewManager!.showText
+            if (displayOutput) {
                 var scoredClassifications: [ScoredClassification] = []
-                for classification in imageClassification.classifications {
+                for classification in imageClassification.classifications.values {
                     // ASSUME OBJECTS ARE STATIC FOR NOW
                     let obstacleLabel = ObstacleLabel.fromString(classification.label)
                     let score = CalculateScore(label: obstacleLabel, depth: classification.distance, speed: 0)
@@ -280,29 +291,67 @@ extension ARController: ClassificationReceiver {
                     let classification = topObjects[i].classification
                     let score = topObjects[i].score
                     
+                    // Perform depth smoothing based on all the times it's appeared in previous time steps
+                    let previousDepths = self.depthPerClassificationSinceLastOutput[classification.label]
+                    let smoothedDepth = previousDepths == nil || previousDepths!.count == 0 ? classification.distance : performSmoothing(data: previousDepths!, alpha: self.smoothingFactor)!.last
+                    let smoothedClassification = ClassificationData(
+                        label: classification.label,
+                        confidence: classification.confidence,
+                        distance: smoothedDepth,
+                        boundingBox: classification.boundingBox
+                    )
+                    
+                    
                     if (score >= self.scoreThreshold) {
                         self.placeClassificationLabel(
-                            classification: classification,
+                            classification: smoothedClassification,
                             originalImageSize: imageClassification.imageSize,
                             transform: imageClassification.transform
                         )
     
                         // Display the message for the object at the first index; which is the object with the highest hazard score
                         if (i == 0) {
-                            let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(classification.distance)m away"
+                            let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(classification.distance!)m away"
                             self.statusViewManager?.showMessage(message, autoHide: true)
                         }
                     }
                 }
                 
-                // Reset the cycle
-                self.classificationsSinceLastOutput = []
+                
+                self.depthPerClassificationSinceLastOutput = [:]
+                self.lastTransformPerClassificationSinceLastOutput = [:]
+                self.missingCounterPerClassificationSinceLastOutput = [:]
+            }
+        
+            
+            // Add current labels
+            for classification in imageClassification.classifications.values {
+                if (!self.depthPerClassificationSinceLastOutput.keys.contains(classification.label)) {
+                    self.depthPerClassificationSinceLastOutput[classification.label] = []
+                }
+                
+                if (classification.distance != nil) {
+                    self.depthPerClassificationSinceLastOutput[classification.label]!.append(classification.distance!)
+                }
+                
+                // This marks the last known relative position for a given label
+                self.lastTransformPerClassificationSinceLastOutput[classification.label] = imageClassification.transform
             }
             
-            for classification in imageClassification.classifications {
-                
+            // Compare previous labels with current labels and delete if necessary
+            for existingClassificationLabel in self.depthPerClassificationSinceLastOutput.keys {
+                // If the object was in a previous frame but is no longer in the frame
+                if (!imageClassification.classifications.keys.contains(existingClassificationLabel)) {
+                    if (!self.missingCounterPerClassificationSinceLastOutput.keys.contains(existingClassificationLabel)) {
+                        self.missingCounterPerClassificationSinceLastOutput[existingClassificationLabel] = 0
+                    }
+                    self.missingCounterPerClassificationSinceLastOutput[existingClassificationLabel]! += 1
+                    
+                    if (self.missingCounterPerClassificationSinceLastOutput[existingClassificationLabel] == self.missingCountThresholdForDeletion) {
+                        self.depthPerClassificationSinceLastOutput.removeValue(forKey: existingClassificationLabel)
+                    }
+                }
             }
-            self.classificationsSinceLastOutput.append(imageClassification)
         }
     }
 }

@@ -5,13 +5,13 @@ import ARKit
 struct ClassificationData {
     var label: String
     var confidence: Float
-    var distance: Float
+    var distance: Float?
     var boundingBox: CGRect
 }
 
 struct ImageClassification {
     var imageSize: CGSize
-    var classifications: [ClassificationData]
+    var classifications: Dictionary<String, ClassificationData>
     var transform: simd_float4x4
 }
 
