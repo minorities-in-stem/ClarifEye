@@ -87,10 +87,6 @@ extension ClassificationController {
                             boundingBox: boundingBox
                         )
                         
-                        // For debugging
-                        // let text = "\(label.identifier), distance: \(boundingBoxDistance) m, confidence: \(label.confidence)"
-                        // print(text)
-                        
                         // Assume that there is only one type of each object per image/frame
                         // Take the one with the closest distance
                         if (!classifications.keys.contains(cleanedLabel) ||  boundingBoxDistance < classifications[cleanedLabel]!.distance!) {

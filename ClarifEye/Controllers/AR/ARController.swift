@@ -195,17 +195,8 @@ extension ARController {
         // Scale bounding box to current frame size
         let targetSize = self.sceneView.bounds.size
         let boundingBox = ClassificationController.scaleToTargetSize(boundingBox: classification.boundingBox, imageSize: originalImageSize, targetSize: targetSize)
-//        let boundingBox = classification.boundingBox
         let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
                             
-        // TESTING
-//        let flipped = CGRect(
-//            x: boundingBox.minX,
-//            y: 1 - boundingBox.maxY,
-//            width: boundingBox.width,
-//            height: boundingBox.height
-//        )
-//        let point = CGPoint(x: flipped.midX, y: flipped.midY)
                             
         if let anchor = self.getAnchorForLocation(location: point, distance: classification.distance, label: classification.label, transform: transform) {
             // Track anchor ID to associate text and bounding boxes with the anchor
@@ -221,8 +212,9 @@ extension ARController {
     }
     
     func getAnchorForLocation(location: CGPoint, distance: Float?, label: String, transform: simd_float4x4) -> ARAnchor? {
-        // If no distance, don't place a label; the distance is treated as unknown
+        // If no distance, don't place a label; ewq the distance is treated as unknown
         if (distance == nil) {
+            print("No distance found")
             return nil
         }
         
@@ -289,7 +281,8 @@ extension ARController: ClassificationReceiver {
                     
                     // Perform depth smoothing based on all the times it's appeared in previous time steps
                     let previousDepths = self.depthPerClassificationSinceLastOutput[classification.label]
-                    let smoothedDepth = previousDepths == nil || previousDepths!.count == 0 ? classification.distance : performSmoothing(data: previousDepths!, alpha: self.smoothingFactor)!.last
+                    let hasPreviousDepths = previousDepths == nil || previousDepths!.count == 0
+                    let smoothedDepth = hasPreviousDepths ? classification.distance : performSmoothing(data: previousDepths!, alpha: self.smoothingFactor)!.last
                     let smoothedClassification = ClassificationData(
                         label: classification.label,
                         confidence: classification.confidence,
@@ -307,7 +300,8 @@ extension ARController: ClassificationReceiver {
     
                         // Display the message for the object at the first index; which is the object with the highest hazard score
                         if (i == 0) {
-                            let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(classification.distance!)m away"
+                            let reportedDepth = smoothedDepth == nil ? "an unknown distance" : " \(smoothedDepth!)m"
+                            let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(reportedDepth) away"
                             self.statusViewManager?.showMessage(message, autoHide: true)
                         }
                     }
