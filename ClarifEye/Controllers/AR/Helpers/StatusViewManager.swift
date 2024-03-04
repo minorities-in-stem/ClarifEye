@@ -16,12 +16,7 @@ class StatusViewManager: ObservableObject {
         ]
     }
 
-    
-    @Published var message: String! = "" {
-        didSet {
-            self.delegate?.onMessage(message: message)
-        }
-    }
+    @Published var message: String! = "" 
     @Published var showText: Bool = false {
         didSet {
             self.delegate?.onShowText(showText: showText)
@@ -35,10 +30,12 @@ class StatusViewManager: ObservableObject {
     private var timers: [MessageType: Timer] = [:]
     
     // MARK: - Message Handling
-    func showMessage(_ text: String, autoHide: Bool = true) {
+    func showMessage(_ text: String, autoHide: Bool = true, isError: Bool = false) {
         // Cancel any previous hide timer.
         messageHideTimer?.invalidate()
-        message = text
+        
+        self.message = text
+        self.delegate?.onMessage(message, isError: isError)
         
         // Make sure status is showing.
         setMessageHidden(false)
@@ -50,7 +47,7 @@ class StatusViewManager: ObservableObject {
         }
     }
     
-    func scheduleMessage(_ text: String, inSeconds seconds: TimeInterval, messageType: MessageType) {
+    func scheduleMessage(_ text: String, inSeconds seconds: TimeInterval, messageType: MessageType, autoHide: Bool = false, isError: Bool = false) {
         cancelScheduledMessage(for: messageType)
         
         let timer = Timer.scheduledTimer(withTimeInterval: seconds, repeats: false, block: { [weak self] timer in
@@ -73,26 +70,17 @@ class StatusViewManager: ObservableObject {
     }
     
     // MARK: - ARKit
-    
-    func showTrackingQualityInfo(for trackingState: ARCamera.TrackingState, autoHide: Bool) {
-        showMessage(trackingState.presentationString, autoHide: autoHide)
-    }
-    
     func escalateFeedback(for trackingState: ARCamera.TrackingState, inSeconds seconds: TimeInterval) {
-        cancelScheduledMessage(for: .trackingStateEscalation)
+        var message = trackingState.presentationString
+        if let recommendation = trackingState.recommendation {
+            message.append(": \(recommendation)")
+        }
         
-        let timer = Timer.scheduledTimer(withTimeInterval: seconds, repeats: false, block: { [unowned self] _ in
-            self.cancelScheduledMessage(for: .trackingStateEscalation)
-            
-            var message = trackingState.presentationString
-            if let recommendation = trackingState.recommendation {
-                message.append(": \(recommendation)")
-            }
-            
-            self.showMessage(message, autoHide: true)
-        })
-        
-        timers[.trackingStateEscalation] = timer
+        if (trackingState == .normal) {
+            scheduleMessage(message, inSeconds: seconds, messageType: .trackingStateEscalation, autoHide: true, isError: false)
+        } else {
+            scheduleMessage(message, inSeconds: seconds, messageType: .trackingStateEscalation, autoHide: false, isError: true)
+        }
     }
     
     

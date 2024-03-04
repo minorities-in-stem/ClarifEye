@@ -4,20 +4,20 @@ import ARKit
 extension ARCamera.TrackingState {
     var presentationString: String {
         switch self {
-        case .notAvailable:
-            return "TRACKING UNAVAILABLE"
-        case .normal:
-            return "TRACKING NORMAL"
-        case .limited(.excessiveMotion):
-            return "TRACKING LIMITED\nExcessive motion"
-        case .limited(.insufficientFeatures):
-            return "TRACKING LIMITED\nLow detail"
-        case .limited(.initializing):
-            return "Initializing"
-        case .limited(.relocalizing):
-            return "Recovering from interruption"
-        default:
-            return "TRACKING UNAVAILABLE"
+            case .normal:
+                return "TRACKING NORMAL"
+            case .limited(.excessiveMotion):
+                return "Tracking Limited: Excessive motion"
+            case .limited(.insufficientFeatures):
+                return "Tracking Limited: Low detail"
+            case .limited(.initializing):
+                return "Initializing..."
+            case .limited(.relocalizing):
+                return "Recovering from interruption"
+            case .notAvailable:
+                return "Tracking is unavailble."
+            default:
+                return "Tracking is unavailable."
         }
     }
     
