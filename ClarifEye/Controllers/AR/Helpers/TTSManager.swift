@@ -9,6 +9,15 @@ class TTSManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
         super.init()
         synthesizer.delegate = self
 //        print(AVSpeechSynthesisVoice.speechVoices())
+        
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playback, mode: .default)
+            try audioSession.setActive(true)
+        }
+        catch {
+            print(error)
+        }
     }
     
     
