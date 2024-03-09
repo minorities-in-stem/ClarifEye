@@ -23,6 +23,7 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
     
     @Published var arController: ARController = ARController()
     @Published var statusViewManager: StatusViewManager = StatusViewManager()
+    @Published var ttsManager: TTSManager = TTSManager()
     
     @Published var message: String = "Hello!"
     @Published var isError: Bool = false
@@ -32,6 +33,7 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
         // Set up the controllers and assign their delegates
         arController.classificationController.classificationDelegate = arController
         arController.statusViewManager = statusViewManager
+        arController.ttsManager = ttsManager
         
         NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification).sink { _ in
             self.orientation = UIDevice.current.orientation

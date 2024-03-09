@@ -16,6 +16,7 @@
 		A3331B6F2B10BD2C00EADE34 /* TrackingState+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3331B6E2B10BD2C00EADE34 /* TrackingState+Extensions.swift */; };
 		A382882F2B28F988005A7522 /* BoundingBoxNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382882E2B28F988005A7522 /* BoundingBoxNode.swift */; };
 		A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */; };
+		A38BC9B72B9CBCEF009108B1 /* TTSManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38BC9B62B9CBCEF009108B1 /* TTSManager.swift */; };
 		A38FE1352B634C2B008C3DD8 /* PausedOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38FE1342B634C2B008C3DD8 /* PausedOverlayView.swift */; };
 		A38FE1382B6C6B65008C3DD8 /* DepthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38FE1372B6C6B65008C3DD8 /* DepthUtils.swift */; };
 		A3AE2FF22B0FF08800DCDC7A /* ClassificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE2FF12B0FF08800DCDC7A /* ClassificationController.swift */; };
@@ -43,6 +44,7 @@
 		A3331B6E2B10BD2C00EADE34 /* TrackingState+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackingState+Extensions.swift"; sourceTree = "<group>"; };
 		A382882E2B28F988005A7522 /* BoundingBoxNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxNode.swift; sourceTree = "<group>"; };
 		A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationData.swift; sourceTree = "<group>"; };
+		A38BC9B62B9CBCEF009108B1 /* TTSManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSManager.swift; sourceTree = "<group>"; };
 		A38FE1342B634C2B008C3DD8 /* PausedOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PausedOverlayView.swift; sourceTree = "<group>"; };
 		A38FE1372B6C6B65008C3DD8 /* DepthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepthUtils.swift; sourceTree = "<group>"; };
 		A3AE2FF12B0FF08800DCDC7A /* ClassificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationController.swift; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 				A3AE300A2B109A1100DCDC7A /* TemplateLabelNode.swift */,
 				A382882E2B28F988005A7522 /* BoundingBoxNode.swift */,
 				A38FE1372B6C6B65008C3DD8 /* DepthUtils.swift */,
+				A38BC9B62B9CBCEF009108B1 /* TTSManager.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A3AE2FF22B0FF08800DCDC7A /* ClassificationController.swift in Sources */,
+				A38BC9B72B9CBCEF009108B1 /* TTSManager.swift in Sources */,
 				A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */,
 				A38FE1352B634C2B008C3DD8 /* PausedOverlayView.swift in Sources */,
 				A3AE30092B1099F700DCDC7A /* StatusViewManager.swift in Sources */,
