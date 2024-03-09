@@ -41,6 +41,7 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     var classificationController: ClassificationController = ClassificationController()
     var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
     var statusViewManager: StatusViewManager?
+    var ttsManager: TTSManager?
     
     private var shouldClassify: Bool = true
     private var classificationTimer: Timer?
@@ -302,7 +303,9 @@ extension ARController: ClassificationReceiver {
                         if (i == 0) {
                             let reportedDepth = smoothedDepth == nil ? "an unknown distance" : " \(smoothedDepth!)m"
                             let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(reportedDepth) away"
+                                
                             self.statusViewManager?.showMessage(message, autoHide: true)
+                            self.ttsManager?.speak(message)
                         }
                     }
                 }
