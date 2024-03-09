@@ -13,7 +13,7 @@ class TTSManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
     
     
     func speak(_ text: String) {
-        print("Speaking: ", text)
+//        print("Speaking: ", text)
         let utterance = AVSpeechUtterance(string: text)
         
         utterance.voice = AVSpeechSynthesisVoice(identifier: "com.apple.voice.compact.en-US.Samantha")
