@@ -3,12 +3,12 @@ import AVFoundation
 class TTSManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
     var synthesizer: AVSpeechSynthesizer = AVSpeechSynthesizer()
     
-    @Published var utteranceRate: Float = 0.1
-    @Published var language: String = "en-US"
+    @Published var utteranceRate: Float = 0.5
     
     override init() {
         super.init()
         synthesizer.delegate = self
+//        print(AVSpeechSynthesisVoice.speechVoices())
     }
     
     
@@ -16,8 +16,7 @@ class TTSManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
         print("Speaking: ", text)
         let utterance = AVSpeechUtterance(string: text)
         
-//        utterance.voice = AVSpeechSynthesisVoice(language: self.language)
-        utterance.voice = AVSpeechSynthesisVoice(identifier: "com.apple.speech.synthesis.voice.Fred")
+        utterance.voice = AVSpeechSynthesisVoice(identifier: "com.apple.voice.compact.en-US.Samantha")
         utterance.rate = self.utteranceRate
         
         synthesizer.speak(utterance)
