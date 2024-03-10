@@ -12,7 +12,7 @@ class ClassificationController: NSObject {
     weak var classificationDelegate: ClassificationReceiver?
     
     private var currentBuffer: CVPixelBuffer?
-    private let videoQueue = DispatchQueue(label: "com.ClarifEye.VideoQueue", qos: .userInteractive)
+    private let videoQueue = DispatchQueue(label: "videoQueue", qos: .userInteractive)
     private let orientation =  UIDevice.current.orientation
     
     
@@ -50,11 +50,6 @@ extension ClassificationController {
                 return
             }
             
-            // Downsample image to 640 x 640
-            // TODO: this might not actually be needed (but try for now)
-//            guard let image = self.downsample(pixelBuffer: imagePixelBuffer, toSize: CGSize(width: 640, height: 640)) else {
-//                return
-//            }
             let image = imagePixelBuffer
             self.getClassificationAndDistance(imagePixelBuffer: image, depthDataBuffer: depthDataBuffer, transform: transform)
         }
@@ -122,26 +117,6 @@ extension ClassificationController {
 
 // MARK: -Helper Methods
 extension ClassificationController {
-    func downsample(pixelBuffer: CVPixelBuffer, toSize size: CGSize) -> CVPixelBuffer? {
-        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-        let context = CIContext(options: nil)
-        
-        // Create a downscaled version of the image
-        let scaledImage = ciImage.transformed(by: CGAffineTransform(scaleX: size.width / ciImage.extent.width, y: size.height / ciImage.extent.height))
-        
-        // Allocate a new pixel buffer to hold the downscaled image
-        var newPixelBuffer: CVPixelBuffer?
-        CVPixelBufferCreate(nil, Int(size.width), Int(size.height), CVPixelBufferGetPixelFormatType(pixelBuffer), nil, &newPixelBuffer)
-        
-        // Render the downscaled image to the new pixel buffer
-        if let newPixelBuffer = newPixelBuffer {
-            context.render(scaledImage, to: newPixelBuffer)
-            return newPixelBuffer
-        }
-        
-        return nil
-    }
-    
     static func scaleToTargetSize(boundingBox: CGRect, imageSize: CGSize, targetSize: CGSize) -> CGRect {
         let scaleX = targetSize.width
         let scaleY = targetSize.height
