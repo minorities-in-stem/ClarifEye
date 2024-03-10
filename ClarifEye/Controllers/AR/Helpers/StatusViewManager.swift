@@ -31,19 +31,21 @@ class StatusViewManager: ObservableObject {
     
     // MARK: - Message Handling
     func showMessage(_ text: String, autoHide: Bool = true, isError: Bool = false) {
-        // Cancel any previous hide timer.
-        messageHideTimer?.invalidate()
-        
-        self.message = text
-        self.delegate?.onMessage(message, isError: isError)
-        
-        // Make sure status is showing.
-        setMessageHidden(false)
-        
-        if autoHide {
-            messageHideTimer = Timer.scheduledTimer(withTimeInterval: displayDuration, repeats: false, block: { [weak self] _ in
-                self?.setMessageHidden(true)
-            })
+        DispatchQueue.main.async {
+            // Cancel any previous hide timer.
+            self.messageHideTimer?.invalidate()
+            
+            self.message = text
+            self.delegate?.onMessage(self.message, isError: isError)
+            
+            // Make sure status is showing.
+            self.setMessageHidden(false)
+            
+            if autoHide {
+                self.messageHideTimer = Timer.scheduledTimer(withTimeInterval: self.displayDuration, repeats: false, block: { [weak self] _ in
+                    self?.setMessageHidden(true)
+                })
+            }
         }
     }
     

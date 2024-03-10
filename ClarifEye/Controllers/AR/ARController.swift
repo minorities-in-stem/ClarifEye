@@ -180,11 +180,9 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
 extension ARController {
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         if (frame.smoothedSceneDepth != nil && self.shouldClassify) {
-            DispatchQueue.main.async {
-                let transform = frame.camera.transform
-                self.classificationController.classify(imagePixelBuffer: frame.capturedImage, depthDataBuffer: frame.smoothedSceneDepth!.depthMap, transform: transform)
-                self.shouldClassify = false
-            }
+            let transform = frame.camera.transform
+            self.classificationController.classify(imagePixelBuffer: frame.capturedImage, depthDataBuffer: frame.smoothedSceneDepth!.depthMap, transform: transform)
+            self.shouldClassify = false
         }
     }
 }
@@ -193,23 +191,26 @@ extension ARController {
 // MARK: - Tap gesture handler & ARSKViewDelegate
 extension ARController {
     func placeClassificationLabel(classification: ClassificationData, originalImageSize: CGSize, transform: simd_float4x4) {
-        // Scale bounding box to current frame size
-        let targetSize = self.sceneView.bounds.size
-        let boundingBox = ClassificationController.scaleToTargetSize(boundingBox: classification.boundingBox, imageSize: originalImageSize, targetSize: targetSize)
-        let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
-                            
-                            
-        if let anchor = self.getAnchorForLocation(location: point, distance: classification.distance, label: classification.label, transform: transform) {
-            // Track anchor ID to associate text and bounding boxes with the anchor
-            anchorToClassification[anchor.identifier] = classification
-            sceneView.session.add(anchor: anchor)
-            
-            // Remove the anchor
-            DispatchQueue.main.asyncAfter(deadline: .now() + (self.statusViewManager?.displayDuration ?? 3)) { [self] in
-                self.anchorToClassification.removeValue(forKey: anchor.identifier)
-                self.sceneView.session.remove(anchor: anchor)
+        DispatchQueue.main.async {
+            // Scale bounding box to current frame size
+            let targetSize = self.sceneView.bounds.size
+            let boundingBox = ClassificationController.scaleToTargetSize(boundingBox: classification.boundingBox, imageSize: originalImageSize, targetSize: targetSize)
+            let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
+                                
+                                
+            if let anchor = self.getAnchorForLocation(location: point, distance: classification.distance, label: classification.label, transform: transform) {
+                // Track anchor ID to associate text and bounding boxes with the anchor
+                self.anchorToClassification[anchor.identifier] = classification
+                self.sceneView.session.add(anchor: anchor)
+                
+                // Remove the anchor
+                DispatchQueue.main.asyncAfter(deadline: .now() + (self.statusViewManager?.displayDuration ?? 3)) { [self] in
+                    self.anchorToClassification.removeValue(forKey: anchor.identifier)
+                    self.sceneView.session.remove(anchor: anchor)
+                }
             }
         }
+        
     }
     
     func getAnchorForLocation(location: CGPoint, distance: Float?, label: String, transform: simd_float4x4) -> ARAnchor? {
@@ -301,7 +302,7 @@ extension ARController: ClassificationReceiver {
     
                         // Display the message for the object at the first index; which is the object with the highest hazard score
                         if (i == 0) {
-                            let reportedDepth = smoothedDepth == nil ? "an unknown distance" : " \(smoothedDepth!)m"
+                            let reportedDepth = smoothedDepth == nil ? "an unknown distance" : String(format: " %.2f m", smoothedDepth!)
                             let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(reportedDepth) away"
                                 
                             self.statusViewManager?.showMessage(message, autoHide: true)
