@@ -12,7 +12,7 @@ class ClassificationController: NSObject {
     weak var classificationDelegate: ClassificationReceiver?
     
     private var currentBuffer: CVPixelBuffer?
-    private let videoQueue = DispatchQueue(label: "com.ClarifEye.VideoQueue", qos: .userInteractive)
+    private let dispatchQueue = DispatchQueue.global(qos: .background)
     private let orientation =  UIDevice.current.orientation
     
     
@@ -45,76 +45,71 @@ class ClassificationController: NSObject {
 
 extension ClassificationController {
     func classify(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer, transform: simd_float4x4) {
-        videoQueue.async {
-            guard self.currentBuffer == nil else {
-                return
-            }
-            
-            // Downsample image to 640 x 640
-            // TODO: this might not actually be needed (but try for now)
-//            guard let image = self.downsample(pixelBuffer: imagePixelBuffer, toSize: CGSize(width: 640, height: 640)) else {
-//                return
-//            }
-            let image = imagePixelBuffer
-            self.getClassificationAndDistance(imagePixelBuffer: image, depthDataBuffer: depthDataBuffer, transform: transform)
+        guard self.currentBuffer == nil else {
+            return
         }
+        
+        let image = imagePixelBuffer
+        self.getClassificationAndDistance(imagePixelBuffer: image, depthDataBuffer: depthDataBuffer, transform: transform)
     }
     
     
     func getClassificationAndDistance(imagePixelBuffer: CVPixelBuffer, depthDataBuffer: CVPixelBuffer, transform: simd_float4x4) {
-        self.currentBuffer = imagePixelBuffer
-        
-        let request = VNCoreMLRequest(model: self.coreMLClassificationModel) { request, error in
-
-            if let results = request.results as? [VNRecognizedObjectObservation] {
-                var classifications: Dictionary<String, ClassificationData> = [:]
-                for observation in results {
-                    let labels = observation.labels
-                    
-                    // Extract bounding box
-                    let boundingBox = observation.boundingBox
-                    let boundingBoxDistance = self.getDistanceFromDepthMap(boundingBox: boundingBox, imagePixelBuffer: imagePixelBuffer, depthPixelBuffer: depthDataBuffer)
-                    
-                    // TODO: rethink; do we want to take the label with the highest confidence or only one with a confidence higher than 0.5
-                    // Do we need to take confidence of prediction into consideration before reporting to the user? Ex. a closer object with low confidence/unknown vs. slightly further object with more confidence
-                    if let label = labels.first(where: { l in l.confidence > 0.5 }) {
-                        let obstacleLabel = ObstacleLabel.fromString(label.identifier)
-                        let cleanedLabel = cleanLabel(obstacleLabel.rawValue)
-                        let classification = ClassificationData(
-                            label: cleanedLabel,
-                            confidence: label.confidence,
-                            distance: boundingBoxDistance,
-                            boundingBox: boundingBox
-                        )
-                        
-                        // Assume that there is only one type of each object per image/frame
-                        // Take the one with the closest distance
-                        if (!classifications.keys.contains(cleanedLabel) ||  boundingBoxDistance < classifications[cleanedLabel]!.distance!) {
-                            classifications[cleanedLabel] = classification
-                        }
-                    }
-        
-                }
-                let imageClassification = ImageClassification(
-                    imageSize: self.getPixelBufferSize(imagePixelBuffer),
-                    classifications: classifications,
-                    transform: transform
-                )
+        dispatchQueue.async {
+            self.currentBuffer = imagePixelBuffer
+            
+            let request = VNCoreMLRequest(model: self.coreMLClassificationModel) { request, error in
                 
-                self.classificationDelegate?.onClassification(imageClassification: imageClassification)
+                if let results = request.results as? [VNRecognizedObjectObservation] {
+                    var classifications: Dictionary<String, ClassificationData> = [:]
+                    for observation in results {
+                        let labels = observation.labels
+                        
+                        // Extract bounding box
+                        let boundingBox = observation.boundingBox
+                        let boundingBoxDistance = self.getDistanceFromDepthMap(boundingBox: boundingBox, imagePixelBuffer: imagePixelBuffer, depthPixelBuffer: depthDataBuffer)
+                        
+                        // TODO: rethink; do we want to take the label with the highest confidence or only one with a confidence higher than 0.5
+                        // Do we need to take confidence of prediction into consideration before reporting to the user? Ex. a closer object with low confidence/unknown vs. slightly further object with more confidence
+                        if let label = labels.first(where: { l in l.confidence > 0.5 }) {
+                            let obstacleLabel = ObstacleLabel.fromString(label.identifier)
+                            let cleanedLabel = cleanLabel(obstacleLabel.rawValue)
+                            let classification = ClassificationData(
+                                label: cleanedLabel,
+                                confidence: label.confidence,
+                                distance: boundingBoxDistance,
+                                boundingBox: boundingBox
+                            )
+                            
+                            // Assume that there is only one type of each object per image/frame
+                            // Take the one with the closest distance
+                            if (!classifications.keys.contains(cleanedLabel) ||  boundingBoxDistance < classifications[cleanedLabel]!.distance!) {
+                                classifications[cleanedLabel] = classification
+                            }
+                        }
+                        
+                    }
+                    let imageClassification = ImageClassification(
+                        imageSize: self.getPixelBufferSize(imagePixelBuffer),
+                        classifications: classifications,
+                        transform: transform
+                    )
+                    
+                    self.classificationDelegate?.onClassification(imageClassification: imageClassification)
+                }
             }
-        }
-        // Use CPU for Vision processing to ensure that there are adequate GPU resources for rendering.
-        request.usesCPUOnly = true
-        
-        let orientation = CGImagePropertyOrientation(self.orientation)
-        let handler = VNImageRequestHandler(cvPixelBuffer: imagePixelBuffer, orientation: orientation, options: [:])
-        
-        do {
-            defer { self.currentBuffer = nil }
-            try handler.perform([request])
-        } catch {
-            print("could not perform request")
+            // Use CPU for Vision processing to ensure that there are adequate GPU resources for rendering.
+            request.usesCPUOnly = true
+            
+            let orientation = CGImagePropertyOrientation(self.orientation)
+            let handler = VNImageRequestHandler(cvPixelBuffer: imagePixelBuffer, orientation: orientation, options: [:])
+            
+            do {
+                defer { self.currentBuffer = nil }
+                try handler.perform([request])
+            } catch {
+                print("could not perform request")
+            }
         }
     }
 }
@@ -122,26 +117,6 @@ extension ClassificationController {
 
 // MARK: -Helper Methods
 extension ClassificationController {
-    func downsample(pixelBuffer: CVPixelBuffer, toSize size: CGSize) -> CVPixelBuffer? {
-        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-        let context = CIContext(options: nil)
-        
-        // Create a downscaled version of the image
-        let scaledImage = ciImage.transformed(by: CGAffineTransform(scaleX: size.width / ciImage.extent.width, y: size.height / ciImage.extent.height))
-        
-        // Allocate a new pixel buffer to hold the downscaled image
-        var newPixelBuffer: CVPixelBuffer?
-        CVPixelBufferCreate(nil, Int(size.width), Int(size.height), CVPixelBufferGetPixelFormatType(pixelBuffer), nil, &newPixelBuffer)
-        
-        // Render the downscaled image to the new pixel buffer
-        if let newPixelBuffer = newPixelBuffer {
-            context.render(scaledImage, to: newPixelBuffer)
-            return newPixelBuffer
-        }
-        
-        return nil
-    }
-    
     static func scaleToTargetSize(boundingBox: CGRect, imageSize: CGSize, targetSize: CGSize) -> CGRect {
         let scaleX = targetSize.width
         let scaleY = targetSize.height

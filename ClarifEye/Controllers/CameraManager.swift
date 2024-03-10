@@ -44,16 +44,12 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
     }
     
     func onMessage(_ message: String, isError: Bool? = false) {
-        DispatchQueue.main.async {
-            self.message = message
-            self.isError = isError!
-        }
+        self.message = message
+        self.isError = isError!
     }
     
     func onShowText(showText: Bool) {
-        DispatchQueue.main.async {
-            self.showText = showText
-        }
+        self.showText = showText
     }
     
     func setStreamAvailable(_ avail: Bool) {
