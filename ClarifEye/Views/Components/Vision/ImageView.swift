@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct ImageView: View {
-    @ObservedObject var settings: Settings
     @ObservedObject var manager: CameraManager
     
     var body: some View {

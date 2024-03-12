@@ -42,6 +42,7 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
     var statusViewManager: StatusViewManager?
     var ttsManager: TTSManager?
+    var settings: Settings?
     
     private var shouldClassify: Bool = true
     private var classificationTimer: Timer?

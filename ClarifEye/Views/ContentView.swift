@@ -15,12 +15,12 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $currentTab) {
             Group {
-                ImageView(settings: settings, manager: cameraManager)
+                ImageView(manager: cameraManager)
                     .tabItem {
                         Label(Tabs.Vision.rawValue, systemImage: "eyeglasses")
                     }
                     .tag(Tabs.Vision)
-                SettingsView(settings: settings)
+                SettingsView(settings: cameraManager.settings)
                     .tabItem {
                         Label(Tabs.Settings.rawValue, systemImage: "gear")
                     }

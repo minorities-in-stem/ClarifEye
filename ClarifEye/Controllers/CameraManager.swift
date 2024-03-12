@@ -21,6 +21,7 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
     
     var cancellables = Set<AnyCancellable>()
     
+    @Published var settings: Settings = Settings()
     @Published var arController: ARController = ARController()
     @Published var statusViewManager: StatusViewManager = StatusViewManager()
     @Published var ttsManager: TTSManager = TTSManager()
@@ -41,6 +42,9 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
         
         arController.cameraCapturedDataDelegate = self
         statusViewManager.delegate = self
+        
+        ttsManager.settings = settings
+        arController.settings = settings
     }
     
     func onMessage(_ message: String, isError: Bool? = false) {

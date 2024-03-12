@@ -8,5 +8,5 @@ enum MeasurementSystem: String {
 class Settings: ObservableObject {
     @Published var measurementSystem: MeasurementSystem = MeasurementSystem.Metric
     @Published var audioOutput: Bool = true
-    @Published var audioSpeed: Float = 1
+    @Published var audioSpeed: Float = 0.5
 }
