@@ -5,7 +5,7 @@ import Metal
 struct InstructionsView: View {
     var body: some View {
         NavigationView {
-            VStack {
+            ScrollView {
                 Text("Start by aiming your phone’s back camera forward during travel. This app will continuously inform you about obstacles in your path. You'll hear descriptions like 'Pole in 3 meters' or 'Car approaching in 5 meters.'" +
                      
                      "\n\nRemember, this app complements but does not replace your usual mobility and navigation tools. It's designed to provide extra situational awareness." +
@@ -16,7 +16,9 @@ struct InstructionsView: View {
 
                      "\n\nFeel free to customize audio alerts, haptic feedback, measurement units, and more in the settings to suit your preferences.")
             }
-        }.navigationTitle("Instructions")
+        }
+        .padding(20)
+        .navigationTitle("Instructions")
     }
 }
 
