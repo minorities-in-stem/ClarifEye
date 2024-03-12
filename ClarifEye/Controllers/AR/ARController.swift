@@ -106,7 +106,7 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     // MARK: - AR Session Handling
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        statusViewManager?.escalateFeedback(for: camera.trackingState, inSeconds: 1.0)
+        statusViewManager?.escalateFeedback(for: camera.trackingState, inSeconds: 0)
         
         if (camera.trackingState == .normal) {
             self.cameraCapturedDataDelegate?.setStreamAvailable(true)
@@ -309,9 +309,9 @@ extension ARController: ClassificationReceiver {
                             if (smoothedDepth == nil) {
                                 reportedDepth = "an unknown distance"
                             } else if (self.settings != nil && self.settings!.measurementSystem == .Imperial) {
-                                reportedDepth = String(format: " %.2f m", smoothedDepth! * self.meterToFootRatio)
+                                reportedDepth = String(format: "%.2f m", smoothedDepth! * self.meterToFootRatio)
                             } else {
-                                reportedDepth = String(format: " %.2f m", smoothedDepth!)
+                                reportedDepth = String(format: "%.2f m", smoothedDepth!)
                             }
                                 
                             
