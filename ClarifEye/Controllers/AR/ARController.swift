@@ -303,7 +303,8 @@ extension ARController: ClassificationReceiver {
                         // Display the message for the object at the first index; which is the object with the highest hazard score
                         if (i == 0) {
                             let reportedDepth = smoothedDepth == nil ? "an unknown distance" : String(format: " %.2f m", smoothedDepth!)
-                            let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(reportedDepth) away"
+//                            let reportedConfidence = String(format: "%.2f % confidence", classification.confidence * 100)
+                            let message = "\(classification.label) \(reportedDepth) away"
                                 
                             self.statusViewManager?.showMessage(message, autoHide: true)
                             self.ttsManager?.speak(message)
