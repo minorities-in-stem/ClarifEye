@@ -36,8 +36,26 @@ struct SettingsView: View {
                     Toggle(isOn: $settings.audioOutput) {
                         Text("Audio Output")
                     }
-                    Slider(value: $settings.audioSpeed) {
-                        Text("Audio Speed")
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("Audio Speed")
+                            Text(String(format: "%.2f", settings.audioSpeed)).font(.system(size: 14))
+                        }
+                        
+                        Slider(
+                            value: $settings.audioSpeed,
+                            in: 0...1,
+                            step: 0.1,
+                            label: {
+                                Text("Audio Speed")
+                            },
+                            minimumValueLabel: {
+                                Text("0")
+                            },
+                            maximumValueLabel: {
+                                Text("1")
+                            }
+                        ).disabled(!settings.audioOutput)
                     }
                 }
                 
