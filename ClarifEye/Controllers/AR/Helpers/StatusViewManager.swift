@@ -78,9 +78,7 @@ class StatusViewManager: ObservableObject {
             message.append(": \(recommendation)")
         }
         
-        if (trackingState == .normal) {
-            scheduleMessage(message, inSeconds: seconds, messageType: .trackingStateEscalation, autoHide: true, isError: false)
-        } else {
+        if (trackingState != .normal) {
             scheduleMessage(message, inSeconds: seconds, messageType: .trackingStateEscalation, autoHide: false, isError: true)
         }
     }

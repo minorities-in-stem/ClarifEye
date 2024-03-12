@@ -5,7 +5,7 @@ import Metal
 struct InstructionsView: View {
     var body: some View {
         NavigationView {
-            VStack {
+            ScrollView {
                 Text("Start by aiming your phone’s back camera forward during travel. This app will continuously inform you about obstacles in your path. You'll hear descriptions like 'Pole in 3 meters' or 'Car approaching in 5 meters.'" +
                      
                      "\n\nRemember, this app complements but does not replace your usual mobility and navigation tools. It's designed to provide extra situational awareness." +
@@ -16,7 +16,9 @@ struct InstructionsView: View {
 
                      "\n\nFeel free to customize audio alerts, haptic feedback, measurement units, and more in the settings to suit your preferences.")
             }
-        }.navigationTitle("Instructions")
+        }
+        .padding(20)
+        .navigationTitle("Instructions")
     }
 }
 
@@ -36,8 +38,26 @@ struct SettingsView: View {
                     Toggle(isOn: $settings.audioOutput) {
                         Text("Audio Output")
                     }
-                    Slider(value: $settings.audioSpeed) {
-                        Text("Audio Speed")
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("Audio Speed")
+                            Text(String(format: "%.2f", settings.audioSpeed)).font(.system(size: 14))
+                        }
+                        
+                        Slider(
+                            value: $settings.audioSpeed,
+                            in: 0...1,
+                            step: 0.1,
+                            label: {
+                                Text("Audio Speed")
+                            },
+                            minimumValueLabel: {
+                                Text("0")
+                            },
+                            maximumValueLabel: {
+                                Text("1")
+                            }
+                        ).disabled(!settings.audioOutput)
                     }
                 }
                 

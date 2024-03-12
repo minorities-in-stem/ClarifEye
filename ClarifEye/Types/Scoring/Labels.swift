@@ -1,7 +1,7 @@
 import Foundation
 
 func cleanLabel(_ label: String) -> String {
-    return label.replacingOccurrences(of: "_", with: " ")
+    return label.replacingOccurrences(of: "_", with: " ").capitalized(with: .none)
 }
 
 enum ObstacleLabel: String {

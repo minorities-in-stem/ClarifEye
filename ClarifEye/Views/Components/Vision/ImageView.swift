@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct ImageView: View {
-    @ObservedObject var settings: Settings
     @ObservedObject var manager: CameraManager
     
     var body: some View {
@@ -36,13 +35,13 @@ struct ImageView: View {
 
 struct ButtonSettingsView: View {
     @ObservedObject var manager: CameraManager
-    private let buttonSize = CGFloat(30)
+    private let buttonSize = CGFloat(45)
     var body: some View {
         VStack {
             Spacer() // Pushes everything to the bottom
 
             HStack {
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 15) {
                     Button(action: manager.toggleStream) {
                         if (manager.streamPaused) {
                             Image(systemName: "play.circle")

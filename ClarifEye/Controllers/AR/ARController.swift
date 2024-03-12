@@ -42,9 +42,12 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     var cameraCapturedDataDelegate: CameraCapturedDataReceiver?
     var statusViewManager: StatusViewManager?
     var ttsManager: TTSManager?
+    var settings: Settings?
     
     private var shouldClassify: Bool = true
     private var classificationTimer: Timer?
+    
+    private let meterToFootRatio: Float = 3.28084
     
     deinit {
         removeClassificationTimer()
@@ -103,7 +106,7 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     // MARK: - AR Session Handling
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        statusViewManager?.escalateFeedback(for: camera.trackingState, inSeconds: 1.0)
+        statusViewManager?.escalateFeedback(for: camera.trackingState, inSeconds: 0)
         
         if (camera.trackingState == .normal) {
             self.cameraCapturedDataDelegate?.setStreamAvailable(true)
@@ -302,11 +305,24 @@ extension ARController: ClassificationReceiver {
     
                         // Display the message for the object at the first index; which is the object with the highest hazard score
                         if (i == 0) {
-                            let reportedDepth = smoothedDepth == nil ? "an unknown distance" : String(format: " %.2f m", smoothedDepth!)
-                            let message = String(format: "Detected \(classification.label) with %.2f", classification.confidence * 100) + "% confidence" + " \(reportedDepth) away"
+                            var reportedDepth: String = ""
+                            if (smoothedDepth == nil) {
+                                reportedDepth = "an unknown distance"
+                            } else if (self.settings != nil && self.settings!.measurementSystem == .Imperial) {
+                                reportedDepth = String(format: "%.2f m", smoothedDepth! * self.meterToFootRatio)
+                            } else {
+                                reportedDepth = String(format: "%.2f m", smoothedDepth!)
+                            }
+                                
+                            
+//                            let reportedConfidence = String(format: "%.2f % confidence", classification.confidence * 100)
+                            let message = "\(classification.label) \(reportedDepth) away"
+                            print(message)
                                 
                             self.statusViewManager?.showMessage(message, autoHide: true)
-                            self.ttsManager?.speak(message)
+                            if (self.settings != nil && self.settings!.audioOutput) {
+                                self.ttsManager?.speak(message)
+                            }
                         }
                     }
                 }

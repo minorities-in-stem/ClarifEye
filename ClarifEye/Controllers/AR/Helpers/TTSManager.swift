@@ -2,8 +2,7 @@ import AVFoundation
 
 class TTSManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
     var synthesizer: AVSpeechSynthesizer = AVSpeechSynthesizer()
-    
-    @Published var utteranceRate: Float = 0.5
+    var settings: Settings?
     
     override init() {
         super.init()
@@ -23,10 +22,11 @@ class TTSManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
     
     func speak(_ text: String) {
         DispatchQueue.main.async {
+            let audioSpeed = self.settings != nil ? self.settings!.audioSpeed : 0.5
             let utterance = AVSpeechUtterance(string: text)
             
             utterance.voice = AVSpeechSynthesisVoice(identifier: "com.apple.voice.compact.en-US.Samantha")
-            utterance.rate = self.utteranceRate
+            utterance.rate = audioSpeed
             
             self.synthesizer.speak(utterance)
         }
