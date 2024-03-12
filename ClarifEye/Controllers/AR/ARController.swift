@@ -47,6 +47,8 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     private var shouldClassify: Bool = true
     private var classificationTimer: Timer?
     
+    private let meterToFootRatio: Float = 3.28084
+    
     deinit {
         removeClassificationTimer()
     }
@@ -303,12 +305,23 @@ extension ARController: ClassificationReceiver {
     
                         // Display the message for the object at the first index; which is the object with the highest hazard score
                         if (i == 0) {
-                            let reportedDepth = smoothedDepth == nil ? "an unknown distance" : String(format: " %.2f m", smoothedDepth!)
+                            var reportedDepth: String
+                            if (smoothedDepth == nil) {
+                                reportedDepth = "an unknown distance"
+                            } else if (self.settings != nil && self.settings!.measurementSystem == .Imperial) {
+                                reportedDepth = String(format: " %.2f m", smoothedDepth! * self.meterToFootRatio)
+                            } else {
+                                reportedDepth = String(format: " %.2f m", smoothedDepth!)
+                            }
+                                
+                            
 //                            let reportedConfidence = String(format: "%.2f % confidence", classification.confidence * 100)
                             let message = "\(classification.label) \(reportedDepth) away"
                                 
                             self.statusViewManager?.showMessage(message, autoHide: true)
-                            self.ttsManager?.speak(message)
+                            if (self.settings != nil && self.settings!.audioOutput) {
+                                self.ttsManager?.speak(message)
+                            }
                         }
                     }
                 }
