@@ -26,7 +26,7 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
     @Published var statusViewManager: StatusViewManager = StatusViewManager()
     @Published var ttsManager: TTSManager = TTSManager()
     
-    @Published var message: String = "Hello!"
+    @Published var message: String = "Welcome to ClarifEye!"
     @Published var isError: Bool = false
     @Published var showText: Bool = true
     

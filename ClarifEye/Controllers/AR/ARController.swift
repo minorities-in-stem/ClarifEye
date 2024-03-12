@@ -305,7 +305,7 @@ extension ARController: ClassificationReceiver {
     
                         // Display the message for the object at the first index; which is the object with the highest hazard score
                         if (i == 0) {
-                            var reportedDepth: String
+                            var reportedDepth: String = ""
                             if (smoothedDepth == nil) {
                                 reportedDepth = "an unknown distance"
                             } else if (self.settings != nil && self.settings!.measurementSystem == .Imperial) {
@@ -317,6 +317,7 @@ extension ARController: ClassificationReceiver {
                             
 //                            let reportedConfidence = String(format: "%.2f % confidence", classification.confidence * 100)
                             let message = "\(classification.label) \(reportedDepth) away"
+                            print(message)
                                 
                             self.statusViewManager?.showMessage(message, autoHide: true)
                             if (self.settings != nil && self.settings!.audioOutput) {

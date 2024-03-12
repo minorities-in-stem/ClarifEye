@@ -12,9 +12,11 @@ struct StatusView: View {
                     Text(text)
                     .transition(.opacity)
                     .foregroundColor(Color.white)
-                } 
+                    .font(.system(size: 24))
+                }
                 .padding()
                 .background(Color.black.opacity(0.5))
+                .cornerRadius(4)
             }
         }
         .animation(.default, value: showText)
