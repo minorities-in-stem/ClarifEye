@@ -5,11 +5,11 @@ extension ARCamera.TrackingState {
     var presentationString: String {
         switch self {
             case .normal:
-                return "TRACKING NORMAL"
+                return "Tracking normal"
             case .limited(.excessiveMotion):
-                return "Tracking Limited: Excessive motion"
+                return "Excessive motion"
             case .limited(.insufficientFeatures):
-                return "Tracking Limited: Low detail"
+                return "Poor Lighting"
             case .limited(.initializing):
                 return "Initializing..."
             case .limited(.relocalizing):
@@ -26,7 +26,7 @@ extension ARCamera.TrackingState {
         case .limited(.excessiveMotion):
             return "Try slowing down your movement, or reset the session."
         case .limited(.insufficientFeatures):
-            return "Try pointing at a flat surface, or reset the session."
+            return "Unable to detect objects. Ensure the back camera is not covered, or reset the session."
         case .limited(.relocalizing):
             return "Return to the location where you left off or try resetting the session."
         default:

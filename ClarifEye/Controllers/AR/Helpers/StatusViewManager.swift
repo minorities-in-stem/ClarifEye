@@ -16,7 +16,7 @@ class StatusViewManager: ObservableObject {
         ]
     }
 
-    @Published var message: String! = "" 
+    @Published var message: String! = ""
     @Published var showText: Bool = false {
         didSet {
             self.delegate?.onShowText(showText: showText)
@@ -53,7 +53,7 @@ class StatusViewManager: ObservableObject {
         cancelScheduledMessage(for: messageType)
         
         let timer = Timer.scheduledTimer(withTimeInterval: seconds, repeats: false, block: { [weak self] timer in
-            self?.showMessage(text)
+            self?.showMessage(text, isError: isError)
             timer.invalidate()
         })
         
@@ -68,18 +68,6 @@ class StatusViewManager: ObservableObject {
     func cancelAllScheduledMessages() {
         for messageType in MessageType.all {
             cancelScheduledMessage(for: messageType)
-        }
-    }
-    
-    // MARK: - ARKit
-    func escalateFeedback(for trackingState: ARCamera.TrackingState, inSeconds seconds: TimeInterval) {
-        var message = trackingState.presentationString
-        if let recommendation = trackingState.recommendation {
-            message.append(": \(recommendation)")
-        }
-        
-        if (trackingState != .normal) {
-            scheduleMessage(message, inSeconds: seconds, messageType: .trackingStateEscalation, autoHide: false, isError: true)
         }
     }
     

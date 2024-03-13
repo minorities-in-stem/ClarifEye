@@ -4,12 +4,12 @@ import Combine
 import simd
 import AVFoundation
 
-protocol CameraCapturedDataReceiver: AnyObject {
+protocol CameraCapturedDataReceiver: AnyObject { 
     func setStreamAvailable(_ avail: Bool)
 }
 
 protocol StatusViewManagerDelegate: AnyObject {
-    func onMessage(_ message: String, isError: Bool?)
+    func onMessage(_ message: String, isError: Bool)
     func onShowText(showText: Bool)
 }
 
@@ -47,9 +47,9 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
         arController.settings = settings
     }
     
-    func onMessage(_ message: String, isError: Bool? = false) {
+    func onMessage(_ message: String, isError: Bool = false) {
         self.message = message
-        self.isError = isError!
+        self.isError = isError
     }
     
     func onShowText(showText: Bool) {

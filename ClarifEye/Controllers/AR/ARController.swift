@@ -106,7 +106,15 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     // MARK: - AR Session Handling
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        statusViewManager?.escalateFeedback(for: camera.trackingState, inSeconds: 0)
+        var message = camera.trackingState.presentationString
+        if let recommendation = camera.trackingState.recommendation {
+            message.append(": \(recommendation)")
+        }
+        
+        if (camera.trackingState != .normal) {
+            statusViewManager?.scheduleMessage(message, inSeconds: 0, messageType: .trackingStateEscalation, autoHide: false, isError: true)
+            ttsManager?.speak(message)
+        }
         
         if (camera.trackingState == .normal) {
             self.cameraCapturedDataDelegate?.setStreamAvailable(true)
