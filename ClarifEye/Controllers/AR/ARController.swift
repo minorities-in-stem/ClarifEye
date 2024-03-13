@@ -111,6 +111,7 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
             message.append(": \(recommendation)")
         }
         
+        ttsManager?.stopSpeaking()
         if (camera.trackingState != .normal) {
             statusViewManager?.scheduleMessage(message, inSeconds: 0, messageType: .trackingStateEscalation, autoHide: false, isError: true)
             ttsManager?.speak(message)

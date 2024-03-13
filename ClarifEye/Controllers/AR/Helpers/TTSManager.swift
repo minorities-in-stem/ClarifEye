@@ -19,6 +19,12 @@ class TTSManager: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
         }
     }
     
+    func stopSpeaking(at boundary: AVSpeechBoundary = .immediate) {
+        DispatchQueue.main.async {
+            self.synthesizer.stopSpeaking(at: boundary)
+        }
+    }
+    
     
     func speak(_ text: String) {
         DispatchQueue.main.async {
