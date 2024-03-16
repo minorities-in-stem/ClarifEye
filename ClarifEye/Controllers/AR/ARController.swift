@@ -341,29 +341,18 @@ extension ARController: ClassificationReceiver {
                             // MARK: - Grab the angle relative to the user
                             
                             // TODO: fix this
-//                            if (smoothedDepth != nil) {
-//                                if let currentFrame = self.sceneView.session.currentFrame {
-//                                
-//                                // Repeating logic here for anchor placement
-//                                var translation = matrix_identity_float4x4
-//                                translation.columns.3.z = -smoothedDepth!
-//                                let initialTransform = simd_mul(imageClassification.transform, translation)
-//                                
-//                                
-//                                let targetSize = self.sceneView.bounds.size
-//                                let boundingBox = ClassificationController.scaleToTargetSize(boundingBox: classification.boundingBox, targetSize: targetSize)
-//                                
-//                                let userX = imageClassification.imageSize.width / 2
-//                                let deltaX = boundingBox.midX - userX
-//    
-//                                let arctangent = asin(deltaX/CGFloat(smoothedDepth!))
-//                                let theta = arctangent * (180.0 / Double.pi)
-//                            }
-//                          }
-                        
+                            let boundingBox = classification.boundingBox
+                            var relativePosition = ""
+                            if (boundingBox.maxX < 0.5) { // Left
+                                relativePosition = "slight left"
+                            } else if (boundingBox.minX > 0.5) { // Right
+                                relativePosition = "slight right"
+                            } else { // Center
+                                relativePosition = "in front"
+                            }
                             
 //                            let reportedConfidence = String(format: "%.2f % confidence", classification.confidence * 100)
-                            let message = "\(classification.label) \(reportedDepth)"
+                            let message = "\(classification.label) \(reportedDepth) \(relativePosition)"
                             print(message)
                                 
                             self.statusViewManager?.showMessage(message, autoHide: true)
