@@ -4,7 +4,6 @@ import ARKit
 import Vision
 import Foundation
 
-
 protocol ClassificationReceiver: AnyObject {
     func onClassification(imageClassification: ImageClassification)
 }
@@ -206,10 +205,10 @@ extension ARController {
         DispatchQueue.main.async {
             // Scale bounding box to current frame size
             let targetSize = self.sceneView.bounds.size
-            let boundingBox = ClassificationController.scaleToTargetSize(boundingBox: classification.boundingBox, imageSize: originalImageSize, targetSize: targetSize)
+//            let boundingBox = ClassificationController.scaleToTargetSize(boundingBox: classification.boundingBox, targetSize: targetSize)
+            let boundingBox = classification.boundingBox
             let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
-                                
-                                
+
             if let anchor = self.getAnchorForLocation(location: point, distance: classification.distance, label: classification.label, transform: transform) {
                 // Track anchor ID to associate text and bounding boxes with the anchor
                 self.anchorToClassification[anchor.identifier] = classification
@@ -231,9 +230,25 @@ extension ARController {
             print("No distance found")
             return nil
         }
+
+        guard let query = self.sceneView.session.currentFrame?.raycastQuery(from: location, allowing: .estimatedPlane, alignment: .any)
+        else {
+            print("Could not create query")
+            return nil
+        }
+        
+        guard let result = self.sceneView.session.raycast(query).first
+        else {
+            print("Raycast did not return any results for location \(location)")
+            return nil
+        }
+        
+        let currentTransform = result.worldTransform
         
         var translation = matrix_identity_float4x4
         translation.columns.3.z = -distance!
+        translation.columns.3.x = currentTransform.columns.3.x
+        translation.columns.3.y = currentTransform.columns.3.y
         
         let anchorTransform = simd_mul(transform, translation)
         let anchor = ARAnchor(transform: anchorTransform)
@@ -318,11 +333,35 @@ extension ARController: ClassificationReceiver {
                             if (smoothedDepth == nil) {
                                 reportedDepth = "an unknown distance"
                             } else if (self.settings != nil && self.settings!.measurementSystem == .Imperial) {
-                                reportedDepth = String(format: "%.2f m", smoothedDepth! * self.meterToFootRatio)
+                                reportedDepth = String(format: "%.2f ft", smoothedDepth! * self.meterToFootRatio)
                             } else {
                                 reportedDepth = String(format: "%.2f m", smoothedDepth!)
                             }
-                                
+                            
+                            
+                            // MARK: - Grab the angle relative to the user
+                            
+                            // TODO: fix this
+//                            if (smoothedDepth != nil) {
+//                                if let currentFrame = self.sceneView.session.currentFrame {
+//                                
+//                                // Repeating logic here for anchor placement
+//                                var translation = matrix_identity_float4x4
+//                                translation.columns.3.z = -smoothedDepth!
+//                                let initialTransform = simd_mul(imageClassification.transform, translation)
+//                                
+//                                
+//                                let targetSize = self.sceneView.bounds.size
+//                                let boundingBox = ClassificationController.scaleToTargetSize(boundingBox: classification.boundingBox, targetSize: targetSize)
+//                                
+//                                let userX = imageClassification.imageSize.width / 2
+//                                let deltaX = boundingBox.midX - userX
+//    
+//                                let arctangent = asin(deltaX/CGFloat(smoothedDepth!))
+//                                let theta = arctangent * (180.0 / Double.pi)
+//                            }
+//                          }
+                        
                             
 //                            let reportedConfidence = String(format: "%.2f % confidence", classification.confidence * 100)
                             let message = "\(classification.label) \(reportedDepth) away"
