@@ -204,11 +204,8 @@ extension ARController {
     func placeClassificationLabel(classification: ClassificationData, originalImageSize: CGSize, transform: simd_float4x4) {
         DispatchQueue.main.async {
             // Scale bounding box to current frame size
-            let targetSize = self.sceneView.bounds.size
-//            let boundingBox = ClassificationController.scaleToTargetSize(boundingBox: classification.boundingBox, targetSize: targetSize)
             let boundingBox = classification.boundingBox
-            let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
-
+            let point = CGPoint(x: boundingBox.midX, y: 1-boundingBox.midY)
             if let anchor = self.getAnchorForLocation(location: point, distance: classification.distance, label: classification.label, transform: transform) {
                 // Track anchor ID to associate text and bounding boxes with the anchor
                 self.anchorToClassification[anchor.identifier] = classification
@@ -237,20 +234,22 @@ extension ARController {
             return nil
         }
         
-        guard let result = self.sceneView.session.raycast(query).first
-        else {
+        let result = self.sceneView.session.raycast(query).first
+        
+        if (result == nil) {
             print("Raycast did not return any results for location \(location)")
-            return nil
+            
+            var translation = matrix_identity_float4x4
+            translation.columns.3.z = -distance!
+
+            let anchorTransform = simd_mul(transform, translation)
+            let anchor = ARAnchor(transform: anchorTransform)
+            return anchor
         }
         
-        let currentTransform = result.worldTransform
         
-        var translation = matrix_identity_float4x4
-        translation.columns.3.z = -distance!
-        translation.columns.3.x = currentTransform.columns.3.x
-        translation.columns.3.y = currentTransform.columns.3.y
-        
-        let anchorTransform = simd_mul(transform, translation)
+        var anchorTransform = result!.worldTransform
+        anchorTransform.columns.3.z = -distance!
         let anchor = ARAnchor(transform: anchorTransform)
         
         return anchor
@@ -364,7 +363,7 @@ extension ARController: ClassificationReceiver {
                         
                             
 //                            let reportedConfidence = String(format: "%.2f % confidence", classification.confidence * 100)
-                            let message = "\(classification.label) \(reportedDepth) away"
+                            let message = "\(classification.label) \(reportedDepth)"
                             print(message)
                                 
                             self.statusViewManager?.showMessage(message, autoHide: true)
