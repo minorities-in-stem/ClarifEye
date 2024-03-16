@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PausedOverlayView: View {
     @State var message: String?
+    @State var initializing: Bool?
     
     var body: some View {
         VStack(alignment: .center, spacing: 6) {

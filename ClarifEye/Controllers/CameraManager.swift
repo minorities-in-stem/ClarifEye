@@ -6,6 +6,7 @@ import AVFoundation
 
 protocol CameraCapturedDataReceiver: AnyObject { 
     func setStreamAvailable(_ avail: Bool)
+    func setInitialized(_ val: Bool)
 }
 
 protocol StatusViewManagerDelegate: AnyObject {
@@ -26,6 +27,7 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
     @Published var statusViewManager: StatusViewManager = StatusViewManager()
     @Published var ttsManager: TTSManager = TTSManager()
     
+    @Published var initialized: Bool = false
     @Published var message: String = "Welcome to ClarifEye!"
     @Published var isError: Bool = false
     @Published var showText: Bool = true
@@ -58,6 +60,10 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
     
     func setStreamAvailable(_ avail: Bool) {
         streamPaused = !avail
+    }
+    
+    func setInitialized(_ val: Bool) {
+        initialized = val
     }
 
     func startStream() {

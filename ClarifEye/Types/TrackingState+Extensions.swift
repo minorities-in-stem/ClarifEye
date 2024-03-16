@@ -11,7 +11,7 @@ extension ARCamera.TrackingState {
             case .limited(.insufficientFeatures):
                 return "Poor Lighting"
             case .limited(.initializing):
-                return "Initializing..."
+                return "Camera initializing..."
             case .limited(.relocalizing):
                 return "Recovering from interruption"
             case .notAvailable:

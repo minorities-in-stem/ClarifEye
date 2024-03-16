@@ -10,6 +10,7 @@ import CoreImage
 
 class ClassificationController: NSObject {
     weak var classificationDelegate: ClassificationReceiver?
+    var modelReady: Bool = false 
     
     private var currentBuffer: CVPixelBuffer?
     private let dispatchQueue = DispatchQueue.global(qos: .background)
@@ -17,30 +18,23 @@ class ClassificationController: NSObject {
     
     
     // MARK: -Setup for object classification/identification model
-    private var _classificationModel: best!
-    private var classificationModel: best! {
-        get {
-            if let model = _classificationModel { return model }
-            _classificationModel = {
-                do {
-                    let configuration = MLModelConfiguration()
-                    return try best(configuration: configuration)
-                } catch {
-                    fatalError("Couldn't create classification model due to: \(error)")
-                }
-            }()
-            return _classificationModel
-        }
-    }
+    private var classificationModel: best!
+    private var coreMLClassificationModel: VNCoreMLModel
     
-    private lazy var coreMLClassificationModel: VNCoreMLModel = {
+    override init() {
         do {
-            let model = try VNCoreMLModel(for: classificationModel.model)
-            return model
+            let configuration = MLModelConfiguration()
+            self.classificationModel = try best(configuration: configuration)
+            
+            let model = try VNCoreMLModel(for: self.classificationModel.model)
+            self.coreMLClassificationModel = model
+            modelReady = true
         } catch {
-            fatalError("Cannot load model")
+            fatalError("Cannot load model. \(error)")
         }
-    }()
+        
+        super.init()
+    }
 }
 
 extension ClassificationController {
@@ -115,7 +109,7 @@ extension ClassificationController {
 }
 
 
-// MARK: -Helper Methods
+// MARK: -Helper MethodsonModelReady
 extension ClassificationController {
     static func scaleToTargetSize(boundingBox: CGRect, targetSize: CGSize) -> CGRect {
         let scaleX = targetSize.width

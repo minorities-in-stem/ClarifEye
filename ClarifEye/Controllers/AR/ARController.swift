@@ -42,6 +42,16 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     var statusViewManager: StatusViewManager?
     var ttsManager: TTSManager?
     var settings: Settings?
+    var modelReady: Bool = false {
+        didSet {
+            self.cameraCapturedDataDelegate?.setInitialized(self.modelReady)
+        }
+    }
+    var streamAvailable: Bool = false {
+        didSet {
+            self.cameraCapturedDataDelegate?.setStreamAvailable(self.streamAvailable)
+        }
+    }
     
     private var shouldClassify: Bool = true
     private var classificationTimer: Timer?
@@ -105,26 +115,28 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     // MARK: - AR Session Handling
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        if (self.modelReady != classificationController.modelReady) {
+            self.modelReady = classificationController.modelReady
+        }
+
+        if (!self.modelReady) {
+            return
+        }
+        
         var message = camera.trackingState.presentationString
         if let recommendation = camera.trackingState.recommendation {
             message.append(": \(recommendation)")
         }
         
-        ttsManager?.stopSpeaking()
-        if (camera.trackingState != .normal) {
+        self.ttsManager?.stopSpeaking()
+        if (camera.trackingState == .normal) {
+            print("Tracking state normal")
+            startStream()
+        } else {
+            print("Tracking state: ", camera.trackingState)
+            pauseStream()
             statusViewManager?.scheduleMessage(message, inSeconds: 0, messageType: .trackingStateEscalation, autoHide: false, isError: true)
             ttsManager?.speak(message)
-        }
-        
-        if (camera.trackingState == .normal) {
-            self.cameraCapturedDataDelegate?.setStreamAvailable(true)
-            self.addClassificationTimer()
-            // Unhide content after successful relocalization.
-            setOverlaysHidden(false)
-        } else {
-            self.cameraCapturedDataDelegate?.setStreamAvailable(false)
-            self.removeClassificationTimer()
-            setOverlaysHidden(true)
         }
     }
     
@@ -286,6 +298,23 @@ extension ARController: ClassificationReceiver {
         self.depthPerClassificationSinceLastOutput = [:]
         self.lastTransformPerClassificationSinceLastOutput = [:]
         self.missingCounterPerClassificationSinceLastOutput = [:]
+    }
+    
+    func startStream() {
+        DispatchQueue.main.async {
+            self.streamAvailable = true
+            self.addClassificationTimer()
+            // Unhide content after successful relocalization.
+            self.setOverlaysHidden(false)
+        }
+    }
+    
+    func pauseStream() {
+        DispatchQueue.main.async {
+            self.streamAvailable = false
+            self.removeClassificationTimer()
+            self.setOverlaysHidden(true)
+        }
     }
     
     func onClassification(imageClassification: ImageClassification) {

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ImageView: View {
     @ObservedObject var manager: CameraManager
+    var message = ""
     
     var body: some View {
         let paused = manager.streamPaused
@@ -25,7 +26,7 @@ struct ImageView: View {
         .overlay {
             if (paused) {
                 PausedOverlayView(
-                    message: manager.isError ? manager.message : nil
+                    message: (!manager.initialized ? "Loading..." : manager.isError ? manager.message : nil)
                 )
                 .allowsHitTesting(false)
             }
