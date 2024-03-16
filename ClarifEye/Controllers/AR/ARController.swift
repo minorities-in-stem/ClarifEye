@@ -338,9 +338,7 @@ extension ARController: ClassificationReceiver {
                             }
                             
                             
-                            // MARK: - Grab the angle relative to the user
-                            
-                            // TODO: fix this
+                            // MARK: - Grab the position relative to the user
                             let boundingBox = classification.boundingBox
                             var relativePosition = ""
                             if (boundingBox.maxX < 0.5) { // Left
