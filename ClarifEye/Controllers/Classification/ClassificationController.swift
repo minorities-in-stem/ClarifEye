@@ -67,7 +67,7 @@ extension ClassificationController {
                         
                         // Extract bounding box
                         let boundingBox = observation.boundingBox
-                        let boundingBoxDistance = self.getDistanceFromDepthMap(boundingBox: boundingBox, imagePixelBuffer: imagePixelBuffer, depthPixelBuffer: depthDataBuffer)
+                        let boundingBoxDistance = self.getDistanceFromDepthMap(boundingBox: boundingBox, depthPixelBuffer: depthDataBuffer)
                         
                         // TODO: rethink; do we want to take the label with the highest confidence or only one with a confidence higher than 0.5
                         // Do we need to take confidence of prediction into consideration before reporting to the user? Ex. a closer object with low confidence/unknown vs. slightly further object with more confidence
@@ -100,7 +100,7 @@ extension ClassificationController {
             }
             // Use CPU for Vision processing to ensure that there are adequate GPU resources for rendering.
             request.usesCPUOnly = true
-            
+
             let orientation = CGImagePropertyOrientation(self.orientation)
             let handler = VNImageRequestHandler(cvPixelBuffer: imagePixelBuffer, orientation: orientation, options: [:])
             
@@ -117,7 +117,7 @@ extension ClassificationController {
 
 // MARK: -Helper Methods
 extension ClassificationController {
-    static func scaleToTargetSize(boundingBox: CGRect, imageSize: CGSize, targetSize: CGSize) -> CGRect {
+    static func scaleToTargetSize(boundingBox: CGRect, targetSize: CGSize) -> CGRect {
         let scaleX = targetSize.width
         let scaleY = targetSize.height
         
@@ -138,15 +138,9 @@ extension ClassificationController {
     }
 
     
-    func getDistanceFromDepthMap(boundingBox: CGRect, imagePixelBuffer: CVPixelBuffer, depthPixelBuffer: CVPixelBuffer) -> Float {
-        let colorImageSize = self.getPixelBufferSize(imagePixelBuffer)
+    func getDistanceFromDepthMap(boundingBox: CGRect, depthPixelBuffer: CVPixelBuffer) -> Float {
         let depthDataSize = self.getPixelBufferSize(depthPixelBuffer)
-        
-        let depthBoundingBox = ClassificationController.scaleToTargetSize(boundingBox: boundingBox, imageSize: colorImageSize, targetSize: depthDataSize)
-        
-        // Get the distance to middle of bounding box
-        let x = depthBoundingBox.midX
-        let y = depthBoundingBox.midY
+        let depthBoundingBox = ClassificationController.scaleToTargetSize(boundingBox: boundingBox, targetSize: depthDataSize)
         
         // Lock the pixel buffer for reading
         CVPixelBufferLockBaseAddress(depthPixelBuffer, CVPixelBufferLockFlags.readOnly)
@@ -155,12 +149,22 @@ extension ClassificationController {
         let pixelBytesPerRow = CVPixelBufferGetBytesPerRow(depthPixelBuffer)
         let pixelBufferBaseAddress = CVPixelBufferGetBaseAddress(depthPixelBuffer)!
         
-        let byteOffset = Int(y) * pixelBytesPerRow + Int(x) * 4 // Multiply by 4 for CVPixelBuffer of Float32, 2 for Float16
-        let depthInMeters = pixelBufferBaseAddress.load(fromByteOffset: byteOffset, as: Float32.self)
+        var shortestDistance: Float = Float.greatestFiniteMagnitude // Initialize with the maximum possible value
+        
+        // Iterate over each pixel within the bounding box
+        for y in Int(depthBoundingBox.minY)..<Int(depthBoundingBox.maxY) {
+            for x in Int(depthBoundingBox.minX)..<Int(depthBoundingBox.maxX) {
+                let byteOffset = y * pixelBytesPerRow + x * 4 // Assuming depth data is Float32b
+                let depthInMeters = pixelBufferBaseAddress.load(fromByteOffset: byteOffset, as: Float32.self)
+                if (depthInMeters < shortestDistance) {
+                    shortestDistance = depthInMeters
+                }
+            }
+        }
         
         // Unlock the pixel buffer after reading
         CVPixelBufferUnlockBaseAddress(depthPixelBuffer, CVPixelBufferLockFlags.readOnly)
         
-        return Float(depthInMeters)
+        return Float(shortestDistance)
     }
 }

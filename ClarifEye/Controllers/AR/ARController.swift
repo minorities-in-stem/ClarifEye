@@ -4,7 +4,6 @@ import ARKit
 import Vision
 import Foundation
 
-
 protocol ClassificationReceiver: AnyObject {
     func onClassification(imageClassification: ImageClassification)
 }
@@ -205,11 +204,8 @@ extension ARController {
     func placeClassificationLabel(classification: ClassificationData, originalImageSize: CGSize, transform: simd_float4x4) {
         DispatchQueue.main.async {
             // Scale bounding box to current frame size
-            let targetSize = self.sceneView.bounds.size
-            let boundingBox = ClassificationController.scaleToTargetSize(boundingBox: classification.boundingBox, imageSize: originalImageSize, targetSize: targetSize)
-            let point = CGPoint(x: boundingBox.midX, y: boundingBox.midY)
-                                
-                                
+            let boundingBox = classification.boundingBox
+            let point = CGPoint(x: boundingBox.midX, y: 1-boundingBox.midY)
             if let anchor = self.getAnchorForLocation(location: point, distance: classification.distance, label: classification.label, transform: transform) {
                 // Track anchor ID to associate text and bounding boxes with the anchor
                 self.anchorToClassification[anchor.identifier] = classification
@@ -231,11 +227,29 @@ extension ARController {
             print("No distance found")
             return nil
         }
+
+        guard let query = self.sceneView.session.currentFrame?.raycastQuery(from: location, allowing: .estimatedPlane, alignment: .any)
+        else {
+            print("Could not create query")
+            return nil
+        }
         
-        var translation = matrix_identity_float4x4
-        translation.columns.3.z = -distance!
+        let result = self.sceneView.session.raycast(query).first
         
-        let anchorTransform = simd_mul(transform, translation)
+        if (result == nil) {
+            print("Raycast did not return any results for location \(location)")
+            
+            var translation = matrix_identity_float4x4
+            translation.columns.3.z = -distance!
+
+            let anchorTransform = simd_mul(transform, translation)
+            let anchor = ARAnchor(transform: anchorTransform)
+            return anchor
+        }
+        
+        
+        var anchorTransform = result!.worldTransform
+        anchorTransform.columns.3.z = -distance!
         let anchor = ARAnchor(transform: anchorTransform)
         
         return anchor
@@ -318,14 +332,25 @@ extension ARController: ClassificationReceiver {
                             if (smoothedDepth == nil) {
                                 reportedDepth = "an unknown distance"
                             } else if (self.settings != nil && self.settings!.measurementSystem == .Imperial) {
-                                reportedDepth = String(format: "%.2f m", smoothedDepth! * self.meterToFootRatio)
+                                reportedDepth = String(format: "%.2f ft", smoothedDepth! * self.meterToFootRatio)
                             } else {
                                 reportedDepth = String(format: "%.2f m", smoothedDepth!)
                             }
-                                
+                            
+                            
+                            // MARK: - Grab the position relative to the user
+                            let boundingBox = classification.boundingBox
+                            var relativePosition = ""
+                            if (boundingBox.maxX < 0.5) { // Left
+                                relativePosition = "slight left"
+                            } else if (boundingBox.minX > 0.5) { // Right
+                                relativePosition = "slight right"
+                            } else { // Center
+                                relativePosition = "in front"
+                            }
                             
 //                            let reportedConfidence = String(format: "%.2f % confidence", classification.confidence * 100)
-                            let message = "\(classification.label) \(reportedDepth) away"
+                            let message = "\(classification.label) \(reportedDepth) \(relativePosition)"
                             print(message)
                                 
                             self.statusViewManager?.showMessage(message, autoHide: true)
