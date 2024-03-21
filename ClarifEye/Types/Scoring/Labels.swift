@@ -5,68 +5,71 @@ func cleanLabel(_ label: String) -> String {
 }
 
 enum ObstacleLabel: String {
-    case PERSON = "person"
-    case BICYCLE = "bicycle"
-    case CAR = "car"
-    case MOTORBIKE = "motorbike"
-    case BUS = "bus"
-    case TRAIN = "train"
-    case TRUCK = "truck"
-    case BOAT = "boat"
-    case TRAFFIC_LIGHT = "traffic_light"
-    case BICYCLER = "bicycler"
-    case BRAILLE_BLOCK = "braille_block"
-    case GUARDRAIL = "guardrail"
-    case WHITE_LINE = "white_line"
-    case CROSSWALK = "crosswalk"
-    case SIGNAL_BUTTON = "signal_button"
-    case SIGNAL_RED = "signal_red"
-    case SIGNAL_BLUE = "signal_blue"
-    case STAIRS = "stairs"
-    case HANDRAIL = "handrail"
-    case STEPS = "steps"
-    case FAREGATES = "faregates"
-    case TRAIN_TICKET_MACHINE = "train_ticket_machine"
-    case SHRUBS = "shrubs"
-    case TREE = "tree"
-    case VENDING_MACHINE = "vending_machine"
     case BATHROOM = "bathroom"
+    case BENCH = "bench"
+    case BICYCLE = "bicycle"
+    case BICYCLER = "bicycler"
+    case BOAT = "boat"
+    case BOLLARD = "bollard"
+    case BRAILLE_BLOCK = "braille_block"
+    case BUS = "bus"
+    case BUS_STOP_SIGN = "bus_stop_sign"
+    case CAR = "car"
+    case CHAIR = "chair"
+    case CROSSWALK = "crosswalk"
+    case DOG = "dog"
     case DOOR = "door"
     case ELEVATOR = "elevator"
     case ESCALATOR = "escalator"
-    case BOLLARD = "bollard"
-    case BUS_STOP_SIGN = "bus_stop_sign"
-    case POLE = "pole"
-    case MONUMENT = "monument"
+    case FAREGATES = "faregates"
     case FENCE = "fence"
-    case WALL = "wall"
-    case SIGNBOARD = "signboard"
+    case FIRE_HYDRANT = "fire_hydrant"
     case FLAG = "flag"
+    case GUARDRAIL = "guardrail"
+    case HANDRAIL = "handrail"
+    case MONUMENT = "monument"
+    case MOTORBIKE = "motorbike"
+    case OTHER = "other"
+    case PERSON = "person"
+    case POLE = "pole"
     case POSTBOX = "postbox"
     case SAFETY_CONE = "safety-cone"
-    case DOG = "dog"
-    case FIRE_HYDRANT = "fire_hydrant"
-    case UNKNOWN = "unknown_object"
+    case SHRUBS = "shrubs"
+    case SIGNAL_BLUE = "signal_blue"
+    case SIGNAL_BUTTON = "signal_button"
+    case SIGNAL_RED = "signal_red"
+    case SIGNBOARD = "signboard"
+    case STAIRS = "stairs"
+    case STEPS = "steps"
+    case STOP_SIGN = "stop_sign"
+    case TRAFFIC_LIGHT = "traffic_light"
+    case TRAIN = "train"
+    case TRAIN_TICKET_MACHINE = "train_ticket_machine"
+    case TREE = "tree"
+    case TRUCK = "truck"
+    case VENDING_MACHINE = "vending_machine"
+    case WALL = "wall"
+    case WHITE_LINE = "white_line"
     
     static func fromString(_ string: String) -> ObstacleLabel {
         if let enumValue = ObstacleLabel(rawValue: string) {
             return enumValue
         } else {
-            return .UNKNOWN
+            return .OTHER
         }
     }
     
     var obstacleClass: Obstacle {
         switch self {
-            case .CAR, .TRUCK, .BUS: return .VEHICLE
+            case .CAR, .TRUCK, .BUS, .MOTORBIKE, .TRAIN, .BOAT: return .VEHICLE
             case .BICYCLE, .BICYCLER: return .CYCLIST
-            case .STAIRS, .STEPS: return .STAIRS
+            case .STAIRS, .STEPS, .ESCALATOR, .ELEVATOR: return .STAIRS
             case .SAFETY_CONE: return .CONSTRUCTION
-            case .WALL: return .WALL
+            case .WALL, .DOOR: return .WALL
             case .FENCE: return .FENCE
-            case .GUARDRAIL: return .BARRIER
-            case .POLE, .BOLLARD: return .POLE
-            case .TREE: return .TREE
+            case .GUARDRAIL, .FAREGATES, .HANDRAIL, .FIRE_HYDRANT, .STOP_SIGN: return .BARRIER
+            case .POLE, .BOLLARD, .MONUMENT: return .POLE
+            case .TREE, .SHRUBS: return .TREE
             case .PERSON: return .PERSON
             default: return .NONE
         }
