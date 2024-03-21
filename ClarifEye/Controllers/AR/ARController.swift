@@ -24,6 +24,7 @@ extension CGImagePropertyOrientation {
 class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDelegate, ARSessionDelegate {
     // Minimum severity score to display feedback
     // FOR NOW, set this to be low so we can test UI interactions
+    // TODO: modify this threshold to be more reasonable
     var scoreThreshold: Float = 3
     var maxNumOfObjectsToDisplay: Int = 3 // Maximum number of observations per frame to display
     private var missingCountThresholdForDeletion: Int = 5 // How many counts before an object is deleted
@@ -136,7 +137,9 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
             print("Tracking state: ", camera.trackingState)
             pauseStream()
             statusViewManager?.scheduleMessage(message, inSeconds: 0, messageType: .trackingStateEscalation, autoHide: false, isError: true)
-            ttsManager?.speak(message)
+            if (self.settings != nil && self.settings!.audioOutput) {
+                ttsManager?.speak(message)
+            }
         }
     }
     
@@ -323,10 +326,13 @@ extension ARController: ClassificationReceiver {
             if (displayOutput) {
                 var scoredClassifications: [ScoredClassification] = []
                 for classification in imageClassification.classifications.values {
-                    // ASSUME OBJECTS ARE STATIC FOR NOW
-                    let obstacleLabel = ObstacleLabel.fromString(classification.label)
-                    let score = CalculateScore(label: obstacleLabel, depth: classification.distance, speed: 0)
-                    scoredClassifications.append(ScoredClassification(classification: classification, score: score))
+                    // Only consider objects that are not marked as "other"
+                    if (classification.label != ObstacleLabel.OTHER.rawValue) {
+                        // ASSUME OBJECTS ARE STATIC FOR NOW
+                        let obstacleLabel = ObstacleLabel.fromString(classification.label)
+                        let score = CalculateScore(label: obstacleLabel, depth: classification.distance, speed: 0)
+                        scoredClassifications.append(ScoredClassification(classification: classification, score: score))
+                    }
                 }
                 
                 let threshold = min(self.maxNumOfObjectsToDisplay, scoredClassifications.count)
@@ -369,6 +375,7 @@ extension ARController: ClassificationReceiver {
                             
                             // MARK: - Grab the position relative to the user
                             let boundingBox = classification.boundingBox
+                            let label = cleanLabel(classification.label)
                             var relativePosition = ""
                             if (boundingBox.maxX < 0.5) { // Left
                                 relativePosition = "slight left"
@@ -378,10 +385,11 @@ extension ARController: ClassificationReceiver {
                                 relativePosition = "in front"
                             }
                             
-//                            let reportedConfidence = String(format: "%.2f % confidence", classification.confidence * 100)
-                            let message = "\(classification.label) \(reportedDepth) \(relativePosition)"
+                            //- MARK: feedback to user
+                            // let reportedConfidence = String(format: "%.2f % confidence", classification.confidence * 100)
+                            let message = "\(label) \(reportedDepth) \(relativePosition)"
                             print(message)
-                                
+                            
                             self.statusViewManager?.showMessage(message, autoHide: true)
                             if (self.settings != nil && self.settings!.audioOutput) {
                                 self.ttsManager?.speak(message)

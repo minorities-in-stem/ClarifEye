@@ -10,7 +10,7 @@ import CoreImage
 
 class ClassificationController: NSObject {
     weak var classificationDelegate: ClassificationReceiver?
-    var modelReady: Bool = false 
+    var modelReady: Bool = false
     
     private var currentBuffer: CVPixelBuffer?
     private let dispatchQueue = DispatchQueue.global(qos: .background)
@@ -18,13 +18,13 @@ class ClassificationController: NSObject {
     
     
     // MARK: -Setup for object classification/identification model
-    private var classificationModel: best!
+    private var classificationModel: t82new!
     private var coreMLClassificationModel: VNCoreMLModel
     
     override init() {
         do {
             let configuration = MLModelConfiguration()
-            self.classificationModel = try best(configuration: configuration)
+            self.classificationModel = try t82new(configuration: configuration)
             
             let model = try VNCoreMLModel(for: self.classificationModel.model)
             self.coreMLClassificationModel = model
@@ -53,7 +53,6 @@ extension ClassificationController {
             self.currentBuffer = imagePixelBuffer
             
             let request = VNCoreMLRequest(model: self.coreMLClassificationModel) { request, error in
-                
                 if let results = request.results as? [VNRecognizedObjectObservation] {
                     var classifications: Dictionary<String, ClassificationData> = [:]
                     for observation in results {
@@ -67,9 +66,9 @@ extension ClassificationController {
                         // Do we need to take confidence of prediction into consideration before reporting to the user? Ex. a closer object with low confidence/unknown vs. slightly further object with more confidence
                         if let label = labels.first(where: { l in l.confidence > 0.5 }) {
                             let obstacleLabel = ObstacleLabel.fromString(label.identifier)
-                            let cleanedLabel = cleanLabel(obstacleLabel.rawValue)
+                            let labelText = obstacleLabel.rawValue
                             let classification = ClassificationData(
-                                label: cleanedLabel,
+                                label: labelText,
                                 confidence: label.confidence,
                                 distance: boundingBoxDistance,
                                 boundingBox: boundingBox
@@ -77,8 +76,8 @@ extension ClassificationController {
                             
                             // Assume that there is only one type of each object per image/frame
                             // Take the one with the closest distance
-                            if (!classifications.keys.contains(cleanedLabel) ||  boundingBoxDistance < classifications[cleanedLabel]!.distance!) {
-                                classifications[cleanedLabel] = classification
+                            if (!classifications.keys.contains(labelText) ||  boundingBoxDistance < classifications[labelText]!.distance!) {
+                                classifications[labelText] = classification
                             }
                         }
                         

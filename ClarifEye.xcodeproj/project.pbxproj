@@ -11,7 +11,6 @@
 		A3027A3B2B09F61A009C644F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3027A3A2B09F61A009C644F /* SettingsView.swift */; };
 		A3200B222B264B7300DFBD64 /* Scores.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3200B212B264B7300DFBD64 /* Scores.swift */; };
 		A3200B242B264F5F00DFBD64 /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3200B232B264F5F00DFBD64 /* Labels.swift */; };
-		A3200B262B26797A00DFBD64 /* best.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A3200B252B26797A00DFBD64 /* best.mlmodel */; };
 		A3331B6D2B10B9DD00EADE34 /* LabelScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A3331B6C2B10B9DD00EADE34 /* LabelScene.sks */; };
 		A3331B6F2B10BD2C00EADE34 /* TrackingState+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3331B6E2B10BD2C00EADE34 /* TrackingState+Extensions.swift */; };
 		A382882F2B28F988005A7522 /* BoundingBoxNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382882E2B28F988005A7522 /* BoundingBoxNode.swift */; };
@@ -28,6 +27,7 @@
 		A3AE300D2B109BA700DCDC7A /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE300C2B109BA700DCDC7A /* Settings.swift */; };
 		A3AE300F2B10A46100DCDC7A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3AE300E2B10A46100DCDC7A /* LaunchScreen.storyboard */; };
 		A3C118202AFC935100FC4F23 /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C1181F2AFC935100FC4F23 /* StatusView.swift */; };
+		A3D5B82D2BABE93A00C6034A /* t82new.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A3D5B82C2BABE93A00C6034A /* t82new.mlmodel */; };
 		AE2C81C927396765001BDCC7 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2C81C827396765001BDCC7 /* View+Extensions.swift */; };
 		AE921D2A270D7B02000E95C6 /* ClarifEye.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE921D29270D7B02000E95C6 /* ClarifEye.swift */; };
 		AE921D2C270D7B02000E95C6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE921D2B270D7B02000E95C6 /* ContentView.swift */; };
@@ -39,7 +39,6 @@
 		A3027A3A2B09F61A009C644F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A3200B212B264B7300DFBD64 /* Scores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scores.swift; sourceTree = "<group>"; };
 		A3200B232B264F5F00DFBD64 /* Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
-		A3200B252B26797A00DFBD64 /* best.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = best.mlmodel; path = Models/best.mlmodel; sourceTree = "<group>"; };
 		A3331B6C2B10B9DD00EADE34 /* LabelScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LabelScene.sks; sourceTree = "<group>"; };
 		A3331B6E2B10BD2C00EADE34 /* TrackingState+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackingState+Extensions.swift"; sourceTree = "<group>"; };
 		A382882E2B28F988005A7522 /* BoundingBoxNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxNode.swift; sourceTree = "<group>"; };
@@ -56,6 +55,7 @@
 		A3AE300C2B109BA700DCDC7A /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		A3AE300E2B10A46100DCDC7A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A3C1181F2AFC935100FC4F23 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
+		A3D5B82C2BABE93A00C6034A /* t82new.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = t82new.mlmodel; path = Models/t82new.mlmodel; sourceTree = "<group>"; };
 		AE18F046274A126C008BC9E3 /* AVFCapture.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AVFCapture.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE18F048274A1272008BC9E3 /* CMCapture.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CMCapture.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE2C81C827396765001BDCC7 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
@@ -91,7 +91,7 @@
 		A37940AB2AF0A3AD0064540A /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				A3200B252B26797A00DFBD64 /* best.mlmodel */,
+				A3D5B82C2BABE93A00C6034A /* t82new.mlmodel */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -306,13 +306,13 @@
 				A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */,
 				A38FE1352B634C2B008C3DD8 /* PausedOverlayView.swift in Sources */,
 				A3AE30092B1099F700DCDC7A /* StatusViewManager.swift in Sources */,
+				A3D5B82D2BABE93A00C6034A /* t82new.mlmodel in Sources */,
 				A3C118202AFC935100FC4F23 /* StatusView.swift in Sources */,
 				A3AE30072B1099DF00DCDC7A /* ARController.swift in Sources */,
 				A382882F2B28F988005A7522 /* BoundingBoxNode.swift in Sources */,
 				A3AE300B2B109A1100DCDC7A /* TemplateLabelNode.swift in Sources */,
 				A3AE2FFB2B10013100DCDC7A /* CameraManager.swift in Sources */,
 				A3027A342B09F474009C644F /* ImageView.swift in Sources */,
-				A3200B262B26797A00DFBD64 /* best.mlmodel in Sources */,
 				AE2C81C927396765001BDCC7 /* View+Extensions.swift in Sources */,
 				A3331B6F2B10BD2C00EADE34 /* TrackingState+Extensions.swift in Sources */,
 				A3AE2FF82B0FF29300DCDC7A /* ARView.swift in Sources */,
