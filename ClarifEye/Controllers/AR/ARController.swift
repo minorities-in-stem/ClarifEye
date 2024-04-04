@@ -59,6 +59,12 @@ class ARController: UIViewController, UIGestureRecognizerDelegate, ARSKViewDeleg
     
     private let meterToFootRatio: Float = 3.28084
     
+    private var reportingCounter: Int = 0
+    private var perIntervalCounter: Int = 0
+    private var onReportData: String = ""
+    private var perIntervalData: String = ""
+    var reporting: Bool = false
+    
     deinit {
         removeClassificationTimer()
     }
@@ -301,6 +307,7 @@ extension ARController: ClassificationReceiver {
         self.depthPerClassificationSinceLastOutput = [:]
         self.lastTransformPerClassificationSinceLastOutput = [:]
         self.missingCounterPerClassificationSinceLastOutput = [:]
+        self.perIntervalCounter = 0
     }
     
     func startStream() {
@@ -324,6 +331,9 @@ extension ARController: ClassificationReceiver {
         DispatchQueue.main.async {
             let displayOutput = self.statusViewManager != nil && !self.statusViewManager!.showText
             if (displayOutput) {
+                self.reportingCounter += 1
+                self.onReportData = "Results for report # \(self.onReportData)"
+                
                 var scoredClassifications: [ScoredClassification] = []
                 for classification in imageClassification.classifications.values {
                     // Only consider objects that are not marked as "other"
@@ -352,8 +362,35 @@ extension ARController: ClassificationReceiver {
                         distance: smoothedDepth,
                         boundingBox: classification.boundingBox
                     )
+
+                    var reportedDepth: String = ""
+                    if (smoothedDepth == nil) {
+                        reportedDepth = "an unknown distance"
+                    } else if (self.settings != nil && self.settings!.measurementSystem == .Imperial) {
+                        reportedDepth = String(format: "%.2f ft", smoothedDepth! * self.meterToFootRatio)
+                    } else {
+                        reportedDepth = String(format: "%.2f m", smoothedDepth!)
+                    }
                     
                     
+                    // MARK: - Grab the position relative to the user
+                    let boundingBox = classification.boundingBox
+                    let label = cleanLabel(classification.label)
+                    var relativePosition = ""
+                    if (boundingBox.maxX < 0.5) { // Left
+                        relativePosition = "slight left"
+                    } else if (boundingBox.minX > 0.5) { // Right
+                        relativePosition = "slight right"
+                    } else { // Center
+                        relativePosition = "in front"
+                    }
+                    
+                    //- MARK: feedback to user
+                    // let reportedConfidence = String(format: "%.2f % confidence", classification.confidence * 100)
+                    let message = "\(label) \(reportedDepth) \(relativePosition)"
+                    self.perIntervalData = "\n\t-\(i+1). \(label): \(reportedDepth)"
+                
+                            
                     if (score >= self.scoreThreshold) {
                         self.placeClassificationLabel(
                             classification: smoothedClassification,
@@ -363,33 +400,6 @@ extension ARController: ClassificationReceiver {
     
                         // Display the message for the object at the first index; which is the object with the highest hazard score
                         if (i == 0) {
-                            var reportedDepth: String = ""
-                            if (smoothedDepth == nil) {
-                                reportedDepth = "an unknown distance"
-                            } else if (self.settings != nil && self.settings!.measurementSystem == .Imperial) {
-                                reportedDepth = String(format: "%.2f ft", smoothedDepth! * self.meterToFootRatio)
-                            } else {
-                                reportedDepth = String(format: "%.2f m", smoothedDepth!)
-                            }
-                            
-                            
-                            // MARK: - Grab the position relative to the user
-                            let boundingBox = classification.boundingBox
-                            let label = cleanLabel(classification.label)
-                            var relativePosition = ""
-                            if (boundingBox.maxX < 0.5) { // Left
-                                relativePosition = "slight left"
-                            } else if (boundingBox.minX > 0.5) { // Right
-                                relativePosition = "slight right"
-                            } else { // Center
-                                relativePosition = "in front"
-                            }
-                            
-                            //- MARK: feedback to user
-                            // let reportedConfidence = String(format: "%.2f % confidence", classification.confidence * 100)
-                            let message = "\(label) \(reportedDepth) \(relativePosition)"
-                            print(message)
-                            
                             self.statusViewManager?.showMessage(message, autoHide: true)
                             if (self.settings != nil && self.settings!.audioOutput) {
                                 self.ttsManager?.speak(message)
@@ -399,10 +409,12 @@ extension ARController: ClassificationReceiver {
                 }
                 
                 self.resetClassificationTracking()
+                print(self.onReportData)
             }
         
             
             // Add current labels
+            self.perIntervalData = "\nReport #  \(self.reportingCounter), Interval \(self.perIntervalCounter)"
             for classification in imageClassification.classifications.values {
                 if (!self.depthPerClassificationSinceLastOutput.keys.contains(classification.label)) {
                     self.depthPerClassificationSinceLastOutput[classification.label] = []
@@ -410,6 +422,7 @@ extension ARController: ClassificationReceiver {
                 
                 if (classification.distance != nil) {
                     self.depthPerClassificationSinceLastOutput[classification.label]!.append(classification.distance!)
+                    self.perIntervalData += "\n\t-\(classification.label): \(classification.distance!)"
                 }
                 
                 // This marks the last known relative position for a given label
@@ -430,6 +443,9 @@ extension ARController: ClassificationReceiver {
                     }
                 }
             }
+            
+            self.perIntervalCounter += 1
+            print(self.perIntervalData)
         }
     }
 }

@@ -18,13 +18,13 @@ class ClassificationController: NSObject {
     
     
     // MARK: -Setup for object classification/identification model
-    private var classificationModel: t82new!
+    private var classificationModel: t12!
     private var coreMLClassificationModel: VNCoreMLModel
     
     override init() {
         do {
             let configuration = MLModelConfiguration()
-            self.classificationModel = try t82new(configuration: configuration)
+            self.classificationModel = try t12(configuration: configuration)
             
             let model = try VNCoreMLModel(for: self.classificationModel.model)
             self.coreMLClassificationModel = model
