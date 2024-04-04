@@ -43,6 +43,15 @@ struct ButtonSettingsView: View {
 
             HStack {
                 VStack(alignment: .leading, spacing: 15) {
+                    Button(action: manager.toggleReporting) {
+                        if (manager.reporting) {
+                            Image(systemName: "waveform.slash")
+                                .font(.system(size: buttonSize))
+                        } else {
+                            Image(systemName: "waveform")
+                                .font(.system(size: buttonSize))
+                        }
+                    }
                     Button(action: manager.toggleStream) {
                         if (manager.streamPaused) {
                             Image(systemName: "play.circle")

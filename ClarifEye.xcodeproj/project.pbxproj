@@ -15,6 +15,7 @@
 		A3331B6F2B10BD2C00EADE34 /* TrackingState+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3331B6E2B10BD2C00EADE34 /* TrackingState+Extensions.swift */; };
 		A382882F2B28F988005A7522 /* BoundingBoxNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382882E2B28F988005A7522 /* BoundingBoxNode.swift */; };
 		A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */; };
+		A38A5DDB2BBF089A00C67CD8 /* t12.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A38A5DDA2BBF089A00C67CD8 /* t12.mlmodel */; };
 		A38BC9B72B9CBCEF009108B1 /* TTSManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38BC9B62B9CBCEF009108B1 /* TTSManager.swift */; };
 		A38FE1352B634C2B008C3DD8 /* PausedOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38FE1342B634C2B008C3DD8 /* PausedOverlayView.swift */; };
 		A38FE1382B6C6B65008C3DD8 /* DepthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38FE1372B6C6B65008C3DD8 /* DepthUtils.swift */; };
@@ -43,6 +44,7 @@
 		A3331B6E2B10BD2C00EADE34 /* TrackingState+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackingState+Extensions.swift"; sourceTree = "<group>"; };
 		A382882E2B28F988005A7522 /* BoundingBoxNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxNode.swift; sourceTree = "<group>"; };
 		A3846CC42AFCC6BA00A720E9 /* ClassificationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassificationData.swift; sourceTree = "<group>"; };
+		A38A5DDA2BBF089A00C67CD8 /* t12.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = t12.mlmodel; path = Models/t12.mlmodel; sourceTree = "<group>"; };
 		A38BC9B62B9CBCEF009108B1 /* TTSManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSManager.swift; sourceTree = "<group>"; };
 		A38FE1342B634C2B008C3DD8 /* PausedOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PausedOverlayView.swift; sourceTree = "<group>"; };
 		A38FE1372B6C6B65008C3DD8 /* DepthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepthUtils.swift; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 		A37940AB2AF0A3AD0064540A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A38A5DDA2BBF089A00C67CD8 /* t12.mlmodel */,
 				A3D5B82C2BABE93A00C6034A /* t82new.mlmodel */,
 			);
 			name = Models;
@@ -303,6 +306,7 @@
 			files = (
 				A3AE2FF22B0FF08800DCDC7A /* ClassificationController.swift in Sources */,
 				A38BC9B72B9CBCEF009108B1 /* TTSManager.swift in Sources */,
+				A38A5DDB2BBF089A00C67CD8 /* t12.mlmodel in Sources */,
 				A3846CC52AFCC6BA00A720E9 /* ClassificationData.swift in Sources */,
 				A38FE1352B634C2B008C3DD8 /* PausedOverlayView.swift in Sources */,
 				A3AE30092B1099F700DCDC7A /* StatusViewManager.swift in Sources */,

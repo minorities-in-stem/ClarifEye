@@ -31,6 +31,7 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
     @Published var message: String = "Welcome to ClarifEye!"
     @Published var isError: Bool = false
     @Published var showText: Bool = true
+    @Published var reporting: Bool = false
     
     init() {
         // Set up the controllers and assign their delegates
@@ -74,6 +75,19 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
     func stopStream() {
         streamPaused = true
         arController.pause()
+    }
+    
+    func toggleReporting() {
+        arController.reporting = !arController.reporting
+        self.reporting = arController.reporting
+        
+        if (self.reporting) {
+            arController.recordStartTime()
+        }
+        
+        if (!self.reporting) {
+            arController.writeDataToFile()
+        }
     }
     
     func toggleStream() {
