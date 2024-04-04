@@ -302,6 +302,21 @@ extension ARController {
 }
 
 extension ARController {
+    func getTimeString() -> String {
+        let now = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
+        let currentTimeString = formatter.string(from: now)
+        return currentTimeString
+    }
+    
+    func recordStartTime() {
+        let currentTimeString = getTimeString()
+        let text = "Starting at \(currentTimeString)"
+        self.onReportData = text
+        self.perIntervalData = text
+    }
+    
     func writeDataToFile() {
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             print("Failed to access Documents directory")
@@ -351,7 +366,7 @@ extension ARController: ClassificationReceiver {
                 // - MARK: reporting
                 if (self.reporting) {
                     self.reportingCounter += 1
-                    self.onReportData += "\nResults for report # \(self.reportingCounter)"
+                    self.onReportData += "\n\(self.getTimeString()) Results for report # \(self.reportingCounter)"
                 }
                 
                 
@@ -445,7 +460,7 @@ extension ARController: ClassificationReceiver {
             // Add current labels
             // - MARK: reporting
             if (self.reporting) {
-                self.perIntervalData += "\nReport # \(self.reportingCounter), Interval \(self.perIntervalCounter)"
+                self.perIntervalData += "\n\(self.getTimeString()) Report # \(self.reportingCounter), Interval \(self.perIntervalCounter)"
             }
             
             for classification in imageClassification.classifications.values {

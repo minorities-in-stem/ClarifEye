@@ -81,7 +81,11 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
         arController.reporting = !arController.reporting
         self.reporting = arController.reporting
         
-        if (!arController.reporting) {
+        if (self.reporting) {
+            arController.recordStartTime()
+        }
+        
+        if (!self.reporting) {
             arController.writeDataToFile()
         }
     }
