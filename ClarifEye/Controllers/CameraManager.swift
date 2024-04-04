@@ -80,6 +80,10 @@ class CameraManager: ObservableObject, CameraCapturedDataReceiver, StatusViewMan
     func toggleReporting() {
         arController.reporting = !arController.reporting
         self.reporting = arController.reporting
+        
+        if (!arController.reporting) {
+            arController.writeDataToFile()
+        }
     }
     
     func toggleStream() {

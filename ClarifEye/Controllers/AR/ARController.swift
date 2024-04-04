@@ -301,6 +301,23 @@ extension ARController {
     }
 }
 
+extension ARController {
+    func writeDataToFile() {
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Failed to access Documents directory")
+            return
+        }
+        
+        do {
+            try perIntervalData.write(to: documentsDirectory.appendingPathComponent("ClarifEye-PerInterval.txt"), atomically: true, encoding: .utf8)
+            try onReportData.write(to: documentsDirectory.appendingPathComponent("ClarifEye-Report.txt"), atomically: true, encoding: .utf8)
+            print("File written successfully to \(documentsDirectory)")
+        } catch {
+            print("Failed to write to file: \(error)")
+        }
+    }
+}
+
 // MARK: - Handle classification display
 extension ARController: ClassificationReceiver {
     func resetClassificationTracking() {
@@ -331,8 +348,12 @@ extension ARController: ClassificationReceiver {
         DispatchQueue.main.async {
             let displayOutput = self.statusViewManager != nil && !self.statusViewManager!.showText
             if (displayOutput) {
-                self.reportingCounter += 1
-                self.onReportData = "Results for report # \(self.onReportData)"
+                // - MARK: reporting
+                if (self.reporting) {
+                    self.reportingCounter += 1
+                    self.onReportData += "\nResults for report # \(self.reportingCounter)"
+                }
+                
                 
                 var scoredClassifications: [ScoredClassification] = []
                 for classification in imageClassification.classifications.values {
@@ -362,7 +383,7 @@ extension ARController: ClassificationReceiver {
                         distance: smoothedDepth,
                         boundingBox: classification.boundingBox
                     )
-
+                    
                     var reportedDepth: String = ""
                     if (smoothedDepth == nil) {
                         reportedDepth = "an unknown distance"
@@ -388,16 +409,21 @@ extension ARController: ClassificationReceiver {
                     //- MARK: feedback to user
                     // let reportedConfidence = String(format: "%.2f % confidence", classification.confidence * 100)
                     let message = "\(label) \(reportedDepth) \(relativePosition)"
-                    self.perIntervalData = "\n\t-\(i+1). \(label): \(reportedDepth)"
-                
-                            
+                    
+                    
+                    // - MARK: reporting
+                    if (self.reporting) {
+                        self.onReportData += "\n\t\(i+1). Label: \(label), Depth: \(reportedDepth), Score: \(score)"
+                    }
+                    
+                    
                     if (score >= self.scoreThreshold) {
                         self.placeClassificationLabel(
                             classification: smoothedClassification,
                             originalImageSize: imageClassification.imageSize,
                             transform: imageClassification.transform
                         )
-    
+                        
                         // Display the message for the object at the first index; which is the object with the highest hazard score
                         if (i == 0) {
                             self.statusViewManager?.showMessage(message, autoHide: true)
@@ -409,12 +435,19 @@ extension ARController: ClassificationReceiver {
                 }
                 
                 self.resetClassificationTracking()
-                print(self.onReportData)
+                if (self.reporting) {
+                    print(self.onReportData)
+                }
+
             }
-        
+            
             
             // Add current labels
-            self.perIntervalData = "\nReport #  \(self.reportingCounter), Interval \(self.perIntervalCounter)"
+            // - MARK: reporting
+            if (self.reporting) {
+                self.perIntervalData += "\nReport # \(self.reportingCounter), Interval \(self.perIntervalCounter)"
+            }
+            
             for classification in imageClassification.classifications.values {
                 if (!self.depthPerClassificationSinceLastOutput.keys.contains(classification.label)) {
                     self.depthPerClassificationSinceLastOutput[classification.label] = []
@@ -422,7 +455,11 @@ extension ARController: ClassificationReceiver {
                 
                 if (classification.distance != nil) {
                     self.depthPerClassificationSinceLastOutput[classification.label]!.append(classification.distance!)
-                    self.perIntervalData += "\n\t-\(classification.label): \(classification.distance!)"
+                    
+                    // - MARK: reporting
+                    if (self.reporting) {
+                        self.perIntervalData += "\n\t-\(classification.label): \(classification.distance!)"
+                    }
                 }
                 
                 // This marks the last known relative position for a given label
@@ -444,8 +481,11 @@ extension ARController: ClassificationReceiver {
                 }
             }
             
-            self.perIntervalCounter += 1
-            print(self.perIntervalData)
+            // - MARK: reporting
+            if (self.reporting) {
+                self.perIntervalCounter += 1
+                print(self.perIntervalData)
+            }
         }
     }
 }
