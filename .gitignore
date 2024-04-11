@@ -1,5 +1,7 @@
 # Data
 verification-data/
+env/
+models/
 
 # Xcode
 #

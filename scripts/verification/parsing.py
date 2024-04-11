@@ -5,17 +5,17 @@ from pathlib import Path
 from datetime import datetime
 
 ID_FN = None
-# TS_FN = lambda x: datetime.strptime(x, TIMESTAMP_FORMAT)
-TS_FN = ID_FN
 LOWER_FN = lambda x: x.lower().replace(" ", "_")
 
+# START_LINE_REGEX = r"Starting at (\d{2}:\d{2}:\d{2})"
+
 INTERVAL_TITLE_REGEX = r"(\d{2}:\d{2}:\d{2}) Report # (\d+), Interval (\d+)"
-INTERVAL_TITLE_OUT = [("timestamp", TS_FN), ("report_num", int), ("interval", int)]
+INTERVAL_TITLE_OUT = [("timestamp", ID_FN), ("report_num", int), ("interval", int)]
 INTERVAL_ELEMENT_REGEX = r"\s+-([^:]+): ([\d.]+)"
 INTERVAL_ELEMENT_OUT = [("class", LOWER_FN), ("score", float)]
 
 REPORT_TITLE_REGEX = r"(\d{2}:\d{2}:\d{2}) Results for report # (\d+)"
-REPORT_TITLE_OUT = [("timestamp", TS_FN), ("report_num", int)]
+REPORT_TITLE_OUT = [("timestamp", ID_FN), ("report_num", int)]
 REPORT_ELEMENT_REGEX = r"\s+\d\. Label: ([\w -]+), Depth: ([\d.]+) m, Score: ([\d.]+)"
 REPORT_ELEMENT_OUT = [("class", LOWER_FN), ("depth", float), ("score", float)]
 
@@ -44,14 +44,14 @@ def parse(lines: list, title_regex, title_out, element_regex, element_out):
                 k: (v if fn is None else fn(v))
                 for (k, fn), v in zip(title_out, re.findall(title_regex, l)[0])
             }
-            ret["detections"] = list()
+            ret["detections"] = dict()
         else:
-            ret["detections"].append(
-                {
-                    k: (v if fn is None else fn(v))
-                    for (k, fn), v in zip(element_out, re.findall(element_regex, l)[0])
-                }
-            )
+            t = {
+                k: (v if fn is None else fn(v))
+                for (k, fn), v in zip(element_out, re.findall(element_regex, l)[0])
+            }
+            c = t.pop("class")
+            ret["detections"][c] = t
 
     if ret is not None:
         yield ret
@@ -65,21 +65,24 @@ def compile_results(per_interval, report):
 
     for i, rep in enumerate(report):
         if start_time is None:
-            start_time = rep["timestamp"]
+            start_time = datetime.strptime(rep["timestamp"], TIMESTAMP_FORMAT)
+        rep["rel_timestamp"] = (datetime.strptime(rep["timestamp"], TIMESTAMP_FORMAT) - start_time).total_seconds()
+        del rep["timestamp"]
         rep["per_interval"] = list()
         result.append(rep)
         REP_2_IDX[rep["report_num"]] = rep
 
     for pi in per_interval:
         rnum = pi.pop("report_num")
-        res = REP_2_IDX.get(rnum+1)
+        res = REP_2_IDX.get(rnum) # TODO: Check if this is correct
         if res is None:
             # print("No report for interval", rnum)
             continue
 
         assert pi["interval"] == len(res["per_interval"]), "FAILED"
         del pi["interval"]
-        # assert pi["timestamp"] == res["timestamp"], str(pi["timestamp"]) + " != " + str(res["timestamp"])
+        pi["rel_timestamp"] = (datetime.strptime(pi["timestamp"], TIMESTAMP_FORMAT) - start_time).total_seconds()
+        del pi["timestamp"]
         res["per_interval"].append(pi)
 
     return result
