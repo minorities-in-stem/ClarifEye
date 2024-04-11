@@ -7,16 +7,17 @@ from datetime import datetime
 ID_FN = None
 # TS_FN = lambda x: datetime.strptime(x, TIMESTAMP_FORMAT)
 TS_FN = ID_FN
+LOWER_FN = lambda x: x.lower().replace(" ", "_")
 
 INTERVAL_TITLE_REGEX = r"(\d{2}:\d{2}:\d{2}) Report # (\d+), Interval (\d+)"
 INTERVAL_TITLE_OUT = [("timestamp", TS_FN), ("report_num", int), ("interval", int)]
 INTERVAL_ELEMENT_REGEX = r"\s+-([^:]+): ([\d.]+)"
-INTERVAL_ELEMENT_OUT = [("class", ID_FN), ("score", float)]
+INTERVAL_ELEMENT_OUT = [("class", LOWER_FN), ("score", float)]
 
 REPORT_TITLE_REGEX = r"(\d{2}:\d{2}:\d{2}) Results for report # (\d+)"
 REPORT_TITLE_OUT = [("timestamp", TS_FN), ("report_num", int)]
 REPORT_ELEMENT_REGEX = r"\s+\d\. Label: ([\w -]+), Depth: ([\d.]+) m, Score: ([\d.]+)"
-REPORT_ELEMENT_OUT = [("class", ID_FN), ("depth", float), ("score", float)]
+REPORT_ELEMENT_OUT = [("class", LOWER_FN), ("depth", float), ("score", float)]
 
 TIMESTAMP_FORMAT = "%H:%M:%S"
 
