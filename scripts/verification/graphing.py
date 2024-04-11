@@ -70,6 +70,7 @@ def plot_scene_depth(scene, t0=None, tN=None, offset={}, max_time=None, min_time
     if xlim is not None:
         plt.xlim(xlim)
     plt.legend(handles=legend_elements)
+
     if save_fig is not None:
         plt.savefig(save_fig)
     else:
@@ -81,9 +82,26 @@ def plot_scene_score(scene, t0=None, tN=None, save_fig=None):
 
     rep_scores = {}
     int_scores = {}
+    max_scores = {}
 
-    obj_classes = scene["data"].keys()
+    obj_classes = set()
+    for trial in scene['trials']:
+        for report in trial:
+            t = report["rel_timestamp"]
+            obj_classes.update(report["detections"].keys())
 
+            max_score = float('-inf')
+            for obj_cls, d in report["detections"].items():
+                if d["score"] > max_score:
+                    max_score = d["score"]
+                    max_obj_cls = obj_cls
+
+            if max_obj_cls not in max_scores:
+                max_scores[max_obj_cls] = ([], [])
+            t_max_score, v_max_score = max_scores[max_obj_cls]
+            t_max_score.append(t)
+            v_max_score.append(max_score)
+    
     for obj_cls in obj_classes:
         for i, trial in enumerate(scene['trials']):
             t_rep_score = []
@@ -91,7 +109,7 @@ def plot_scene_score(scene, t0=None, tN=None, save_fig=None):
 
             t_int_score = []
             v_int_score = []
-    
+
             for j, report in enumerate(trial):
                 if obj_cls in report["detections"]:
                     t = report["rel_timestamp"]
@@ -106,6 +124,7 @@ def plot_scene_score(scene, t0=None, tN=None, save_fig=None):
 
             if obj_cls not in int_scores:
                 int_scores[obj_cls] = []
+
             int_scores[obj_cls].append((i+1, t_int_score, v_int_score))
             rep_scores[obj_cls] = (t_rep_score, v_rep_score)
 
@@ -114,10 +133,17 @@ def plot_scene_score(scene, t0=None, tN=None, save_fig=None):
     REP_LINESTYLE = "solid"
     
     for obj_cls, color in zip(obj_classes, COLORS):
-        for i_trial, x, y in int_scores[obj_cls]:
-            plt.plot(x, y, color=color, linestyle=INT_LINESTYLE)
-        x, y = rep_scores[obj_cls]
-        plt.plot(x, y, linestyle=REP_LINESTYLE)
+        if obj_cls in int_scores:
+            for i_trial, x, y in int_scores[obj_cls]:
+                plt.plot(x, y, color=color, linestyle=INT_LINESTYLE)
+
+        if obj_cls in rep_scores:
+            x, y = rep_scores[obj_cls]
+            plt.plot(x, y, linestyle=REP_LINESTYLE)
+
+        if obj_cls in max_scores:
+            x, y = max_scores[obj_cls]
+            plt.scatter(x, y, marker=(5, 1), color=color, s=30)
 
     legend_elements = []
     for obj_cls, color in zip(obj_classes, COLORS):
@@ -129,6 +155,7 @@ def plot_scene_score(scene, t0=None, tN=None, save_fig=None):
     plt.xlabel('Time (s)')
     plt.ylabel('Score')
     plt.legend(handles=legend_elements)
+
     if save_fig is not None:
         plt.savefig(save_fig)
     else:
