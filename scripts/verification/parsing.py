@@ -5,7 +5,7 @@ from pathlib import Path
 from datetime import datetime
 
 ID_FN = None
-LOWER_FN = lambda x: x.lower().replace(" ", "_")
+LOWER_FN = lambda x: x.lower().replace("_", " ")
 
 # START_LINE_REGEX = r"Starting at (\d{2}:\d{2}:\d{2})"
 
@@ -97,9 +97,6 @@ def parse_results(folder, t):
     report_parsed = parse(report, REPORT_TITLE_REGEX, REPORT_TITLE_OUT, REPORT_ELEMENT_REGEX, REPORT_ELEMENT_OUT)
     per_interval_parsed = parse(per_interval, INTERVAL_TITLE_REGEX, INTERVAL_TITLE_OUT, INTERVAL_ELEMENT_REGEX, INTERVAL_ELEMENT_OUT)
 
-    # print(list(report_parsed))
-    # print(list(per_interval_parsed))
-
     return compile_results(per_interval_parsed, report_parsed)
 
 
@@ -110,12 +107,13 @@ if __name__ == "__main__":
         print(i, f.name, t, end="")
 
         result = parse_results(folder, t)
-        
         if result is None:
             print(": Missing files for", t)
             continue
         else:
             print()
-
-        with open(folder / f"result-{t}.json", "w") as f:
+        
+        out_folder = Path("./out/parsing")
+        out_folder.mkdir(exist_ok=True, parents=True)
+        with open(out_folder / f"result-{t}.json", "w") as f:
             json.dump(result, f, indent=2)

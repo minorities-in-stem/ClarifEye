@@ -1,0 +1,61 @@
+Starting at 17:23:55
+17:23:56 Report # 140, Interval 0
+	-fire_hydrant: 3.5690773
+	-pole: 14.0476675
+17:23:57 Report # 141, Interval 0
+	-fire_hydrant: 3.5576897
+	-pole: 12.569077
+17:23:58 Report # 142, Interval 0
+	-pole: 12.985549
+	-fire_hydrant: 3.796967
+17:24:00 Report # 143, Interval 0
+	-fire_hydrant: 2.72155
+	-pole: 12.935574
+17:24:01 Report # 143, Interval 1
+	-fire_hydrant: 3.2701738
+	-pole: 13.172385
+17:24:02 Report # 143, Interval 2
+	-fire_hydrant: 3.202819
+	-pole: 12.624978
+17:24:04 Report # 144, Interval 0
+	-fire_hydrant: 3.79399
+	-pole: 12.248299
+17:24:05 Report # 145, Interval 0
+	-fire_hydrant: 3.2999372
+	-pole: 12.129582
+17:24:06 Report # 145, Interval 1
+	-fire_hydrant: 2.760445
+	-pole: 11.185974
+17:24:08 Report # 145, Interval 2
+	-pole: 12.526729
+	-fire_hydrant: 2.4452636
+17:24:09 Report # 146, Interval 0
+	-fire_hydrant: 1.97843
+	-pole: 12.112067
+17:24:10 Report # 146, Interval 1
+	-fire_hydrant: 1.665302
+	-pole: 11.8065195
+17:24:12 Report # 146, Interval 2
+	-pole: 12.478692
+	-fire_hydrant: 1.5468105
+17:24:13 Report # 147, Interval 0
+	-pole: 12.320663
+	-fire_hydrant: 1.5568144
+17:24:14 Report # 147, Interval 1
+	-pole: 12.061356
+	-fire_hydrant: 1.5635316
+17:24:16 Report # 147, Interval 2
+	-fire_hydrant: 1.5713422
+	-pole: 12.00598
+17:24:17 Report # 148, Interval 0
+	-fire_hydrant: 1.5758485
+	-pole: 11.469242
+17:24:18 Report # 148, Interval 1
+	-fire_hydrant: 1.584147
+	-pole: 12.251301
+17:24:20 Report # 148, Interval 2
+	-fire_hydrant: 1.5680305
+	-pole: 11.646123
+17:24:21 Report # 149, Interval 0
+	-fire_hydrant: 1.5507896
+	-pole: 11.439806

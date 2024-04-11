@@ -1,0 +1,24 @@
+Starting at 17:45:43
+17:45:44 Results for report # 182
+	1. Label: Car, Depth: 6.80 m, Score: 9.2
+	2. Label: Fire Hydrant, Depth: 3.67 m, Score: 2.8
+	3. Label: Person, Depth: 3.24 m, Score: 0.5
+17:45:48 Results for report # 183
+	1. Label: Fire Hydrant, Depth: 3.47 m, Score: 4.6
+	2. Label: Person, Depth: 5.78 m, Score: 2.3
+	3. Label: Car, Depth: 6.04 m, Score: 2.0
+17:45:52 Results for report # 184
+	1. Label: Bollard, Depth: 1.73 m, Score: 8.2
+	2. Label: Fire Hydrant, Depth: 2.42 m, Score: 8.2
+	3. Label: Person, Depth: 6.16 m, Score: 4.1
+17:45:56 Results for report # 185
+	1. Label: Fire Hydrant, Depth: 1.49 m, Score: 8.2
+	2. Label: Bollard, Depth: 3.19 m, Score: 8.2
+	3. Label: Person, Depth: 2.34 m, Score: 7.7
+17:46:00 Results for report # 186
+	1. Label: Fire Hydrant, Depth: 2.16 m, Score: 6.3999996
+	2. Label: Person, Depth: 1.41 m, Score: 0.5
+17:46:03 Results for report # 187
+	1. Label: Bollard, Depth: 0.75 m, Score: 10.0
+	2. Label: Person, Depth: 1.81 m, Score: 9.5
+	3. Label: Car, Depth: 5.51 m, Score: 2.0

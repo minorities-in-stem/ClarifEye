@@ -1,0 +1,15 @@
+Starting at 17:18:35
+17:18:36 Results for report # 124
+	1. Label: Person, Depth: 1.70 m, Score: 7.7
+	2. Label: Pole, Depth: 14.27 m, Score: 1.0
+17:18:40 Results for report # 125
+	1. Label: Person, Depth: 1.81 m, Score: 7.7
+	2. Label: Fire Hydrant, Depth: 2.37 m, Score: 6.3999996
+	3. Label: Pole, Depth: 13.09 m, Score: 1.0
+17:18:44 Results for report # 126
+	1. Label: Fire Hydrant, Depth: 2.95 m, Score: 6.3999996
+	2. Label: Pole, Depth: 12.89 m, Score: 1.0
+17:18:48 Results for report # 127
+	1. Label: Fire Hydrant, Depth: 2.91 m, Score: 6.3999996
+	2. Label: Pole, Depth: 12.15 m, Score: 1.0
+	3. Label: Person, Depth: 12.62 m, Score: 0.5

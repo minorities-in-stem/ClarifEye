@@ -1,0 +1,254 @@
+Starting at 17:10:18
+17:10:20 Report # 83, Interval 0
+	-bus: 2.0647755
+	-person: 2.055232
+	-fire_hydrant: 4.6585445
+	-car: 2.055232
+17:10:21 Report # 83, Interval 1
+	-car: 3.1442077
+	-person: 2.0602067
+	-fire_hydrant: 16.553755
+17:10:23 Report # 84, Interval 0
+	-fire_hydrant: 16.062178
+	-car: 3.224464
+	-person: 2.0657337
+17:10:24 Report # 84, Interval 1
+	-person: 1.9252684
+	-fire_hydrant: 11.788595
+	-car: 3.3707628
+17:10:25 Report # 84, Interval 2
+	-car: 3.489495
+	-person: 1.8924135
+	-fire_hydrant: 14.72475
+17:10:27 Report # 85, Interval 0
+	-person: 1.9671037
+	-car: 2.319754
+	-fire_hydrant: 13.120222
+17:10:28 Report # 85, Interval 1
+	-fire_hydrant: 13.622647
+	-car: 1.8994404
+	-person: 2.1101692
+17:10:29 Report # 85, Interval 2
+	-fire_hydrant: 8.659398
+	-person: 2.3555348
+	-car: 2.5263298
+17:10:31 Report # 86, Interval 0
+	-car: 2.1388853
+	-fire_hydrant: 14.376344
+	-person: 2.0002034
+17:10:32 Report # 86, Interval 1
+	-car: 2.1657736
+	-person: 2.233942
+	-fire_hydrant: 11.09516
+17:10:33 Report # 86, Interval 2
+	-person: 3.927657
+	-car: 2.170974
+	-fire_hydrant: 7.742207
+17:10:35 Report # 87, Interval 0
+	-car: 2.1828065
+	-fire_hydrant: 13.487791
+	-person: 2.8125634
+17:10:36 Report # 87, Interval 1
+	-person: 1.8689857
+	-fire_hydrant: 4.8535542
+	-car: 1.982026
+17:10:38 Report # 87, Interval 2
+	-person: 3.0050762
+	-fire_hydrant: 8.598257
+	-car: 1.9242299
+17:10:39 Report # 88, Interval 0
+	-fire_hydrant: 9.174265
+	-car: 1.9512925
+	-person: 3.4668446
+17:10:41 Report # 88, Interval 1
+	-fire_hydrant: 13.174905
+	-car: 4.398086
+	-person: 2.7100954
+17:10:42 Report # 88, Interval 2
+	-person: 2.1023877
+	-fire_hydrant: 12.56494
+	-car: 4.2583594
+17:10:43 Report # 89, Interval 0
+	-car: 3.9514387
+	-fire_hydrant: 13.413946
+	-person: 4.563508
+17:10:44 Report # 89, Interval 1
+	-person: 3.979446
+	-car: 4.1818676
+	-fire_hydrant: 13.60729
+17:10:46 Report # 89, Interval 2
+	-fire_hydrant: 13.128056
+	-person: 4.6395583
+	-car: 4.1402364
+17:10:47 Report # 90, Interval 0
+	-person: 2.8390431
+	-car: 4.1598277
+	-fire_hydrant: 13.584559
+17:10:49 Report # 90, Interval 1
+	-fire_hydrant: 15.066543
+	-car: 4.0691433
+	-person: 2.4194744
+17:10:50 Report # 90, Interval 2
+	-car: 3.8561418
+	-person: 2.0620646
+	-fire_hydrant: 16.752457
+17:10:51 Report # 91, Interval 0
+	-car: 4.2603106
+	-person: 4.620174
+	-fire_hydrant: 20.871096
+17:10:53 Report # 92, Interval 0
+	-fire_hydrant: 13.748339
+	-car: 3.9982343
+	-person: 4.588431
+17:10:54 Report # 92, Interval 1
+	-fire_hydrant: 20.02721
+	-car: 4.2577796
+	-person: 4.0332365
+17:10:55 Report # 92, Interval 2
+	-car: 3.8415124
+	-person: 2.6427317
+	-fire_hydrant: 13.185375
+17:10:57 Report # 93, Interval 0
+	-car: 3.8485258
+	-person: 2.0430315
+	-fire_hydrant: 13.314829
+17:10:58 Report # 93, Interval 1
+	-person: 4.5782027
+	-fire_hydrant: 14.8810835
+	-car: 3.67771
+17:10:59 Report # 93, Interval 2
+	-person: 2.2248166
+	-car: 3.9025767
+	-fire_hydrant: 12.959863
+17:11:01 Report # 94, Interval 0
+	-person: 2.9711225
+	-fire_hydrant: 7.604108
+	-car: 3.465371
+17:11:02 Report # 94, Interval 1
+	-car: 3.4713843
+	-person: 2.1114862
+	-fire_hydrant: 13.124136
+17:11:03 Report # 94, Interval 2
+	-car: 4.2327685
+	-person: 2.6561468
+	-fire_hydrant: 11.341107
+17:11:05 Report # 95, Interval 0
+	-fire_hydrant: 7.8819513
+	-car: 3.916511
+	-person: 2.420136
+17:11:06 Report # 95, Interval 1
+	-fire_hydrant: 15.692808
+	-car: 2.2637992
+	-person: 4.6468625
+17:11:08 Report # 95, Interval 2
+	-fire_hydrant: 20.652218
+	-car: 4.441429
+	-person: 4.6139045
+17:11:09 Report # 96, Interval 0
+	-person: 4.4297247
+	-car: 2.325148
+	-fire_hydrant: 13.132212
+17:11:10 Report # 96, Interval 1
+	-person: 3.2487292
+	-car: 4.420636
+	-fire_hydrant: 17.297894
+17:11:11 Report # 96, Interval 2
+	-fire_hydrant: 21.962017
+	-car: 4.198352
+	-person: 2.3201797
+17:11:13 Report # 97, Interval 0
+	-car: 4.5477037
+	-person: 2.024835
+	-fire_hydrant: 20.657476
+17:11:14 Report # 97, Interval 1
+	-person: 4.651576
+	-car: 3.9980004
+	-fire_hydrant: 13.289392
+17:11:15 Report # 97, Interval 2
+	-person: 4.7017508
+	-fire_hydrant: 20.536451
+	-car: 4.488751
+17:11:17 Report # 98, Interval 0
+	-car: 4.2081504
+	-fire_hydrant: 20.753504
+	-person: 4.6861744
+17:11:18 Report # 99, Interval 0
+	-person: 4.6835
+	-fire_hydrant: 20.856125
+	-car: 4.464321
+17:11:19 Report # 100, Interval 0
+	-car: 4.1899204
+	-person: 4.663131
+	-fire_hydrant: 20.431015
+17:11:20 Report # 101, Interval 0
+	-fire_hydrant: 6.7182064
+	-car: 3.7243166
+	-person: 4.654021
+17:11:22 Report # 101, Interval 1
+	-person: 2.0336237
+	-car: 3.1353676
+	-fire_hydrant: 6.6233454
+17:11:23 Report # 101, Interval 2
+	-fire_hydrant: 11.769802
+	-car: 3.1345448
+	-person: 2.0299153
+17:11:24 Report # 102, Interval 0
+	-person: 4.6951447
+	-fire_hydrant: 14.068365
+	-car: 4.328136
+17:11:26 Report # 103, Interval 0
+	-fire_hydrant: 11.584982
+	-car: 4.0395365
+	-person: 3.3376539
+17:11:27 Report # 103, Interval 1
+	-fire_hydrant: 9.6028385
+	-person: 2.2568014
+	-car: 3.466219
+17:11:28 Report # 103, Interval 2
+	-person: 1.9110816
+	-fire_hydrant: 6.410173
+	-car: 3.5676188
+17:11:30 Report # 104, Interval 0
+	-person: 4.5763144
+	-fire_hydrant: 7.0740848
+	-car: 3.545457
+17:11:31 Report # 104, Interval 1
+	-car: 3.4293425
+	-person: 4.523232
+	-fire_hydrant: 11.139179
+17:11:32 Report # 104, Interval 2
+	-car: 3.4929903
+	-person: 2.1575654
+	-fire_hydrant: 7.0391703
+17:11:34 Report # 105, Interval 0
+	-person: 2.975929
+	-fire_hydrant: 12.092134
+	-car: 4.011514
+17:11:35 Report # 105, Interval 1
+	-car: 3.3597558
+	-person: 2.2751257
+	-fire_hydrant: 8.902934
+17:11:37 Report # 105, Interval 2
+	-car: 3.4109776
+	-person: 1.8770901
+	-fire_hydrant: 8.67754
+17:11:38 Report # 106, Interval 0
+	-fire_hydrant: 14.987561
+	-person: 4.63714
+	-car: 3.459399
+17:11:39 Report # 106, Interval 1
+	-car: 3.1319804
+	-person: 2.040068
+	-fire_hydrant: 4.884711
+17:11:41 Report # 106, Interval 2
+	-fire_hydrant: 12.148142
+	-person: 4.520727
+	-car: 3.2860289
+17:11:42 Report # 107, Interval 0
+	-person: 2.011869
+	-fire_hydrant: 4.7045765
+	-car: 2.011869
+17:11:43 Report # 107, Interval 1
+	-car: 2.0869458
+	-person: 2.052505
+	-fire_hydrant: 4.6567616

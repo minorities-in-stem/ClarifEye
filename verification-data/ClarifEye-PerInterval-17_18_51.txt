@@ -1,0 +1,45 @@
+Starting at 17:18:35
+17:18:35 Report # 123, Interval 0
+	-person: 1.7392473
+	-pole: 14.84933
+17:18:36 Report # 124, Interval 0
+	-person: 1.7900974
+	-pole: 12.629403
+17:18:38 Report # 124, Interval 1
+	-person: 1.7834878
+	-pole: 13.41203
+17:18:39 Report # 124, Interval 2
+	-person: 1.8180423
+	-fire_hydrant: 2.3655012
+	-pole: 13.141401
+17:18:40 Report # 125, Interval 0
+	-fire_hydrant: 2.9513197
+	-person: 1.7943313
+	-pole: 12.427348
+17:18:42 Report # 125, Interval 1
+	-pole: 13.170467
+	-person: 1.318977
+	-fire_hydrant: 2.9489522
+17:18:43 Report # 125, Interval 2
+	-pole: 12.952327
+	-fire_hydrant: 2.9457197
+	-person: 1.7470299
+17:18:44 Report # 126, Interval 0
+	-pole: 12.465883
+	-fire_hydrant: 2.9149106
+17:18:46 Report # 126, Interval 1
+	-person: 12.248667
+	-pole: 12.827258
+	-fire_hydrant: 2.9235766
+17:18:47 Report # 126, Interval 2
+	-pole: 11.821806
+	-fire_hydrant: 2.904976
+	-person: 12.714994
+17:18:48 Report # 127, Interval 0
+	-fire_hydrant: 2.9157836
+	-pole: 11.710461
+	-person: 11.869286
+17:18:49 Report # 127, Interval 1
+	-pole: 11.328385
+	-person: 11.550434
+	-fire_hydrant: 2.9183452

@@ -1,0 +1,70 @@
+Starting at 17:31:53
+17:31:53 Report # 157, Interval 0
+	-person: 1.3906752
+	-pole: 4.2145324
+17:31:54 Report # 158, Interval 0
+	-pole: 4.479947
+	-person: 1.595298
+17:31:56 Report # 158, Interval 1
+	-person: 2.291685
+	-pole: 2.9446044
+17:31:57 Report # 158, Interval 2
+	-person: 1.797307
+	-pole: 3.2841594
+	-car: 1.4080143
+17:31:58 Report # 159, Interval 0
+	-pole: 4.5715885
+	-person: 2.6319716
+17:31:59 Report # 159, Interval 1
+	-person: 3.1270487
+	-pole: 3.1376784
+17:32:00 Report # 159, Interval 2
+	-pole: 3.5219145
+	-person: 1.4041411
+17:32:02 Report # 160, Interval 0
+	-person: 1.5087795
+	-pole: 3.101822
+17:32:03 Report # 160, Interval 1
+	-person: 4.3308005
+	-pole: 2.814913
+17:32:04 Report # 160, Interval 2
+	-person: 2.1074586
+	-pole: 2.3075783
+17:32:05 Report # 161, Interval 0
+	-fire_hydrant: 1.7822475
+	-person: 1.9625767
+	-pole: 2.283031
+17:32:07 Report # 161, Interval 1
+	-pole: 2.1946566
+	-person: 1.4834564
+17:32:08 Report # 161, Interval 2
+	-person: 1.8429826
+	-pole: 2.231853
+17:32:09 Report # 162, Interval 0
+	-pole: 2.1954055
+	-person: 1.4997977
+17:32:11 Report # 162, Interval 1
+	-person: 1.6867287
+	-pole: 2.1302598
+17:32:12 Report # 162, Interval 2
+	-pole: 2.164123
+	-person: 1.8195955
+17:32:13 Report # 163, Interval 0
+	-person: 1.8228974
+	-pole: 2.1008778
+17:32:15 Report # 163, Interval 1
+	-person: 1.8431071
+	-pole: 2.1486712
+17:32:16 Report # 163, Interval 2
+	-person: 1.5037414
+	-pole: 2.1509602
+	-car: 1.8318653
+17:32:17 Report # 164, Interval 0
+	-pole: 2.1522174
+	-person: 1.9198029
+17:32:19 Report # 164, Interval 1
+	-person: 2.234435
+	-pole: 2.415206
+17:32:20 Report # 164, Interval 2
+	-person: 2.1727102
+	-pole: 2.4402716

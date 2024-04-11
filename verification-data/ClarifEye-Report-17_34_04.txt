@@ -1,0 +1,22 @@
+Starting at 17:33:40
+17:33:41 Results for report # 175
+	1. Label: Person, Depth: 2.96 m, Score: 7.7
+	2. Label: Pole, Depth: 5.30 m, Score: 1.0
+17:33:45 Results for report # 176
+	1. Label: Pole, Depth: 5.22 m, Score: 1.0
+	2. Label: Person, Depth: 1.80 m, Score: 0.5
+17:33:47 Results for report # 177
+	1. Label: Person, Depth: 8.95 m, Score: 4.1
+	2. Label: Pole, Depth: 4.87 m, Score: 1.0
+17:33:50 Results for report # 178
+	1. Label: Pole, Depth: 3.84 m, Score: 4.6
+	2. Label: Person, Depth: 1.92 m, Score: 4.1
+17:33:54 Results for report # 179
+	1. Label: Pole, Depth: 2.68 m, Score: 6.3999996
+	2. Label: Person, Depth: 2.56 m, Score: 5.8999996
+17:33:58 Results for report # 180
+	1. Label: Person, Depth: 2.32 m, Score: 7.7
+	2. Label: Pole, Depth: 2.35 m, Score: 6.3999996
+17:34:01 Results for report # 181
+	1. Label: Pole, Depth: 2.29 m, Score: 6.3999996
+	2. Label: Person, Depth: 1.64 m, Score: 5.8999996

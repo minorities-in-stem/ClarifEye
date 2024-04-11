@@ -1,0 +1,29 @@
+Starting at 17:17:38
+17:17:39 Results for report # 116
+	1. Label: Person, Depth: 1.65 m, Score: 7.7
+	2. Label: Fire Hydrant, Depth: 3.46 m, Score: 6.3999996
+	3. Label: Pole, Depth: 11.88 m, Score: 1.0
+17:17:42 Results for report # 117
+	1. Label: Fire Hydrant, Depth: 2.62 m, Score: 6.3999996
+	2. Label: Person, Depth: 1.53 m, Score: 5.8999996
+	3. Label: Pole, Depth: 11.92 m, Score: 1.0
+17:17:46 Results for report # 118
+	1. Label: Person, Depth: 2.36 m, Score: 5.8999996
+	2. Label: Pole, Depth: 13.20 m, Score: 1.0
+17:17:50 Results for report # 119
+	1. Label: Fire Hydrant, Depth: 2.57 m, Score: 6.3999996
+	2. Label: Person, Depth: 2.36 m, Score: 5.8999996
+	3. Label: Pole, Depth: 13.75 m, Score: 1.0
+17:17:54 Results for report # 120
+	1. Label: Person, Depth: 2.36 m, Score: 5.8999996
+	2. Label: Pole, Depth: 13.84 m, Score: 1.0
+17:17:58 Results for report # 121
+	1. Label: Person, Depth: 2.10 m, Score: 7.7
+	2. Label: Fire Hydrant, Depth: 2.90 m, Score: 6.3999996
+	3. Label: Pole, Depth: 12.38 m, Score: 1.0
+17:18:02 Results for report # 122
+	1. Label: Fire Hydrant, Depth: 2.97 m, Score: 6.3999996
+	2. Label: Pole, Depth: 12.01 m, Score: 1.0
+17:18:06 Results for report # 123
+	1. Label: Fire Hydrant, Depth: 2.96 m, Score: 6.3999996
+	2. Label: Pole, Depth: 12.86 m, Score: 1.0

@@ -1,0 +1,94 @@
+Starting at 17:22:44
+17:22:44 Report # 128, Interval 0
+	-pole: 13.814836
+	-fire_hydrant: 4.066272
+17:22:46 Report # 129, Interval 0
+	-fire_hydrant: 4.212257
+	-pole: 12.50613
+17:22:47 Report # 130, Interval 0
+	-pole: 14.201509
+	-fire_hydrant: 5.094265
+	-safety-cone: 5.094265
+17:22:48 Report # 131, Interval 0
+	-pole: 12.615995
+	-fire_hydrant: 5.0504994
+	-person: 3.6431358
+17:22:50 Report # 132, Interval 0
+	-person: 3.8114908
+	-pole: 12.642766
+	-car: 1.3447417
+	-fire_hydrant: 4.3515964
+17:22:51 Report # 132, Interval 1
+	-pole: 13.0377035
+	-person: 13.048518
+	-fire_hydrant: 3.75381
+17:22:52 Report # 132, Interval 2
+	-fire_hydrant: 3.8653324
+	-car: 1.325733
+	-pole: 11.930611
+	-person: 12.182625
+17:22:53 Report # 133, Interval 0
+	-pole: 12.460435
+	-fire_hydrant: 3.6260862
+	-person: 12.931343
+17:22:55 Report # 134, Interval 0
+	-person: 2.2574759
+	-pole: 11.971186
+	-fire_hydrant: 3.3137586
+17:22:56 Report # 134, Interval 1
+	-person: 15.721833
+	-fire_hydrant: 3.063847
+	-pole: 11.202829
+17:22:58 Report # 134, Interval 2
+	-person: 10.892163
+	-fire_hydrant: 2.5736032
+	-pole: 12.252187
+17:22:59 Report # 135, Interval 0
+	-person: 1.6890535
+	-fire_hydrant: 2.2718782
+	-pole: 10.171659
+17:23:00 Report # 135, Interval 1
+	-fire_hydrant: 1.8940164
+	-pole: 10.601702
+17:23:02 Report # 135, Interval 2
+	-fire_hydrant: 4.2530518
+	-pole: 12.280951
+	-person: 5.3982778
+17:23:03 Report # 136, Interval 0
+	-pole: 11.734742
+	-person: 3.7733176
+	-fire_hydrant: 1.5510268
+17:23:04 Report # 136, Interval 1
+	-fire_hydrant: 1.5215499
+	-pole: 11.492061
+17:23:06 Report # 136, Interval 2
+	-fire_hydrant: 1.5345603
+	-pole: 11.679312
+17:23:07 Report # 137, Interval 0
+	-fire_hydrant: 1.5623921
+	-pole: 11.914467
+17:23:08 Report # 137, Interval 1
+	-fire_hydrant: 1.5256349
+	-pole: 11.55817
+	-person: 1.9468418
+17:23:09 Report # 137, Interval 2
+	-fire_hydrant: 1.5428957
+	-pole: 11.010825
+	-person: 2.0512407
+17:23:11 Report # 138, Interval 0
+	-person: 2.0137553
+	-pole: 10.48188
+	-fire_hydrant: 1.5300934
+17:23:12 Report # 138, Interval 1
+	-pole: 11.495986
+	-fire_hydrant: 1.5565106
+17:23:13 Report # 138, Interval 2
+	-pole: 10.69272
+	-fire_hydrant: 1.5313582
+17:23:15 Report # 139, Interval 0
+	-pole: 10.232294
+	-fire_hydrant: 1.5394439
+17:23:16 Report # 139, Interval 1
+	-pole: 10.540558
+	-person: 2.0716481
+	-fire_hydrant: 1.5263766

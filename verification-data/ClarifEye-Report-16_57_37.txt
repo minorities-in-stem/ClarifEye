@@ -1,0 +1,9 @@
+Starting at 16:57:22
+16:57:22 Results for report # 67
+	1. Label: Person, Depth: 0.49 m, Score: 9.5
+16:57:26 Results for report # 68
+	1. Label: Person, Depth: 0.52 m, Score: 9.5
+16:57:30 Results for report # 69
+	1. Label: Person, Depth: 0.70 m, Score: 7.7
+16:57:34 Results for report # 70
+	1. Label: Person, Depth: 1.75 m, Score: 5.8999996

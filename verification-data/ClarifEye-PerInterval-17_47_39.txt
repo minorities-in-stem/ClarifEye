@@ -1,0 +1,73 @@
+Starting at 17:47:15
+17:47:17 Report # 195, Interval 0
+	-fire_hydrant: 4.456137
+	-car: 7.5856185
+	-person: 4.0492573
+17:47:18 Report # 196, Interval 0
+	-fire_hydrant: 4.447175
+	-person: 3.973301
+	-car: 1.376807
+17:47:19 Report # 196, Interval 1
+	-person: 3.5486455
+	-fire_hydrant: 3.9812446
+	-car: 6.777736
+17:47:21 Report # 196, Interval 2
+	-person: 9.232991
+	-car: 6.136978
+	-fire_hydrant: 2.8429003
+17:47:22 Report # 197, Interval 0
+	-fire_hydrant: 2.373191
+	-flag: 6.0659957
+	-person: 3.3826647
+	-car: 5.8155627
+17:47:23 Report # 197, Interval 1
+	-car: 5.5073905
+	-fire_hydrant: 2.0324912
+	-person: 2.679553
+	-flag: 5.792559
+17:47:25 Report # 198, Interval 0
+	-fire_hydrant: 1.5170884
+	-person: 2.2198517
+	-bollard: 4.303496
+17:47:26 Report # 198, Interval 1
+	-bollard: 1.1937762
+	-fire_hydrant: 1.0928735
+	-person: 1.7495791
+17:47:28 Report # 198, Interval 2
+	-safety-cone: 0.84323007
+	-person: 1.4137553
+	-bollard: 3.6737776
+	-fire_hydrant: 0.76859576
+17:47:29 Report # 199, Interval 0
+	-fire_hydrant: 3.2300832
+	-person: 1.1244291
+17:47:30 Report # 199, Interval 1
+	-person: 2.088091
+	-bollard: 1.0825723
+17:47:32 Report # 199, Interval 2
+	-car: 4.210762
+	-signboard: 5.257982
+	-bollard: 0.8274819
+	-person: 0.91141295
+17:47:33 Report # 200, Interval 0
+	-bollard: 0.7187127
+	-car: 4.5805845
+	-person: 0.7948815
+17:47:34 Report # 200, Interval 1
+	-car: 4.331069
+	-bollard: 0.67660826
+	-person: 0.75698817
+17:47:36 Report # 201, Interval 0
+	-car: 4.420555
+	-bollard: 0.6817939
+	-person: 0.7591509
+17:47:37 Report # 201, Interval 1
+	-truck: 23.845871
+	-person: 0.75841904
+	-car: 4.2574077
+	-bollard: 0.68662184
+17:47:39 Report # 201, Interval 2
+	-person: 0.76709986
+	-truck: 23.845676
+	-car: 4.152737
+	-bollard: 0.6959826

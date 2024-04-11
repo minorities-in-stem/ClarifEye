@@ -1,0 +1,31 @@
+Starting at 16:40:11
+16:40:11 Report # 43, Interval 0
+	-person: 2.6616716
+16:40:13 Report # 44, Interval 0
+	-person: 2.6268885
+16:40:14 Report # 44, Interval 1
+	-person: 2.6617172
+16:40:15 Report # 44, Interval 2
+	-person: 2.3533578
+16:40:16 Report # 45, Interval 0
+	-person: 2.0688276
+16:40:18 Report # 45, Interval 1
+	-person: 1.7733289
+16:40:19 Report # 45, Interval 2
+	-person: 1.4808542
+16:40:20 Report # 46, Interval 0
+	-person: 1.1426231
+16:40:22 Report # 46, Interval 1
+	-person: 0.77769166
+16:40:23 Report # 46, Interval 2
+	-person: 0.56708
+16:40:24 Report # 47, Interval 0
+	-person: 0.5664166
+16:40:25 Report # 47, Interval 1
+	-person: 0.59172684
+16:40:27 Report # 47, Interval 2
+	-person: 0.6051431
+16:40:28 Report # 48, Interval 0
+	-person: 0.60677046
+16:40:29 Report # 48, Interval 1
+	-person: 0.62165713

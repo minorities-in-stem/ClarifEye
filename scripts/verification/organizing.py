@@ -29,6 +29,10 @@ SCENE_LABELS = [
                 "start": IN2M(math.sqrt(100**2 + 20**2)),
                 # "speed": 8,
             }
+        },
+        "kwargs": {
+            "max_time": 5.0,
+            "ylim": [2, 2.7],
         }
     },
     {
@@ -43,35 +47,35 @@ SCENE_LABELS = [
         }
     },
     {
-        "description": "User stands still",
+        "description": "User stands still facing a person, tree, and fire hydrant",
         "trials": ["17_10_47", "17_11_18", "17_11_44"],
         # "trials": ["17_11_44"],
         "data": {
             "person": IN2M(97),
-            "fire_hydrant": IN2M(85),
+            "fire hydrant": IN2M(85),
             "tree": IN2M(97+280)
         }
     },
     {
-        "description": "Person in frame in front of fire_hydrant, then moves out of frame",
+        "description": "Person in frame in front of fire hydrant, then moves out of frame",
         "trials": ["17_17_02", "17_18_07", "17_18_51"],
         "data": {
-            "fire_hydrant": IN2M(120),
+            "fire hydrant": IN2M(120),
             "person": IN2M(108)
         }
     },
     {
-        "description": "User walks towards fire_hydrant",
+        "description": "User walks towards fire hydrant",
         "trials": ["17_23_16", "17_24_22", "17_25_16"],
         "data": {
-            "fire_hydrant": {
+            "fire hydrant": {
                 "start": IN2M(216),
                 "end": IN2M(64),
             }
         }
     },
     {
-        "description": "User walking, stationary pole, person walks towards pole, user and peson meet at pole",
+        "description": "User and Person Walking Towards e/o with pole between them",
         "trials": ["17_32_21", "17_33_19", "17_34_04"],
         "data": {
             "pole": {
@@ -85,23 +89,28 @@ SCENE_LABELS = [
         }
     },
     {
-        "description": "User walks towards 3 bollards and 1 fire_hydrant, people in background",
+        "description": "User walks towards 3 bollards and a fire hydrant",
         "trials": ["17_46_07", "17_46_47", "17_47_39"],
         "data": {
             "bollard": {
                 "start": IN2M(180),
                 "end": IN2M(20),
             },
-            "fire_hydrant": {
-                "start": IN2M(180),
+            "fire hydrant": {
+                "start": IN2M(170),
                 "end": IN2M(20),
+            }
+        },
+        "kwargs": {
+            "offset": {
+                "fire hydrant": [0, -5],
             }
         }
     }
 ]
 
 
-def main(folder):
+def main(folder, out_folder):
     for scene in SCENE_LABELS:
         trials = []
         for t in scene["trials"]:
@@ -115,10 +124,10 @@ def main(folder):
             elif isinstance(val, dict):
                 scene["data"][obj_cls] = [val["start"], val["end"]]
 
-    with open(folder / f"all.json", "w") as f:
+    with open(out_folder / f"all.json", "w") as f:
         json.dump(SCENE_LABELS, f, indent=2)
 
 
 if __name__ == "__main__":
-    folder = Path("./verification-data")
-    main(folder)
+    folder = Path("./out")
+    main(folder / "parsing", folder)

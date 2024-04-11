@@ -1,0 +1,69 @@
+Starting at 17:32:50
+17:32:50 Report # 165, Interval 0
+	-person: 9.143148
+	-pole: 5.119452
+17:32:51 Report # 166, Interval 0
+	-pole: 5.168032
+	-person: 9.194073
+17:32:53 Report # 167, Interval 0
+	-person: 6.7119617
+	-pole: 3.8168814
+17:32:54 Report # 168, Interval 0
+	-car: 1.7577515
+	-person: 8.784902
+	-pole: 4.5324936
+17:32:55 Report # 168, Interval 1
+	-person: 3.802448
+	-pole: 3.892906
+17:32:56 Report # 168, Interval 2
+	-pole: 3.6042316
+	-person: 3.3305192
+17:32:58 Report # 169, Interval 0
+	-person: 2.9763334
+	-pole: 2.9397924
+17:32:59 Report # 169, Interval 1
+	-person: 2.375039
+	-pole: 2.5726206
+17:33:00 Report # 169, Interval 2
+	-person: 2.2892878
+	-pole: 2.4151943
+17:33:02 Report # 170, Interval 0
+	-person: 2.0483553
+	-pole: 2.171588
+17:33:03 Report # 170, Interval 1
+	-person: 1.9883991
+	-pole: 2.346341
+17:33:05 Report # 171, Interval 0
+	-pole: 2.381446
+	-person: 1.6938653
+17:33:06 Report # 171, Interval 1
+	-person: 2.089974
+	-pole: 2.3149743
+17:33:08 Report # 171, Interval 2
+	-person: 1.8296077
+	-pole: 2.4226322
+	-car: 14.094577
+17:33:09 Report # 172, Interval 0
+	-person: 1.9690293
+	-pole: 2.2264578
+17:33:10 Report # 172, Interval 1
+	-pole: 2.3742747
+	-person: 1.9241942
+17:33:12 Report # 172, Interval 2
+	-person: 1.9161781
+	-pole: 2.3000317
+17:33:13 Report # 173, Interval 0
+	-person: 1.7734423
+	-pole: 2.424322
+17:33:14 Report # 173, Interval 1
+	-person: 1.916242
+	-pole: 2.3671985
+17:33:16 Report # 173, Interval 2
+	-pole: 2.3551524
+	-person: 2.1845882
+17:33:17 Report # 174, Interval 0
+	-person: 2.259719
+	-pole: 2.4294832
+17:33:18 Report # 174, Interval 1
+	-person: 2.1973164
+	-pole: 2.3807125

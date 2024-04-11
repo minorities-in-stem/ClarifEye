@@ -1,0 +1,50 @@
+Starting at 17:33:40
+17:33:41 Report # 175, Interval 0
+	-person: 1.8971988
+	-pole: 5.395629
+17:33:42 Report # 175, Interval 1
+	-pole: 5.1738687
+	-person: 1.5800772
+17:33:44 Report # 175, Interval 2
+	-pole: 5.1769266
+	-person: 1.8440355
+17:33:45 Report # 176, Interval 0
+	-pole: 4.873623
+	-person: 8.950118
+17:33:47 Report # 177, Interval 0
+	-person: 3.1377246
+	-pole: 4.2303147
+17:33:48 Report # 177, Interval 1
+	-person: 1.6175672
+	-pole: 3.742375
+17:33:50 Report # 178, Interval 0
+	-person: 3.0560548
+	-pole: 3.1988237
+17:33:51 Report # 178, Interval 1
+	-pole: 2.7258394
+	-person: 2.6237276
+17:33:52 Report # 178, Interval 2
+	-pole: 2.4971166
+	-person: 2.368721
+17:33:54 Report # 179, Interval 0
+	-person: 2.3257675
+	-pole: 2.4183092
+17:33:55 Report # 179, Interval 1
+	-person: 2.300931
+	-pole: 2.3190725
+17:33:57 Report # 179, Interval 2
+	-person: 2.3199549
+	-pole: 2.3433585
+17:33:58 Report # 180, Interval 0
+	-person: 1.8890023
+	-pole: 2.1661186
+17:33:59 Report # 180, Interval 1
+	-person: 1.5807911
+	-pole: 2.323803
+17:34:01 Report # 181, Interval 0
+	-pole: 2.2923334
+	-person: 2.0951238
+17:34:03 Report # 181, Interval 1
+	-pole: 2.1500401
+	-car: 1.5244199
+	-person: 1.8672101
