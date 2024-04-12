@@ -10,7 +10,7 @@ def IN2M(inches):
 
 SCENE_LABELS = [
     {
-        "description": "Person walking towards user",
+        "description": "User stands still, person walks towards user",
         "trials": ["16_38_59", "16_40_30", "16_41_24"],
         "data": {
             "person": {
@@ -21,7 +21,7 @@ SCENE_LABELS = [
         }
     },
     {
-        "description": "Person walking horizontally across frame",
+        "description": "User stands still, person walks perpendicular to user path",
         "trials": ["16_53_04", "16_54_08", "16_55_36"],
         "data": {
             "person": {
@@ -36,7 +36,7 @@ SCENE_LABELS = [
         }
     },
     {
-        "description": "Person walking away from user",
+        "description": "User stands still, person walks away from user",
         "trials": ["16_57_37", "16_59_00", "17_00_05"],
         "data": {
             "person": {
@@ -47,7 +47,7 @@ SCENE_LABELS = [
         }
     },
     {
-        "description": "User stands still facing a person, tree, and fire hydrant",
+        "description": "User stands still, facing person, tree, & fire hydrant",
         "trials": ["17_10_47", "17_11_18", "17_11_44"],
         # "trials": ["17_11_44"],
         "data": {
@@ -57,7 +57,7 @@ SCENE_LABELS = [
         }
     },
     {
-        "description": "Person in frame in front of fire hydrant, then moves out of frame",
+        "description": "User stands still, facing moving person and fire hydrant",
         "trials": ["17_17_02", "17_18_07", "17_18_51"],
         "data": {
             "fire hydrant": IN2M(120),
@@ -75,7 +75,7 @@ SCENE_LABELS = [
         }
     },
     {
-        "description": "User and Person Walking Towards e/o with pole between them",
+        "description": "User and person walk towards e/o with pole between them",
         "trials": ["17_32_21", "17_33_19", "17_34_04"],
         "data": {
             "pole": {
