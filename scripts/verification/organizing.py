@@ -62,6 +62,12 @@ SCENE_LABELS = [
         "data": {
             "fire hydrant": IN2M(120),
             "person": IN2M(108)
+        },
+        "kwargs": {
+            "offset": {
+                "person": [0, -20],
+            },
+            "xlim": [0, 10]
         }
     },
     {
